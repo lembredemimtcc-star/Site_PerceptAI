@@ -4,7 +4,7 @@ import { toast } from "sonner";
 import { TopBar } from "../../shared/components";
 import { COLORS } from "../../config/colors";
 import { calendarEvents as initialEvents, eventTypeMeta } from "./calendarioData";
-import { NovoEventoModal, NovoEventoFormData } from "./NovoEventoModal";
+import { NovoEventoModal, NovoEventoFormData } from "../../components/modals/NovoEventoModal";
 import {
   getWeekDays,
   getMonthDays,

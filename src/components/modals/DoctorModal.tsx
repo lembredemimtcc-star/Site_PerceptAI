@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { X } from "lucide-react";
-import { Doctor } from "../../../types";
-import { DoctorModalProps } from "../dashboard.types";
-import { doctorModalStyles as styles, getPlantaoToggleStyle } from "./DoctorModal.styles";
+import { Doctor } from "../../types";
+import { DoctorModalProps } from "../../modules/dashboard/dashboard.types";
+import { doctorModalStyles as styles, getPlantaoToggleStyle } from "./styles/DoctorModal.styles";
 
 export const DoctorModal: React.FC<DoctorModalProps> = ({ doctor, allBeds, onClose, onSave, onSelectPatient }) => {
   const [plantao, setPlantao] = useState(doctor.plantao);

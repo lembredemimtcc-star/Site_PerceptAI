@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { X, CalendarPlus } from "lucide-react";
-import { eventTypeMeta } from "./calendarioData";
-import { TipoEventoKey } from "./calendario.types";
+import { eventTypeMeta } from "../../modules/calendario/calendarioData";
+import { TipoEventoKey } from "../../modules/calendario/calendario.types";
 import {
   novoEventoModalStyles as styles,
   getTypeChipStyle,
-} from "./NovoEventoModal.styles";
+} from "./styles/NovoEventoModal.styles";
 
 export interface NovoEventoFormData {
   tipo: TipoEventoKey;

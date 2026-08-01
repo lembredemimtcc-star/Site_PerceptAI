@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { X } from "lucide-react";
 import { toast } from "sonner";
-import { Medicamento } from "./medicamentos.types";
+import { Medicamento } from "../../modules/medicamentos/medicamentos.types";
 import { beds } from "../../config/mockData";
-import { novoMedicamentoModalStyles as styles } from "./NovoMedicamentoModal.styles";
+import { novoMedicamentoModalStyles as styles } from "./styles/NovoMedicamentoModal.styles";
 
 interface NovoMedicamentoModalProps {
   onClose: () => void;

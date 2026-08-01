@@ -1,6 +1,6 @@
-import { COLORS } from "../../config/colors";
+import { COLORS } from "../../../config/colors";
 
-export const novaVisitaModalStyles = {
+export const novoMedicamentoModalStyles = {
   overlay: {
     background: "rgba(15, 18, 22, 0.45)",
   },
@@ -21,6 +21,9 @@ export const novaVisitaModalStyles = {
   fieldInput: {
     borderColor: COLORS.line,
     color: COLORS.ink,
+  },
+  checkboxLabel: {
+    color: COLORS.slate,
   },
   cancelButton: {
     borderColor: COLORS.line,

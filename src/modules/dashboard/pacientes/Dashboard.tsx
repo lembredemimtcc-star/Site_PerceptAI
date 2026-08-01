@@ -1,10 +1,11 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Search, Filter, AlertTriangle, ChevronDown } from "lucide-react";
-import { TopBar } from "../../shared/components";
-import { BedCard } from "./components/BedCard";
-import { beds, recentPatients } from "../../config/mockData";
-import { Bed, RiskLevel } from "../../types";
+import { TopBar } from "../../../shared/components";
+import { BedCard } from "../../../components/BedCard";
+import { beds, recentPatients } from "../../../config/mockData";
+import { Bed, RiskLevel } from "../../../types";
 import { dashboardStyles as styles, getRiskBadgeStyle, getFilterOptionStyle } from "./Dashboard.styles";
+
 
 interface DashboardProps {
   onOpenBed: (bed: Bed) => void;

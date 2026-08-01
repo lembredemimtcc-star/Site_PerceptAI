@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import { TopBar } from "../../shared/components";
-import { Bed, Doctor } from "../../types";
-import { beds, doctors } from "../../config/mockData";
-import { DoctorCard } from "./components/DoctorCard";
-import { DoctorModal } from "./components/DoctorModal";
+import { TopBar } from "../../../shared/components";
+import { Bed, Doctor } from "../../../types";
+import { beds, doctors } from "../../../config/mockData";
+import { DoctorCard } from "../../../components/DoctorCard";
+import { DoctorModal } from "../../../components/modals/DoctorModal";
 
 interface DashMedicosProps {
   onOpenBed: (bed: Bed) => void;

@@ -1,15 +1,15 @@
 import React from "react";
 import { ChevronRight } from "lucide-react";
-import { RiskLevel } from "../../../types";
-import { BedCardProps } from "../dashboard.types";
-import { moodMeta } from "../../../config/mockData";
+import { RiskLevel } from "../types";
+import { BedCardProps } from "../modules/dashboard/dashboard.types";
+import { moodMeta } from "../config/mockData";
 import {
   bedCardStyles as styles,
   getRiskBadgeStyle,
   getDecubitoStyle,
   getHrBarStyle,
   getStatusToggleStyle,
-} from "./BedCard.styles";
+} from "./styles/BedCard.styles";
 
 const RISK_OPTIONS: { value: RiskLevel; label: string }[] = [
   { value: "normal", label: "Normal" },

@@ -1,6 +1,6 @@
-import { COLORS } from "../../config/colors";
+import { COLORS } from "../../../config/colors";
 
-export const novoEventoModalStyles = {
+export const estoqueItemModalStyles = {
   overlay: {
     background: "rgba(15, 23, 42, 0.45)",
   },
@@ -35,10 +35,3 @@ export const novoEventoModalStyles = {
     background: COLORS.orange,
   },
 };
-
-// Estilos dinâmicos (dependem do tipo/estado selecionado)
-export const getTypeChipStyle = (color: string, selected: boolean) => ({
-  background: selected ? `${color}1F` : COLORS.bg,
-  color: selected ? color : COLORS.slate,
-  border: `1px solid ${selected ? color : COLORS.line}`,
-});

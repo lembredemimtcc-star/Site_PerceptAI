@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { X, Package, PackagePlus } from "lucide-react";
-import { EstoqueItem } from "./estoque.types";
+import { EstoqueItem } from "../../modules/estoque/estoque.types";
 import {
   estoqueItemModalStyles as styles,
-} from "./EstoqueItemModal.styles";
+} from "./styles/EstoqueItemModal.styles";
 
 interface EstoqueItemModalProps {
   open: boolean;

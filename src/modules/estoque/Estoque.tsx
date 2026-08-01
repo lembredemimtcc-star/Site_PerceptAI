@@ -1,9 +1,10 @@
 import React, { useState } from "react";
-import { Plus, Search, AlertTriangle } from "lucide-react";
+import { Plus, Search } from "lucide-react";
 import { toast } from "sonner";
 import { TopBar } from "../../shared/components";
 import { EstoqueItem } from "./estoque.types";
-import { EstoqueItemModal } from "./EstoqueItemModal";
+import { EstoqueItemModal } from "../../components/modals/EstoqueItemModal";
+import { LowStockAlert } from "../../components/Alert";
 import { estoqueStyles as styles, getStockBadgeStyle } from "./Estoque.styles";
 
 const mockEstoque: EstoqueItem[] = [
@@ -55,20 +56,7 @@ export const Estoque: React.FC = () => {
       <TopBar title="Estoque" subtitle="Controle de medicamentos e insumos" />
 
       <div className="flex-1 overflow-y-auto p-6 space-y-6">
-        {/* Alerta de estoque baixo */}
-        {lowStockItems.length > 0 && (
-          <div className="p-4 rounded-xl border-2 flex items-center gap-3" style={styles.alertBox}>
-            <AlertTriangle size={20} color={styles.alertIconColor} className="shrink-0" />
-            <div>
-              <p className="font-semibold text-sm" style={styles.alertTitle}>
-                {lowStockItems.length} item{lowStockItems.length > 1 ? "ns" : ""} com estoque baixo
-              </p>
-              <p className="text-xs mt-1" style={styles.alertSubtitle}>
-                Reposição necessária
-              </p>
-            </div>
-          </div>
-        )}
+        <LowStockAlert count={lowStockItems.length} />
 
         {/* Busca */}
         <div className="relative">

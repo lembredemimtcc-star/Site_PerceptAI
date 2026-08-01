@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { X } from "lucide-react";
 import { toast } from "sonner";
-import { Visita } from "./visitas.types";
+import { Visita } from "../../modules/visitas/visitas.types";
 import { beds } from "../../config/mockData";
-import { novaVisitaModalStyles as styles } from "./NovaVisitaModal.styles";
+import { novaVisitaModalStyles as styles } from "./styles/NovaVisitaModal.styles";
 
 interface NovaVisitaModalProps {
   onClose: () => void;

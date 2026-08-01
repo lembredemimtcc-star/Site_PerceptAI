@@ -3,7 +3,7 @@ import { Pill, Clock, AlertCircle, CheckCircle2, Syringe, Plus } from "lucide-re
 import { TopBar } from "../../shared/components";
 import { COLORS } from "../../config/colors";
 import { Medicamento } from "./medicamentos.types";
-import { NovoMedicamentoModal } from "./NovoMedicamentoModal";
+import { NovoMedicamentoModal } from "../../components/modals/NovoMedicamentoModal";
 import {
   medicamentosStyles as styles,
   statusCfg as statusIcons,

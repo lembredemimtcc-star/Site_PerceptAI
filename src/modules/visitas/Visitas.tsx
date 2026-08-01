@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Info, UserCheck, Clock, UserX, Plus } from "lucide-react";
 import { TopBar, WireframeAvatar } from "../../shared/components";
 import { Visita } from "./visitas.types";
-import { NovaVisitaModal } from "./NovaVisitaModal";
+import { NovaVisitaModal } from "../../components/modals/NovaVisitaModal";
 import {
   visitasStyles as styles,
   statusCfg,

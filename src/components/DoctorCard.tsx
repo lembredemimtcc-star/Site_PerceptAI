@@ -1,7 +1,7 @@
 import React from "react";
 import { ChevronRight } from "lucide-react";
-import { DoctorCardProps } from "../dashboard.types";
-import { doctorCardStyles as styles, getPlantaoToggleStyle } from "./DoctorCard.styles";
+import { DoctorCardProps } from "../modules/dashboard/dashboard.types";
+import { doctorCardStyles as styles, getPlantaoToggleStyle } from "./styles/DoctorCard.styles";
 
 export const DoctorCard: React.FC<DoctorCardProps> = ({ doctor, beds, onOpenModal }) => {
   const pacientesDoMedico = beds.filter(b => doctor.pacientes.includes(b.id) && b.status === "internado");
