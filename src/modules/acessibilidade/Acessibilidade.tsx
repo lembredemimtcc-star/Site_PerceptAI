@@ -19,7 +19,7 @@ export const Acessibilidade: React.FC = () => {
   const [vibracao, setVibracao] = useState(true);
   const [fonte, setFonte] = useState(1);
 
-  const fonteLabels = ["Pequena", "Padrão", "Grande"];
+  const fonteLabels = ["Pequeno", "Padrão", "Grande"];
 
   const handleSave = () => {
     toast.success("Preferências salvas com sucesso!");
