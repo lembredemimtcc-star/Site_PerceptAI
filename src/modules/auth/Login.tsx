@@ -1,14 +1,15 @@
 import React, { useState } from "react";
-import { LogIn, Eye, EyeOff } from "lucide-react";
-import { COLORS } from "../../config/colors";
+import { Eye, EyeOff } from "lucide-react";
+import logo from "../../assets/logo.png";
+import { loginStyles, loginIconColor } from "./login.styles";
 
 interface LoginProps {
   onLogin: () => void;
 }
 
 export const LoginScreen: React.FC<LoginProps> = ({ onLogin }) => {
-  const [email, setEmail] = useState("dr.almeida@hospital.com");
-  const [password, setPassword] = useState("demo123");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
   const handleLogin = (e: React.FormEvent) => {
@@ -17,36 +18,48 @@ export const LoginScreen: React.FC<LoginProps> = ({ onLogin }) => {
   };
 
   return (
-    <div className="w-full h-screen flex items-center justify-center" style={{ background: COLORS.bg }}>
+    <div
+      className="w-full h-screen flex items-center justify-center"
+      style={loginStyles.page}
+    >
       <div className="w-full max-w-md px-6">
         <div className="mb-8 text-center">
-          <div className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4" style={{ background: COLORS.orangeSoft }}>
-            <LogIn size={32} color={COLORS.orange} />
+          <div className="flex items-center justify-center mx-auto mb-4">
+            <img
+              src={logo}
+              alt="PerceptAI"
+              className="w-32 h-32 object-contain"
+            />
           </div>
-          <h1 className="text-3xl font-bold mb-2" style={{ color: COLORS.ink }}>
+          <h1 className="text-3xl font-bold mb-2" style={loginStyles.title}>
             PerceptAI
           </h1>
-          <p style={{ color: COLORS.slateSoft }}>
+          <p style={loginStyles.subtitle}>
             Sistema de Monitoramento Inteligente para Hospitais
           </p>
         </div>
 
-        <form onSubmit={handleLogin} className="bg-white rounded-2xl border p-8" style={{ borderColor: COLORS.line }}>
+        <form
+          onSubmit={handleLogin}
+          className="bg-white rounded-2xl border p-8"
+          style={loginStyles.formBorder}
+        >
           <div className="mb-4">
-            <label className="block text-sm font-semibold mb-2" style={{ color: COLORS.ink }}>
+            <label className="block text-sm font-semibold mb-2" style={loginStyles.label}>
               Email
             </label>
             <input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              placeholder="Digite seu email"
               className="w-full px-4 py-3 rounded-xl border text-sm"
-              style={{ borderColor: COLORS.line, background: COLORS.bg }}
+              style={loginStyles.input}
             />
           </div>
 
           <div className="mb-6">
-            <label className="block text-sm font-semibold mb-2" style={{ color: COLORS.ink }}>
+            <label className="block text-sm font-semibold mb-2" style={loginStyles.label}>
               Senha
             </label>
             <div className="relative">
@@ -54,8 +67,9 @@ export const LoginScreen: React.FC<LoginProps> = ({ onLogin }) => {
                 type={showPassword ? "text" : "password"}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                placeholder="Digite sua senha"
                 className="w-full px-4 py-3 rounded-xl border text-sm"
-                style={{ borderColor: COLORS.line, background: COLORS.bg }}
+                style={loginStyles.input}
               />
               <button
                 type="button"
@@ -63,9 +77,9 @@ export const LoginScreen: React.FC<LoginProps> = ({ onLogin }) => {
                 className="absolute right-3 top-1/2 -translate-y-1/2"
               >
                 {showPassword ? (
-                  <EyeOff size={18} color={COLORS.slate} />
+                  <EyeOff size={18} color={loginIconColor} />
                 ) : (
-                  <Eye size={18} color={COLORS.slate} />
+                  <Eye size={18} color={loginIconColor} />
                 )}
               </button>
             </div>
@@ -74,12 +88,12 @@ export const LoginScreen: React.FC<LoginProps> = ({ onLogin }) => {
           <button
             type="submit"
             className="w-full py-3 rounded-xl text-white font-semibold text-sm transition-all"
-            style={{ background: COLORS.orange }}
+            style={loginStyles.submitButton}
           >
             Entrar
           </button>
 
-          <p className="text-center text-xs mt-4" style={{ color: COLORS.slateSoft }}>
+          <p className="text-center text-xs mt-4" style={loginStyles.demoText}>
             Demo: dr.almeida@hospital.com / demo123
           </p>
         </form>

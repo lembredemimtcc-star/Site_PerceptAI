@@ -16,7 +16,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ current, onNavigate }) => {
           PerceptAI
         </h2>
         <p className="text-xs mt-1" style={{ color: COLORS.slateSoft }}>
-          Hospital Monitoring
+          Monitoramento hospitalar
         </p>
       </div>
 

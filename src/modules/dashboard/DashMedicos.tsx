@@ -1,8 +1,8 @@
 import React from "react";
 import { TopBar } from "../../shared/components";
-import { COLORS } from "../../config/colors";
 import { Bed } from "../../types";
 import { beds, clinicalData } from "../../config/mockData";
+import { dashMedicosStyles as styles, getRiskBadgeStyle } from "./DashMedicos.styles";
 
 interface DashMedicosProps {
   onOpenBed: (bed: Bed) => void;
@@ -22,29 +22,26 @@ export const DashMedicos: React.FC<DashMedicosProps> = ({ onOpenBed }) => {
                 key={bed.id}
                 onClick={() => onOpenBed(bed)}
                 className="text-left p-4 rounded-xl border hover:shadow-md transition-all"
-                style={{ borderColor: COLORS.line, background: COLORS.card }}
+                style={styles.card}
               >
                 <div className="flex justify-between items-start mb-3">
                   <div>
-                    <p className="text-xs font-semibold" style={{ color: COLORS.slateSoft }}>
+                    <p className="text-xs font-semibold" style={styles.bedLabel}>
                       Leito {bed.id}
                     </p>
-                    <p className="font-semibold" style={{ color: COLORS.ink }}>
+                    <p className="font-semibold" style={styles.bedName}>
                       {bed.name}
                     </p>
                   </div>
                   <span
                     className="text-xs font-semibold px-2 py-1 rounded-lg"
-                    style={{
-                      background: bed.risk === "critical" ? COLORS.redSoft : COLORS.orangeSoft,
-                      color: bed.risk === "critical" ? COLORS.red : COLORS.orange,
-                    }}
+                    style={getRiskBadgeStyle(bed.risk)}
                   >
                     {bed.risk === "critical" ? "Crítico" : "Atenção"}
                   </span>
                 </div>
 
-                <div className="space-y-1 text-xs mb-3" style={{ color: COLORS.slate }}>
+                <div className="space-y-1 text-xs mb-3" style={styles.clinicalInfo}>
                   <p><strong>Idade:</strong> {clinical.idade} anos</p>
                   <p><strong>Diagnóstico:</strong> {clinical.diagnostico}</p>
                   <p><strong>Médico:</strong> {clinical.medico}</p>
@@ -53,13 +50,13 @@ export const DashMedicos: React.FC<DashMedicosProps> = ({ onOpenBed }) => {
                 </div>
 
                 <div className="flex gap-2">
-                  <div className="flex-1 p-2 rounded-lg" style={{ background: COLORS.bg }}>
-                    <p className="text-xs" style={{ color: COLORS.slateSoft }}>FC</p>
-                    <p className="font-bold" style={{ color: COLORS.ink }}>{bed.hr} bpm</p>
+                  <div className="flex-1 p-2 rounded-lg" style={styles.statBox}>
+                    <p className="text-xs" style={styles.statLabel}>FC</p>
+                    <p className="font-bold" style={styles.statValue}>{bed.hr} bpm</p>
                   </div>
-                  <div className="flex-1 p-2 rounded-lg" style={{ background: COLORS.bg }}>
-                    <p className="text-xs" style={{ color: COLORS.slateSoft }}>IA Conf</p>
-                    <p className="font-bold" style={{ color: COLORS.ink }}>{bed.conf}%</p>
+                  <div className="flex-1 p-2 rounded-lg" style={styles.statBox}>
+                    <p className="text-xs" style={styles.statLabel}>IA Conf</p>
+                    <p className="font-bold" style={styles.statValue}>{bed.conf}%</p>
                   </div>
                 </div>
               </button>

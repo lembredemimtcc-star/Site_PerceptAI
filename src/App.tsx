@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Toaster } from "sonner";
 import { FontsAndStyles } from "./config/fonts";
 import { COLORS } from "./config/colors";
 import { Sidebar } from "./shared/components";
@@ -37,6 +38,105 @@ export default function PerceptAIPrototype() {
   return (
     <div className="w-full h-screen" style={{ background: COLORS.bg }}>
       {FontsAndStyles()}
+
+      <Toaster
+        position="top-right"
+        expand={false}
+        gap={10}
+        toastOptions={{
+          duration: 3500,
+          unstyled: false,
+          classNames: {
+            toast: "perceptai-toast",
+          },
+          style: {
+            background: COLORS.card,
+            border: `1px solid ${COLORS.line}`,
+            borderLeft: `4px solid ${COLORS.orange}`,
+            color: COLORS.ink,
+            borderRadius: "14px",
+            fontSize: "13px",
+            fontWeight: 500,
+            padding: "14px 16px",
+            boxShadow: "0 8px 24px rgba(0,0,0,0.08)",
+          },
+        }}
+        icons={{
+          success: (
+            <span
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                width: 22,
+                height: 22,
+                borderRadius: "50%",
+                background: COLORS.greenSoft,
+                color: COLORS.green,
+                fontSize: 13,
+                fontWeight: 700,
+              }}
+            >
+              ✓
+            </span>
+          ),
+          error: (
+            <span
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                width: 22,
+                height: 22,
+                borderRadius: "50%",
+                background: COLORS.redSoft,
+                color: COLORS.red,
+                fontSize: 13,
+                fontWeight: 700,
+              }}
+            >
+              ✕
+            </span>
+          ),
+          warning: (
+            <span
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                width: 22,
+                height: 22,
+                borderRadius: "50%",
+                background: COLORS.orangeSoft,
+                color: COLORS.orange,
+                fontSize: 13,
+                fontWeight: 700,
+              }}
+            >
+              !
+            </span>
+          ),
+          info: (
+            <span
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                width: 22,
+                height: 22,
+                borderRadius: "50%",
+                background: COLORS.orangeSoft,
+                color: COLORS.orange,
+                fontSize: 13,
+                fontWeight: 700,
+              }}
+            >
+              i
+            </span>
+          ),
+        }}
+      />
+
       {!loggedIn ? (
         <LoginScreen onLogin={() => setLoggedIn(true)} />
       ) : (
@@ -52,7 +152,6 @@ export default function PerceptAIPrototype() {
           {page === "visitas" && <Visitas />}
           {page === "calendario" && <Calendario />}
           {page === "mapa" && <Mapa />}
-          {page === "info-ia" && <InfoIA bed={selectedBed} onBack={() => setPage("dash-pacientes")} />}
         </div>
       )}
     </div>
