@@ -37,8 +37,8 @@ export const getRiskBadgeStyle = (risk: keyof typeof riskColors) => ({
   color: riskColors[risk].text,
 });
 
-export const getDecubitoStyle = (decubito: boolean) => ({
-  color: decubito ? COLORS.red : COLORS.green,
+export const getAcordadoStyle = (acordado: boolean) => ({
+  color: acordado ? COLORS.green : COLORS.slateSoft,
 });
 
 export const getHrBarStyle = (hr: number) => ({

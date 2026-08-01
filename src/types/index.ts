@@ -12,7 +12,7 @@ export interface Bed {
   mood: MoodType;
   conf: number;
   risk: RiskLevel;
-  decubito: boolean;
+  acordado: boolean;
   ts: string;
   status: PatientStatus;
 }

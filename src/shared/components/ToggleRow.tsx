@@ -31,7 +31,10 @@ export const ToggleRow: React.FC<ToggleRowProps> = ({ icon: Icon, title, desc, c
         className="relative w-12 h-6 rounded-full transition-colors"
         style={{ background: checked ? COLORS.green : COLORS.line }}
       >
-        <span className="absolute top-0.5 w-6 h-6 rounded-full bg-white transition-transform" style={{ transform: checked ? "translateX(22px)" : "translateX(2px)" }} />
+        <span
+          className="absolute top-1/2 -translate-y-1/2 w-5 h-5 rounded-full bg-white transition-transform"
+          style={{ transform: checked ? "translateX(23px) translateY(-50%)" : "translateX(3px) translateY(-50%)" }}
+        />
       </button>
     </div>
   );

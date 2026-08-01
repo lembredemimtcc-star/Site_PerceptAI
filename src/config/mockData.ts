@@ -18,14 +18,14 @@ export const moodMeta: Record<string, MoodMeta> = {
 };
 
 export const beds: Bed[] = [
-  { id: "402", name: "M. Silva",   hr: 121, hrSeries: [78,82,88,95,101,110,121], mood: "dor",      conf: 92, risk: "critical", decubito: false, ts: "agora",    status: "internado" },
-  { id: "403", name: "J. Andrade", hr: 74,  hrSeries: [70,72,71,73,74,74,74],     mood: "dormindo", conf: 96, risk: "normal",   decubito: true,  ts: "há 2 min", status: "internado" },
-  { id: "404", name: "R. Costa",   hr: 96,  hrSeries: [80,84,88,90,93,95,96],     mood: "medo",     conf: 81, risk: "attention",decubito: false, ts: "há 1 min", status: "internado" },
-  { id: "405", name: "A. Nunes",   hr: 70,  hrSeries: [68,69,70,70,71,70,70],     mood: "neutro",   conf: 95, risk: "normal",   decubito: false, ts: "há 4 min", status: "internado" },
-  { id: "406", name: "C. Prado",   hr: 89,  hrSeries: [75,78,81,84,86,88,89],     mood: "tristeza", conf: 74, risk: "attention",decubito: true,  ts: "há 1 min", status: "internado" },
-  { id: "407", name: "L. Ferreira",hr: 102, hrSeries: [80,85,90,94,97,100,102],   mood: "acordado", conf: 90, risk: "normal",   decubito: false, ts: "agora",    status: "internado" },
-  { id: "408", name: "P. Martins", hr: 64,  hrSeries: [66,65,65,64,64,63,64],     mood: "dormindo", conf: 97, risk: "normal",   decubito: false, ts: "há 3 min", status: "internado" },
-  { id: "409", name: "V. Rocha",   hr: 111, hrSeries: [82,88,93,99,104,108,111],  mood: "enjoo",    conf: 79, risk: "attention",decubito: false, ts: "há 2 min", status: "internado" },
+  { id: "402", name: "M. Silva",   hr: 121, hrSeries: [78,82,88,95,101,110,121], mood: "dor",      conf: 92, risk: "critical", acordado: false, ts: "agora",    status: "internado" },
+  { id: "403", name: "J. Andrade", hr: 74,  hrSeries: [70,72,71,73,74,74,74],     mood: "dormindo", conf: 96, risk: "normal",   acordado: true,  ts: "há 2 min", status: "internado" },
+  { id: "404", name: "R. Costa",   hr: 96,  hrSeries: [80,84,88,90,93,95,96],     mood: "medo",     conf: 81, risk: "attention",acordado: false, ts: "há 1 min", status: "internado" },
+  { id: "405", name: "A. Nunes",   hr: 70,  hrSeries: [68,69,70,70,71,70,70],     mood: "neutro",   conf: 95, risk: "normal",   acordado: false, ts: "há 4 min", status: "internado" },
+  { id: "406", name: "C. Prado",   hr: 89,  hrSeries: [75,78,81,84,86,88,89],     mood: "tristeza", conf: 74, risk: "attention",acordado: true,  ts: "há 1 min", status: "internado" },
+  { id: "407", name: "L. Ferreira",hr: 102, hrSeries: [80,85,90,94,97,100,102],   mood: "acordado", conf: 90, risk: "normal",   acordado: false, ts: "agora",    status: "internado" },
+  { id: "408", name: "P. Martins", hr: 64,  hrSeries: [66,65,65,64,64,63,64],     mood: "dormindo", conf: 97, risk: "normal",   acordado: false, ts: "há 3 min", status: "internado" },
+  { id: "409", name: "V. Rocha",   hr: 111, hrSeries: [82,88,93,99,104,108,111],  mood: "enjoo",    conf: 79, risk: "attention",acordado: false, ts: "há 2 min", status: "internado" },
 ];
 
 export const doctors: Doctor[] = [

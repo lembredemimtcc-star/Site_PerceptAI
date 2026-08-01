@@ -6,7 +6,7 @@ import { moodMeta } from "../config/mockData";
 import {
   bedCardStyles as styles,
   getRiskBadgeStyle,
-  getDecubitoStyle,
+  getAcordadoStyle,
   getHrBarStyle,
   getStatusToggleStyle,
 } from "./styles/BedCard.styles";
@@ -97,10 +97,10 @@ export const BedCard: React.FC<BedCardProps> = ({ bed, onSelect, onChangeRisk, o
             </div>
             <div>
               <p className="text-xs" style={styles.statLabel}>
-                Decúbito
+                Consciência
               </p>
-              <p className="font-semibold text-sm" style={getDecubitoStyle(bed.decubito)}>
-                {bed.decubito ? "Sim" : "Não"}
+              <p className="font-semibold text-sm" style={getAcordadoStyle(bed.acordado)}>
+                {bed.acordado ? "Acordado" : "Dormindo"}
               </p>
             </div>
             <div>

@@ -1,10 +1,11 @@
 import React, { useState } from "react";
-import { Plus, Search } from "lucide-react";
+import { Plus } from "lucide-react";
 import { toast } from "sonner";
 import { TopBar } from "../../shared/components";
 import { EstoqueItem } from "./estoque.types";
 import { EstoqueItemModal } from "../../components/modals/EstoqueItemModal";
-import { LowStockAlert } from "../../components/Alert";
+import { AlertBanner } from "../../components/AlertBanner";
+import { SearchInput } from "../../components/SearchInput";
 import { estoqueStyles as styles, getStockBadgeStyle } from "./Estoque.styles";
 
 const mockEstoque: EstoqueItem[] = [
@@ -56,20 +57,20 @@ export const Estoque: React.FC = () => {
       <TopBar title="Estoque" subtitle="Controle de medicamentos e insumos" />
 
       <div className="flex-1 overflow-y-auto p-6 space-y-6">
-        <LowStockAlert count={lowStockItems.length} />
+        {lowStockItems.length > 0 && (
+          <AlertBanner
+            variant="warning"
+            title={`${lowStockItems.length} ${lowStockItems.length > 1 ? "itens" : "item"} com estoque baixo`}
+            subtitle="Reposição necessária"
+          />
+        )}
 
         {/* Busca */}
-        <div className="relative">
-          <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2" color={styles.searchIconColor} />
-          <input
-            type="text"
-            placeholder="Buscar item..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-9 pr-4 py-3 rounded-xl border text-sm"
-            style={styles.searchInput}
-          />
-        </div>
+        <SearchInput
+          value={searchTerm}
+          onChange={setSearchTerm}
+          placeholder="Buscar item..."
+        />
 
         {/* Itens por categoria */}
         {categories.map(category => {
