@@ -9,12 +9,8 @@ import {
   getStatusBadgeStyle,
 } from "./Visitas.styles";
 
-const visitasIniciais: Visita[] = [
-  { leito: "402", visitante: "Ana Silva",     parentesco: "Filha",  entrada: "14:00", saida: "14:30", status: "em-andamento" },
-  { leito: "405", visitante: "Bruno Nunes",   parentesco: "Filho",  entrada: "15:00", saida: "15:30", status: "agendada" },
-  { leito: "407", visitante: "Marta Ferreira",parentesco: "Esposa", entrada: "13:00", saida: "13:30", status: "finalizada" },
-  { leito: "408", visitante: "Igor Martins",  parentesco: "Filho",  entrada: "16:00", saida: "16:30", status: "agendada" },
-];
+import { useVisitas } from "../../hooks";
+import { supabase } from "../../lib/supabase";
 
 const statusIconMap = {
   "em-andamento": UserCheck,
@@ -23,11 +19,27 @@ const statusIconMap = {
 };
 
 export const Visitas: React.FC = () => {
-  const [visitasData, setVisitasData] = useState<Visita[]>(visitasIniciais);
+  const { data: supabaseVisitas = [], refetch } = useVisitas();
   const [modalOpen, setModalOpen] = useState(false);
 
-  const handleAddVisita = (visita: Visita) => {
-    setVisitasData([...visitasData, visita]);
+  // Transform DB rows to local Visita array
+  const visitasData: Visita[] = supabaseVisitas.map((dbVisita: any) => {
+    const formatTime = (ts: string | null) => ts ? new Date(ts).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : "??:??";
+    return {
+      leito: dbVisita.internacao?.leito?.numero || "??",
+      paciente: dbVisita.internacao?.paciente?.nome || "",
+      visitante: dbVisita.visitante?.nome || "Desconhecido",
+      parentesco: dbVisita.visitante?.parentesco || "-",
+      entrada: formatTime(dbVisita.data_entrada),
+      saida: formatTime(dbVisita.data_saida) === "??:??" ? "---" : formatTime(dbVisita.data_saida),
+      status: dbVisita.status === "concluida" ? "finalizada" : (dbVisita.data_saida ? "agendada" : "em-andamento"),
+      id: dbVisita.id,
+    };
+  });
+
+  const handleAddVisita = async (visita: Visita) => {
+    // TODO: save real visita + visitante records using supabase
+    // for now just close modal
     setModalOpen(false);
   };
 

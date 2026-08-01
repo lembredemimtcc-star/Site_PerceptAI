@@ -8,17 +8,23 @@ import { AlertBanner } from "../../components/AlertBanner";
 import { SearchInput } from "../../components/SearchInput";
 import { estoqueStyles as styles, getStockBadgeStyle } from "./Estoque.styles";
 
-const mockEstoque: EstoqueItem[] = [
-  { id: "1", nome: "Luvas látex P", categoria: "EPI", quantidade: 450, minimo: 200, unidade: "caixa" },
-  { id: "2", nome: "Máscara N95", categoria: "EPI", quantidade: 80, minimo: 150, unidade: "un" },
-  { id: "3", nome: "Gaze estéril", categoria: "Curativo", quantidade: 320, minimo: 100, unidade: "caixa" },
-  { id: "4", nome: "Soro fisiológico", categoria: "Medicamento", quantidade: 150, minimo: 100, unidade: "L" },
-  { id: "5", nome: "Cateter IV 20G", categoria: "Equipamento", quantidade: 45, minimo: 50, unidade: "un" },
-];
+import { useEstoque } from "../../hooks";
+import { supabase } from "../../lib/supabase";
 
 export const Estoque: React.FC = () => {
+  const { data: supabaseItems = [], refetch } = useEstoque();
+  
+  // Transform DB rows to local EstoqueItem
+  const items: EstoqueItem[] = supabaseItems.map((dbItem: any) => ({
+    id: dbItem.id,
+    nome: dbItem.item,
+    categoria: dbItem.categoria,
+    quantidade: dbItem.quantidade,
+    minimo: dbItem.quantidade_minima,
+    unidade: dbItem.unidade,
+  }));
+
   const [searchTerm, setSearchTerm] = useState("");
-  const [items, setItems] = useState<EstoqueItem[]>(mockEstoque);
   const [modalOpen, setModalOpen] = useState(false);
   const [modalMode, setModalMode] = useState<"novo" | "editar">("novo");
   const [editingItem, setEditingItem] = useState<EstoqueItem | null>(null);
@@ -44,12 +50,27 @@ export const Estoque: React.FC = () => {
     setModalOpen(true);
   };
 
-  const handleSaveItem = (item: EstoqueItem) => {
-    setItems((prev) => {
-      const exists = prev.some((i) => i.id === item.id);
-      return exists ? prev.map((i) => (i.id === item.id ? item : i)) : [...prev, item];
-    });
-    toast.success(modalMode === "novo" ? "Item adicionado ao estoque" : "Item atualizado");
+  const handleSaveItem = async (item: EstoqueItem) => {
+    try {
+      const payload = {
+        item: item.nome,
+        categoria: item.categoria,
+        quantidade: item.quantidade,
+        quantidade_minima: item.minimo,
+        unidade: item.unidade,
+      };
+
+      if (modalMode === "novo") {
+        await supabase.from("estoque").insert(payload);
+      } else {
+        await supabase.from("estoque").update(payload).eq("id", item.id);
+      }
+      
+      toast.success(modalMode === "novo" ? "Item adicionado ao estoque" : "Item atualizado");
+      refetch();
+    } catch (err: any) {
+      toast.error(err.message || "Erro ao salvar item");
+    }
   };
 
   return (

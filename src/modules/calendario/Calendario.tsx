@@ -3,7 +3,9 @@ import { ChevronLeft, ChevronRight, Plus } from "lucide-react";
 import { toast } from "sonner";
 import { TopBar } from "../../shared/components";
 import { COLORS } from "../../config/colors";
-import { calendarEvents as initialEvents, eventTypeMeta } from "./calendarioData";
+import { useCalendario } from "../../hooks";
+import { supabase } from "../../lib/supabase";
+import { eventTypeMeta } from "./calendarioData";
 import { NovoEventoModal, NovoEventoFormData } from "../../components/modals/NovoEventoModal";
 import {
   getWeekDays,
@@ -27,9 +29,18 @@ import {
 type ViewMode = "semana" | "mes";
 
 export const Calendario: React.FC = () => {
-  const [events, setEvents] = useState(initialEvents);
+  const { data: supabaseEvents = [], refetch } = useCalendario();
   const [modalOpen, setModalOpen] = useState(false);
   const [viewMode, setViewMode] = useState<ViewMode>("semana");
+  
+  // Transform db events to local format
+  const events = supabaseEvents.map((dbEvt: any) => ({
+    id: dbEvt.id,
+    data: dbEvt.data_inicio.split("T")[0],
+    hora: new Date(dbEvt.data_inicio).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+    tipo: dbEvt.tipo,
+    titulo: dbEvt.titulo,
+  }));
   const [referenceDate, setReferenceDate] = useState(new Date());
 
   const days = useMemo(
@@ -47,9 +58,21 @@ export const Calendario: React.FC = () => {
     setReferenceDate((prev) => (viewMode === "semana" ? addDays(prev, 7) : addMonths(prev, 1)));
   };
 
-  const handleSaveEvento = (data: NovoEventoFormData) => {
-    setEvents((prev) => [...prev, data]);
-    toast.success("Evento adicionado ao calendário");
+  const handleSaveEvento = async (data: NovoEventoFormData) => {
+    try {
+      const payload = {
+        titulo: data.titulo,
+        tipo: data.tipo,
+        data_inicio: `${data.data}T${data.hora}:00`,
+        data_fim: `${data.data}T${data.hora}:00`, // simplifying for now
+        descricao: "",
+      };
+      await supabase.from("calendario_eventos").insert(payload);
+      toast.success("Evento adicionado ao calendário");
+      refetch();
+    } catch (err: any) {
+      toast.error(err.message || "Erro ao criar evento");
+    }
   };
 
   const today = new Date();

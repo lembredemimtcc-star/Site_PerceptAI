@@ -1,7 +1,8 @@
 import React from "react";
 import { ChevronRight } from "lucide-react";
-import { RiskLevel } from "../types";
+import { RiskLevel, MoodType } from "../types";
 import { BedCardProps } from "../modules/dashboard/dashboard.types";
+import { useSinaisVitais, useExpressoes } from "../hooks";
 import { moodMeta } from "../config/mockData";
 import {
   bedCardStyles as styles,
@@ -18,9 +19,25 @@ const RISK_OPTIONS: { value: RiskLevel; label: string }[] = [
 ];
 
 export const BedCard: React.FC<BedCardProps> = ({ bed, onSelect, onChangeRisk, onToggleStatus }) => {
-  const mood = moodMeta[bed.mood];
-  const MoodIcon = mood.icon;
   const isInternado = bed.status === "internado";
+  const internacaoId = isInternado ? bed.internacaoId : undefined;
+
+  const { data: vitals = [] } = useSinaisVitais(internacaoId);
+  const { data: expressions = [] } = useExpressoes(internacaoId);
+
+  // Extract latest vital sign
+  const latestVital = vitals[vitals.length - 1];
+  const hr = latestVital?.hr ?? bed.hr;
+  
+  // Extract latest expression
+  const latestExpression = expressions[expressions.length - 1];
+  const moodName = latestExpression?.mood ?? bed.mood;
+  const mood = moodMeta[moodName as MoodType] || moodMeta["neutro"];
+  const MoodIcon = mood.icon;
+  const conf = latestExpression?.confianca ?? bed.conf;
+  const acordado = moodName !== "dormindo";
+  const hrSeries = vitals.length > 0 ? vitals.map(v => v.hr ?? 0) : bed.hrSeries;
+  const ts = latestVital ? new Date(latestVital.registrado_em).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : bed.ts;
 
   return (
     <div
@@ -80,7 +97,7 @@ export const BedCard: React.FC<BedCardProps> = ({ bed, onSelect, onChangeRisk, o
             </div>
             <div>
               <p className="text-xs" style={styles.moodLabel}>
-                {mood.label} • {bed.conf}%
+                {mood.label} • {conf}%
               </p>
             </div>
           </div>
@@ -92,15 +109,15 @@ export const BedCard: React.FC<BedCardProps> = ({ bed, onSelect, onChangeRisk, o
                 FC
               </p>
               <p className="font-semibold text-sm" style={styles.statValue}>
-                {bed.hr}
+                {hr}
               </p>
             </div>
             <div>
               <p className="text-xs" style={styles.statLabel}>
                 Consciência
               </p>
-              <p className="font-semibold text-sm" style={getAcordadoStyle(bed.acordado)}>
-                {bed.acordado ? "Acordado" : "Dormindo"}
+              <p className="font-semibold text-sm" style={getAcordadoStyle(acordado)}>
+                {acordado ? "Acordado" : "Dormindo"}
               </p>
             </div>
             <div>
@@ -108,7 +125,7 @@ export const BedCard: React.FC<BedCardProps> = ({ bed, onSelect, onChangeRisk, o
                 Atualização
               </p>
               <p className="font-semibold text-xs" style={styles.statValue}>
-                {bed.ts}
+                {ts}
               </p>
             </div>
           </div>
@@ -116,8 +133,8 @@ export const BedCard: React.FC<BedCardProps> = ({ bed, onSelect, onChangeRisk, o
           {/* Rodapé */}
           <div className="flex items-center justify-between">
             <div className="flex gap-1">
-              {bed.hrSeries.slice(-3).map((hr, i) => (
-                <div key={i} className="w-2 rounded-full" style={getHrBarStyle(hr)} />
+              {hrSeries.slice(-3).map((h, i) => (
+                <div key={i} className="w-2 rounded-full" style={getHrBarStyle(h)} />
               ))}
             </div>
             <ChevronRight

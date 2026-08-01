@@ -13,14 +13,9 @@ import {
   getToggleButtonStyle,
 } from "./Medicamentos.styles";
 
-const medicamentosData: Medicamento[] = [
-  { id: 1, leito: "402", paciente: "M. Silva",   nome: "Dipirona 1g",       via: "EV", horario: "08:00", status: "atrasado",    recorrente: true },
-  { id: 2, leito: "404", paciente: "R. Costa",   nome: "Salbutamol",        via: "Inalatória", horario: "08:30", status: "pendente", recorrente: true },
-  { id: 3, leito: "406", paciente: "C. Prado",   nome: "Omeprazol 40mg",    via: "EV", horario: "09:00", status: "pendente",    recorrente: true },
-  { id: 4, leito: "409", paciente: "V. Rocha",   nome: "Tramadol 50mg",     via: "EV", horario: "09:00", status: "pendente",    recorrente: false },
-  { id: 5, leito: "403", paciente: "J. Andrade", nome: "Enoxaparina 40mg",  via: "SC", horario: "07:30", status: "administrado", recorrente: true },
-  { id: 6, leito: "408", paciente: "P. Martins", nome: "Prednisona 20mg",   via: "VO", horario: "07:00", status: "administrado", recorrente: true },
-];
+import { useQueryClient } from "@tanstack/react-query";
+import { supabase } from "../../lib/supabase";
+import { useAdministracoes } from "../../hooks";
 
 const statusIconMap = {
   administrado: CheckCircle2,
@@ -48,26 +43,47 @@ const KPICard: React.FC<KPICardProps> = ({ icon: Icon, label, value, accent }) =
 );
 
 export const Medicamentos: React.FC = () => {
-  const [items, setItems] = useState<Medicamento[]>(medicamentosData);
+  const { data: administracoes = [], isLoading } = useAdministracoes();
+  const queryClient = useQueryClient();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const toggleAdministrado = (id: number) => {
-    setItems(items.map(m =>
-      m.id === id
-        ? { ...m, status: m.status === "administrado" ? "pendente" : "administrado" }
-        : m
-    ));
+  // Mapear dados do Supabase para o formato da UI
+  const items: Medicamento[] = administracoes.map((admin: any) => ({
+    id: admin.id,
+    leito: admin.internacao?.leito?.numero || "??",
+    paciente: admin.internacao?.paciente?.nome || "Desconhecido",
+    nome: admin.medicamento?.nome || "Desconhecido",
+    via: admin.medicamento?.forma || "-",
+    horario: admin.horario_previsto ? new Date(admin.horario_previsto).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : "??",
+    status: admin.status as any,
+    recorrente: false, // Pode ser ajustado baseado no modelo real se tiver cronograma
+  }));
+
+  const toggleAdministrado = async (id: string, currentStatus: string) => {
+    const newStatus = currentStatus === "administrado" ? "pendente" : "administrado";
+    
+    // Optimistic update
+    queryClient.setQueryData(['administracoes', undefined], (old: any) => {
+      if (!old) return old;
+      return old.map((m: any) => m.id === id ? { ...m, status: newStatus } : m);
+    });
+
+    try {
+      const { error } = await supabase
+        .from('administracoes_medicamento')
+        .update({ status: newStatus })
+        .eq('id', id);
+
+      if (error) throw error;
+    } catch (err) {
+      console.error(err);
+      queryClient.invalidateQueries({ queryKey: ['administracoes'] }); // revert
+    }
   };
 
   const handleAddMedicamento = (novo: Omit<Medicamento, "id" | "status">) => {
-    setItems(prev => [
-      ...prev,
-      {
-        ...novo,
-        id: Math.max(0, ...prev.map(m => m.id)) + 1,
-        status: "pendente",
-      },
-    ]);
+    // TODO: implement real add with Supabase
+    setIsModalOpen(false);
   };
 
   const pendentesOuAtrasados = items.filter(m => m.status !== "administrado").length;
@@ -144,7 +160,7 @@ export const Medicamentos: React.FC = () => {
                 </div>
                 <div className="col-span-1 flex justify-end">
                   <button
-                    onClick={() => toggleAdministrado(m.id)}
+                    onClick={() => toggleAdministrado(m.id as unknown as string, m.status)}
                     className="text-[11px] font-semibold px-3 py-1.5 rounded-full border"
                     style={getToggleButtonStyle(m.status === "administrado")}
                   >

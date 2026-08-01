@@ -4,14 +4,11 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContai
 import { TopBar } from "../../shared/components";
 import { Bed } from "../../types";
 import {
-  vitalsData,
-  painData,
   tremorEvents,
-  // copilotMsgs,
-  // suggestedQs,
   moodMeta,
   clinicalData,
 } from "../../config/mockData";
+import { useSinaisVitais, useExpressoes } from "../../hooks";
 import { infoIAStyles as styles } from "./InfoIA.styles";
 
 interface InfoIAProps {
@@ -20,11 +17,28 @@ interface InfoIAProps {
 }
 
 export const InfoIA: React.FC<InfoIAProps> = ({ bed, onBack }) => {
-  // const [question, setQuestion] = useState("");
-  // const [messages, setMessages] = useState<string[]>(copilotMsgs);
+  const { data: vitals = [], isLoading: isLoadingVitals } = useSinaisVitais(bed.internacaoId);
+  const { data: expressions = [], isLoading: isLoadingExpressions } = useExpressoes(bed.internacaoId);
 
-  const mood = moodMeta[bed.mood];
-  const clinical = clinicalData[bed.id];
+  // Format vitals for chart
+  const vitalsChartData = vitals.map((v: any) => ({
+    t: new Date(v.registrado_em).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+    hr: v.hr,
+    spo2: v.spo2,
+  }));
+
+  // Format expressions (pain) for chart
+  const painChartData = expressions.map((e: any) => ({
+    t: new Date(e.registrado_em).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+    intensidade: e.intensidade || 0,
+  }));
+
+  const latestExpression = expressions[expressions.length - 1];
+  const currentMood = latestExpression?.mood || bed.mood;
+  const currentConf = latestExpression?.confianca || bed.conf;
+
+  const mood = moodMeta[currentMood as keyof typeof moodMeta] || moodMeta["neutro"];
+  const clinical = clinicalData[bed.id] || clinicalData["default"] || { idade: 0, internacao: "Desconhecida", diagnostico: "Sem dados", medico: "Sem Médico" };
   const MoodIcon = mood.icon;
 
   // const handleSendQuestion = (q?: string) => {
@@ -59,7 +73,7 @@ export const InfoIA: React.FC<InfoIAProps> = ({ bed, onBack }) => {
               <div className="flex items-center gap-2 p-3 rounded-lg" style={styles.moodBox}>
                 <MoodIcon size={16} color={mood.color} />
                 <span className="text-xs font-semibold" style={styles.moodText}>
-                  {mood.label} ({bed.conf}%)
+                  {mood.label} ({currentConf}%)
                 </span>
               </div>
             </div>
@@ -71,7 +85,7 @@ export const InfoIA: React.FC<InfoIAProps> = ({ bed, onBack }) => {
               Sinais Vitais (24h)
             </p>
             <ResponsiveContainer width="100%" height={180}>
-              <LineChart data={vitalsData}>
+              <LineChart data={vitalsChartData}>
                 <CartesianGrid strokeDasharray="3 3" stroke={styles.chartGrid} />
                 <XAxis dataKey="t" stroke={styles.chartAxis} style={{ fontSize: 12 }} />
                 <YAxis stroke={styles.chartAxis} style={{ fontSize: 12 }} />
@@ -88,7 +102,7 @@ export const InfoIA: React.FC<InfoIAProps> = ({ bed, onBack }) => {
               Intensidade de Dor (24h)
             </p>
             <ResponsiveContainer width="100%" height={160}>
-              <BarChart data={painData}>
+              <BarChart data={painChartData}>
                 <CartesianGrid strokeDasharray="3 3" stroke={styles.chartGrid} />
                 <XAxis dataKey="t" stroke={styles.chartAxis} style={{ fontSize: 12 }} />
                 <YAxis stroke={styles.chartAxis} style={{ fontSize: 12 }} />

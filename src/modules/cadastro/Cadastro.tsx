@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import { ClipboardList, ChevronDown, Save, UserPlus, BedSingle } from "lucide-react";
 import { TopBar } from "../../shared/components";
-import { leitosLivres, cadastrosRecentes } from "../../config/mockData";
+import { useLeitos, usePacientes } from "../../hooks";
+import { supabase } from "../../lib/supabase";
+import { toast } from "sonner";
 import { cadastroStyles as styles, getSubmitButtonStyle } from "./cadastro.styles";
 
 interface FormFieldProps {
@@ -11,13 +13,15 @@ interface FormFieldProps {
   span?: number;
 }
 
-const FormField: React.FC<FormFieldProps> = ({ label, placeholder, type = "text", span = 1 }) => (
+const FormField = ({ label, value, onChange, placeholder, type = "text", span = 1 }: any) => (
   <div className={`col-span-${span}`}>
     <label className="text-[12.5px] font-semibold" style={styles.fieldLabel}>
       {label}
     </label>
     <input
       type={type}
+      value={value}
+      onChange={(e) => onChange(e.target.value)}
       placeholder={placeholder}
       className="w-full h-11 rounded-xl border px-3 text-sm outline-none mt-1.5"
       style={styles.fieldInput}
@@ -26,9 +30,65 @@ const FormField: React.FC<FormFieldProps> = ({ label, placeholder, type = "text"
 );
 
 export const Cadastro: React.FC = () => {
+  const { data: leitos = [], refetch: refetchLeitos } = useLeitos();
+  const { data: pacientes = [], refetch: refetchPacientes } = usePacientes();
+
   const [lgpd, setLgpd] = useState(false);
   const [camera, setCamera] = useState(false);
   const podeSubmeter = lgpd && camera;
+
+  const [nome, setNome] = useState("");
+  const [cpf, setCpf] = useState("");
+  const [dataNascimento, setDataNascimento] = useState("");
+  const [diagnostico, setDiagnostico] = useState("");
+  const [leitoId, setLeitoId] = useState("");
+
+  const leitosLivresDb = leitos.filter((l: any) => l.status === "livre");
+  const cadastrosRecentesDb = pacientes.slice(-5).reverse(); // últimos 5
+
+  const handleCadastrar = async () => {
+    if (!nome || !cpf || !dataNascimento) {
+      toast.error("Preencha os campos obrigatórios");
+      return;
+    }
+
+    try {
+      // 1. Criar paciente
+      const { data: novoPaciente, error: pacError } = await supabase
+        .from("pacientes")
+        .insert({ nome, cpf, data_nascimento: dataNascimento, diagnostico })
+        .select()
+        .single();
+      
+      if (pacError) throw pacError;
+
+      // 2. Criar internação se leito for selecionado
+      if (leitoId) {
+        const { error: intError } = await supabase
+          .from("internacoes")
+          .insert({
+            paciente_id: novoPaciente.id,
+            leito_id: leitoId,
+            ativo: true,
+            risco: "normal",
+            data_entrada: new Date().toISOString(),
+          });
+        
+        if (intError) throw intError;
+        
+        // Atualiza status do leito para ocupado
+        await supabase.from("leitos").update({ status: "ocupado" }).eq("id", leitoId);
+      }
+
+      toast.success("Paciente cadastrado com sucesso!");
+      setNome(""); setCpf(""); setDataNascimento(""); setDiagnostico(""); setLeitoId("");
+      setLgpd(false); setCamera(false);
+      refetchLeitos();
+      refetchPacientes();
+    } catch (err: any) {
+      toast.error(err.message || "Erro ao cadastrar");
+    }
+  };
 
   return (
     <div className="flex-1 flex flex-col overflow-hidden">
@@ -45,10 +105,10 @@ export const Cadastro: React.FC = () => {
           </div>
 
           <div className="grid grid-cols-2 gap-4">
-            <FormField label="Nome completo" placeholder="Nome do paciente" span={2} />
-            <FormField label="CPF" placeholder="000.000.000-00" />
-            <FormField label="Data de nascimento" type="date" />
-            <FormField label="Convênio" placeholder="Ex.: SUS, Bradesco Saúde" />
+            <FormField label="Nome completo" placeholder="Nome do paciente" span={2} value={nome} onChange={setNome} />
+            <FormField label="CPF" placeholder="000.000.000-00" value={cpf} onChange={setCpf} />
+            <FormField label="Data de nascimento" type="date" value={dataNascimento} onChange={setDataNascimento} />
+            <FormField label="Convênio" placeholder="Ex.: SUS, Bradesco Saúde" value="" onChange={()=>{}} />
 
             <div>
               <label className="text-[12.5px] font-semibold" style={styles.fieldLabel}>
@@ -58,9 +118,12 @@ export const Cadastro: React.FC = () => {
                 <select
                   className="w-full h-11 rounded-xl border px-3 text-sm outline-none appearance-none"
                   style={styles.fieldInput}
+                  value={leitoId}
+                  onChange={(e) => setLeitoId(e.target.value)}
                 >
-                  {leitosLivres.map(l => (
-                    <option key={l}>{l} — livre</option>
+                  <option value="">Selecione um leito</option>
+                  {leitosLivresDb.map((l: any) => (
+                    <option key={l.id} value={l.id}>{l.numero} — livre</option>
                   ))}
                 </select>
                 <ChevronDown
@@ -81,6 +144,8 @@ export const Cadastro: React.FC = () => {
               <textarea
                 placeholder="Descreva o quadro clínico de admissão"
                 rows={3}
+                value={diagnostico}
+                onChange={e => setDiagnostico(e.target.value)}
                 className="w-full rounded-xl border px-3 py-2.5 mt-1.5 text-sm outline-none resize-none"
                 style={styles.fieldInput}
               />
@@ -116,6 +181,7 @@ export const Cadastro: React.FC = () => {
           </div>
 
           <button
+            onClick={handleCadastrar}
             disabled={!podeSubmeter}
             className="w-full h-12 rounded-xl text-white font-semibold text-sm mt-6 flex items-center justify-center gap-2 transition-opacity"
             style={getSubmitButtonStyle(podeSubmeter)}
@@ -131,12 +197,12 @@ export const Cadastro: React.FC = () => {
               Leitos disponíveis
             </p>
             <div className="flex flex-col gap-2">
-              {leitosLivres.map(l => (
-                <div key={l} className="flex items-center justify-between px-3 py-2.5 rounded-xl" style={styles.bedRow}>
+              {leitosLivresDb.map((l: any) => (
+                <div key={l.id} className="flex items-center justify-between px-3 py-2.5 rounded-xl" style={styles.bedRow}>
                   <div className="flex items-center gap-2">
                     <BedSingle size={15} color={styles.bedIconColor} />
                     <span className="text-[12.5px] font-semibold" style={styles.bedLabel}>
-                      Leito {l}
+                      Leito {l.numero}
                     </span>
                   </div>
                   <span className="text-[11px] font-semibold" style={styles.bedStatus}>
@@ -152,7 +218,7 @@ export const Cadastro: React.FC = () => {
               Cadastros recentes
             </p>
             <div className="flex flex-col gap-3">
-              {cadastrosRecentes.map((c, i) => (
+              {cadastrosRecentesDb.map((c: any, i: number) => (
                 <div key={i} className="flex items-center gap-3 pb-3 border-b last:border-0" style={styles.cardBorder}>
                   <div className="w-9 h-9 rounded-full flex items-center justify-center shrink-0" style={styles.cadastroIconBox}>
                     <UserPlus size={15} color={styles.cadastroIconColor} />
@@ -162,7 +228,7 @@ export const Cadastro: React.FC = () => {
                       {c.nome}
                     </p>
                     <p className="text-[11px]" style={styles.cadastroInfo}>
-                      Leito {c.leito} · {c.data}
+                      Admissão: {new Date(c.criado_em).toLocaleDateString()}
                     </p>
                   </div>
                 </div>

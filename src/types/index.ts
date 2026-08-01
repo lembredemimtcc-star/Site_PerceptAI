@@ -5,7 +5,8 @@ export type RiskLevel = "normal" | "attention" | "critical";
 export type PatientStatus = "internado" | "alta";
 
 export interface Bed {
-  id: string;
+  id: string; // This is the bed number
+  internacaoId?: string; // NOVO: ID real da internação no Supabase
   name: string;
   hr: number;
   hrSeries: number[];

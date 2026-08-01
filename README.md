@@ -1,162 +1,71 @@
-# PerceptAI - Sistema de Monitoramento Inteligente para Hospitais
+# PerceptAI - Painel de Monitoramento Hospitalar
 
-Aplicação React/TypeScript com arquitetura modular profissional.
+Painel de controle e monitoramento de leitos de UTI, com integração à Inteligência Artificial (Visão Computacional) para análise de dor e expressões faciais, além do monitoramento em tempo real de sinais vitais.
 
-## 📁 Estrutura do Projeto
+## 🚀 Tecnologias Utilizadas
 
+- **Front-end:** React, TypeScript, Vite, TailwindCSS
+- **Gerenciamento de Estado/Cache:** React Query (`@tanstack/react-query`)
+- **Gráficos:** Recharts
+- **Ícones:** Lucide React
+- **Backend/Database:** Supabase (Autenticação, Banco de Dados PostgreSQL e Realtime)
+
+## 📦 Estrutura do Projeto
+
+O projeto foi organizado de forma modular para facilitar a manutenção e escalabilidade:
+
+- `src/components/`: Componentes genéricos (modais, inputs, alertas).
+- `src/config/`: Arquivos de configuração, cores e mock data legado.
+- `src/hooks/`: Hooks customizados (`useInternacoes`, `usePacientes`, `useSinaisVitais`, etc.) conectados ao Supabase.
+- `src/lib/`: Configurações de serviços externos (`supabase.ts`, `auth.ts`, `queryClient.ts`).
+- `src/modules/`: Módulos de negócio da aplicação:
+  - `auth/`: Tela de Login
+  - `cadastro/`: Admissão de pacientes e vinculação aos leitos
+  - `calendario/`: Agendamento de eventos, plantões e procedimentos
+  - `dashboard/`: Visão geral dos leitos ativos e painel do paciente (BedCard)
+  - `estoque/`: Gestão de medicamentos, EPIs e equipamentos
+  - `info-ia/`: Painel detalhado do paciente com gráficos Realtime e Copilot IA
+  - `medicamentos/`: Controle e checagem da prescrição médica
+  - `visitas/`: Controle de visitantes
+- `src/shared/`: Layout principal e barra de navegação (Sidebar, Topbar).
+- `src/types/`: Definições de tipagem global (TypeScript) refletindo as tabelas do banco de dados.
+
+## ⚙️ Como Rodar o Projeto (Localmente)
+
+### 1. Pré-requisitos
+- Node.js instalado (versão 18+ recomendada)
+- Projeto Supabase criado
+
+### 2. Configurar Variáveis de Ambiente
+Crie um arquivo `.env.local` na raiz do projeto com as chaves do seu Supabase:
+
+```env
+VITE_SUPABASE_URL=https://jhoepxcrnyxytwjodjfv.supabase.co
+VITE_SUPABASE_ANON_KEY=sua_chave_anon_public_aqui
 ```
-src/
-├── config/              # Configurações globais
-│   ├── colors.ts       # Paleta de cores (design tokens)
-│   ├── fonts.tsx       # Estilos de fonte
-│   └── mockData.ts     # Dados mock da aplicação
-│
-├── types/              # Tipos TypeScript compartilhados
-│   └── index.ts
-│
-├── modules/            # Módulos da aplicação
-│   ├── auth/           # Autenticação
-│   │   ├── Login.tsx
-│   │   ├── auth.types.ts
-│   │   └── index.ts
-│   │
-│   ├── dashboard/      # Dashboard de pacientes e médicos
-│   │   ├── components/
-│   │   │   └── BedCard.tsx
-│   │   ├── Dashboard.tsx
-│   │   ├── DashMedicos.tsx
-│   │   ├── dashboard.types.ts
-│   │   └── index.ts
-│   │
-│   ├── estoque/        # Gestão de estoque
-│   │   ├── Estoque.tsx
-│   │   ├── estoque.types.ts
-│   │   └── index.ts
-│   │
-│   ├── acessibilidade/ # Configurações de acessibilidade
-│   │   ├── Acessibilidade.tsx
-│   │   └── index.ts
-│   │
-│   ├── info-ia/        # Análise IA de pacientes
-│   │   ├── InfoIA.tsx
-│   │   ├── info-ia.types.ts
-│   │   └── index.ts
-│   │
-│   └── placeholder/    # Páginas em desenvolvimento
-│       ├── Placeholder.tsx
-│       └── index.ts
-│
-├── shared/            # Componentes compartilhados
-│   └── components/
-│       ├── TopBar.tsx
-│       ├── Sidebar.tsx
-│       ├── ToggleRow.tsx
-│       └── index.ts
-│
-├── App.tsx            # Componente principal
-└── index.tsx          # Entry point
-```
+*(Nota: A `VITE_SUPABASE_ANON_KEY` deve ser a chave JWT `anon public` gerada nas configurações de API do Supabase).*
 
-## 🚀 Instalação e Execução
-
+### 3. Instalar Dependências
 ```bash
-# Instalar dependências
 npm install
-
-# Desenvolvimento
-npm run dev
-
-# Build para produção
-npm run build
-
-# Preview da build
-npm run preview
 ```
 
-## 📦 Dependências Principais
+### 4. Rodar o Servidor de Desenvolvimento
+```bash
+npm run dev
+```
+Acesse `http://localhost:3000` (ou a porta indicada no terminal, como 3001).
 
-- **React 18**: Framework UI
-- **TypeScript**: Type safety
-- **Lucide React**: Ícones
-- **Recharts**: Gráficos
-- **Tailwind CSS**: Estilos (via classes)
-- **Vite**: Build tool
+## 🔐 Autenticação de Teste (Demo)
 
-## 🎨 Design System
+Para testar o sistema localmente, crie o usuário abaixo no seu painel do Supabase (**Authentication -> Users**):
+- **E-mail:** `dr.almeida@hospital.com`
+- **Senha:** `demo123`
 
-Cores definidas em `src/config/colors.ts`:
-- Orange: `#F2652E` (primária)
-- Red: `#E14545` (alertas críticos)
-- Green: `#2E9E63` (status normal)
-- Slate: `#67727E` (texto secundário)
+*(Certifique-se de marcar a opção "Auto Confirm User" ao criar o usuário pelo painel).*
 
-## 📋 Módulos Implementados
+## 📡 Integração com IA e Hardware (Próximos Passos)
 
-### ✅ Auth
-Login simples com validação visual.
-
-### ✅ Dashboard
-- **Dashboard de Pacientes**: Visão agregada com filtros e busca
-- **Dashboard Médicos**: Dados clínicos por paciente
-- Cards interativos de leitos
-
-### ✅ Estoque
-Gestão de medicamentos e insumos com alertas de estoque baixo.
-
-### ✅ Acessibilidade
-- Alto contraste
-- Leitor de tela
-- Redução de movimento
-- Tamanho de fonte customizável
-
-### ✅ Info IA
-Análise detalhada de paciente com:
-- Gráficos de vitais (FC, SpO2)
-- Intensidade de dor
-- Eventos neurológicos
-- Copilot IA com sugestões
-
-### 🚧 Placeholder
-Páginas em desenvolvimento (Medicamentos, Cadastro, Visitas, Calendário, Mapa).
-
-## 🔑 Padrões de Arquitetura
-
-### Por Módulo (Feature-based)
-Cada módulo é auto-contido com seus próprios:
-- Componentes
-- Tipos
-- Lógica
-- Index file (re-exports)
-
-### Componentes Compartilhados
-`src/shared/` para componentes reutilizáveis em múltiplos módulos.
-
-### Configuração Centralizada
-`src/config/` para design tokens, dados mock e configurações globais.
-
-## 🔧 Como Adicionar um Novo Módulo
-
-1. Criar pasta: `src/modules/meu-modulo/`
-2. Adicionar arquivos:
-   ```
-   meu-modulo/
-   ├── MeuModulo.tsx       # Componente principal
-   ├── meu-modulo.types.ts # Tipos
-   └── index.ts            # Re-exports
-   ```
-3. Importar em `App.tsx`
-4. Adicionar rota na navegação
-
-## 📝 Credenciais Demo
-
-- **Email**: dr.almeida@hospital.com
-- **Senha**: demo123
-
-## 🎯 Próximos Passos
-
-- [ ] Integração com API real
-- [ ] Sistema de autenticação completo
-- [ ] Persistência de dados (localStorage/DB)
-- [ ] Testes unitários
-- [ ] Documentação de componentes (Storybook)
-- [ ] Internacionalização (i18n)
+- **Realtime (Sinais Vitais):** Os gráficos na tela `InfoIA` estão preparados para reagir instantaneamente quando um novo registro cai no Supabase. Para isso, vá em `Database > Replication` no Supabase e ative a replicação para as tabelas `sinais_vitais` e `expressoes_faciais`.
+- **Copilot (Chatbot IA):** A interface do chatbot está pronta, porém comentada no arquivo `src/modules/info-ia/InfoIA.tsx`. Descomente-a após finalizar o treinamento do seu modelo e conecte-o via API (Fetch/Axios) na função `handleSendQuestion`.
+- **Câmera/Visão Computacional:** O processamento da imagem deve rodar em um script Python/Backend e enviar as predições (confiança e estado emocional) via requisição `INSERT` diretamente para a tabela `expressoes_faciais` no Supabase. O front-end absorverá isso automaticamente.
