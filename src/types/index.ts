@@ -2,6 +2,7 @@ import { LucideIcon } from "lucide-react";
 
 export type MoodType = "dor" | "medo" | "tristeza" | "enjoo" | "sono" | "dormindo" | "acordado" | "neutro";
 export type RiskLevel = "normal" | "attention" | "critical";
+export type PatientStatus = "internado" | "alta";
 
 export interface Bed {
   id: string;
@@ -13,6 +14,7 @@ export interface Bed {
   risk: RiskLevel;
   decubito: boolean;
   ts: string;
+  status: PatientStatus;
 }
 
 export interface ClinicalData {
@@ -70,4 +72,16 @@ export interface RecentPatient {
   nome: string;
   leito: string;
   risco: RiskLevel;
+}
+
+export interface Doctor {
+  id: string;
+  nome: string;
+  especialidade: string;
+  crm: string;
+  turno: "manhã" | "tarde" | "noite";
+  horarioInicio: string; // ex: "07:00"
+  horarioFim: string;    // ex: "13:00"
+  plantao: boolean;
+  pacientes: string[];
 }

@@ -6,4 +6,5 @@ export interface Medicamento {
   via: string;
   horario: string;
   status: "administrado" | "pendente" | "atrasado";
+  recorrente: boolean; // NOVO — se repete todos os dias
 }

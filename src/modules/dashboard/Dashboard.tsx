@@ -17,6 +17,7 @@ const FILTER_OPTIONS: { value: RiskLevel | "all"; label: string }[] = [
 ];
 
 export const Dashboard: React.FC<DashboardProps> = ({ onOpenBed }) => {
+  const [bedsState, setBedsState] = useState<Bed[]>(beds);
   const [filter, setFilter] = useState<RiskLevel | "all">("all");
   const [searchTerm, setSearchTerm] = useState("");
   const [isFilterOpen, setIsFilterOpen] = useState(false);
@@ -32,21 +33,35 @@ export const Dashboard: React.FC<DashboardProps> = ({ onOpenBed }) => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const filteredBeds = beds.filter(bed => {
+  const handleChangeRisk = (bedId: string, risk: RiskLevel) => {
+    setBedsState(prev => prev.map(b => (b.id === bedId ? { ...b, risk } : b)));
+  };
+
+  const handleToggleStatus = (bedId: string) => {
+    setBedsState(prev =>
+      prev.map(b =>
+        b.id === bedId
+          ? { ...b, status: b.status === "internado" ? "alta" : "internado" }
+          : b
+      )
+    );
+  };
+
+  const filteredBeds = bedsState.filter(bed => {
     const matchesFilter = filter === "all" || bed.risk === filter;
     const matchesSearch = bed.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          bed.id.includes(searchTerm);
     return matchesFilter && matchesSearch;
   });
 
-  const criticalCount = beds.filter(b => b.risk === "critical").length;
-  const attentionCount = beds.filter(b => b.risk === "attention").length;
+  const criticalCount = bedsState.filter(b => b.risk === "critical" && b.status === "internado").length;
+  const attentionCount = bedsState.filter(b => b.risk === "attention" && b.status === "internado").length;
 
   const currentFilterLabel = FILTER_OPTIONS.find(opt => opt.value === filter)?.label ?? "Todos";
 
   return (
     <div className="flex-1 flex flex-col overflow-hidden">
-      <TopBar title="Dashboard de Pacientes" subtitle={`${beds.length} leitos monitorados`} />
+      <TopBar title="Dashboard de Pacientes" subtitle={`${bedsState.length} leitos monitorados`} />
 
       <div className="flex-1 overflow-y-auto p-6 space-y-6">
         {/* Alertas críticos */}
@@ -130,7 +145,13 @@ export const Dashboard: React.FC<DashboardProps> = ({ onOpenBed }) => {
         {/* Cards dos leitos */}
         <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4">
           {filteredBeds.map(bed => (
-            <BedCard key={bed.id} bed={bed} onSelect={onOpenBed} />
+            <BedCard
+              key={bed.id}
+              bed={bed}
+              onSelect={onOpenBed}
+              onChangeRisk={handleChangeRisk}
+              onToggleStatus={handleToggleStatus}
+            />
           ))}
         </div>
 

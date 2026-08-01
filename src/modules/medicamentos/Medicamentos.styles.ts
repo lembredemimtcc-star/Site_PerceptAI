@@ -40,6 +40,9 @@ export const medicamentosStyles = {
     background: COLORS.bg,
     color: COLORS.slate,
   },
+  addButton: {
+    background: COLORS.orange,
+  },
 };
 
 export const statusCfg = {

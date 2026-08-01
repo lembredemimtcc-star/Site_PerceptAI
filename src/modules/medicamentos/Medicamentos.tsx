@@ -1,8 +1,9 @@
 import React, { useState } from "react";
-import { Pill, Clock, AlertCircle, CheckCircle2, Syringe } from "lucide-react";
+import { Pill, Clock, AlertCircle, CheckCircle2, Syringe, Plus } from "lucide-react";
 import { TopBar } from "../../shared/components";
 import { COLORS } from "../../config/colors";
 import { Medicamento } from "./medicamentos.types";
+import { NovoMedicamentoModal } from "./NovoMedicamentoModal";
 import {
   medicamentosStyles as styles,
   statusCfg as statusIcons,
@@ -13,12 +14,12 @@ import {
 } from "./Medicamentos.styles";
 
 const medicamentosData: Medicamento[] = [
-  { id: 1, leito: "402", paciente: "M. Silva",   nome: "Dipirona 1g",       via: "EV", horario: "08:00", status: "atrasado" },
-  { id: 2, leito: "404", paciente: "R. Costa",   nome: "Salbutamol",        via: "Inalatória", horario: "08:30", status: "pendente" },
-  { id: 3, leito: "406", paciente: "C. Prado",   nome: "Omeprazol 40mg",    via: "EV", horario: "09:00", status: "pendente" },
-  { id: 4, leito: "409", paciente: "V. Rocha",   nome: "Tramadol 50mg",     via: "EV", horario: "09:00", status: "pendente" },
-  { id: 5, leito: "403", paciente: "J. Andrade", nome: "Enoxaparina 40mg",  via: "SC", horario: "07:30", status: "administrado" },
-  { id: 6, leito: "408", paciente: "P. Martins", nome: "Prednisona 20mg",   via: "VO", horario: "07:00", status: "administrado" },
+  { id: 1, leito: "402", paciente: "M. Silva",   nome: "Dipirona 1g",       via: "EV", horario: "08:00", status: "atrasado",    recorrente: true },
+  { id: 2, leito: "404", paciente: "R. Costa",   nome: "Salbutamol",        via: "Inalatória", horario: "08:30", status: "pendente", recorrente: true },
+  { id: 3, leito: "406", paciente: "C. Prado",   nome: "Omeprazol 40mg",    via: "EV", horario: "09:00", status: "pendente",    recorrente: true },
+  { id: 4, leito: "409", paciente: "V. Rocha",   nome: "Tramadol 50mg",     via: "EV", horario: "09:00", status: "pendente",    recorrente: false },
+  { id: 5, leito: "403", paciente: "J. Andrade", nome: "Enoxaparina 40mg",  via: "SC", horario: "07:30", status: "administrado", recorrente: true },
+  { id: 6, leito: "408", paciente: "P. Martins", nome: "Prednisona 20mg",   via: "VO", horario: "07:00", status: "administrado", recorrente: true },
 ];
 
 const statusIconMap = {
@@ -48,6 +49,7 @@ const KPICard: React.FC<KPICardProps> = ({ icon: Icon, label, value, accent }) =
 
 export const Medicamentos: React.FC = () => {
   const [items, setItems] = useState<Medicamento[]>(medicamentosData);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const toggleAdministrado = (id: number) => {
     setItems(items.map(m =>
@@ -57,16 +59,40 @@ export const Medicamentos: React.FC = () => {
     ));
   };
 
+  const handleAddMedicamento = (novo: Omit<Medicamento, "id" | "status">) => {
+    setItems(prev => [
+      ...prev,
+      {
+        ...novo,
+        id: Math.max(0, ...prev.map(m => m.id)) + 1,
+        status: "pendente",
+      },
+    ]);
+  };
+
   const pendentesOuAtrasados = items.filter(m => m.status !== "administrado").length;
 
   return (
     <div className="flex-1 flex flex-col overflow-hidden">
       <TopBar title="Medicamentos" subtitle="Administração e horários por leito · Ala UTI 2" />
 
-      <div className="grid grid-cols-3 gap-4 px-8 pt-6">
-        <KPICard icon={Pill} label="Doses programadas hoje" value={items.length} accent={COLORS.slate} />
-        <KPICard icon={Clock} label="Pendentes / atrasadas" value={pendentesOuAtrasados} accent={COLORS.orange} />
-        <KPICard icon={AlertCircle} label="Atrasadas" value={items.filter(m => m.status === "atrasado").length} accent={COLORS.red} />
+      <div className="flex items-center justify-between px-8 pt-6">
+        <div className="grid grid-cols-3 gap-4 flex-1">
+          <KPICard icon={Pill} label="Doses programadas hoje" value={items.length} accent={COLORS.slate} />
+          <KPICard icon={Clock} label="Pendentes / atrasadas" value={pendentesOuAtrasados} accent={COLORS.orange} />
+          <KPICard icon={AlertCircle} label="Atrasadas" value={items.filter(m => m.status === "atrasado").length} accent={COLORS.red} />
+        </div>
+      </div>
+
+      <div className="flex justify-end px-8 mt-4">
+        <button
+          onClick={() => setIsModalOpen(true)}
+          className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold text-white"
+          style={styles.addButton}
+        >
+          <Plus size={16} />
+          Novo Medicamento
+        </button>
       </div>
 
       <div className="flex-1 mx-8 my-5 bg-white rounded-2xl border overflow-hidden flex flex-col" style={styles.tableCard}>
@@ -101,6 +127,11 @@ export const Medicamentos: React.FC = () => {
                 <span className="col-span-3 text-[13px] font-medium flex items-center gap-2" style={styles.nome}>
                   <Syringe size={14} color={styles.nomeIconColor} />
                   {m.nome}
+                  {m.recorrente && (
+                    <span className="text-[10px] px-1.5 py-0.5 rounded" style={styles.via}>
+                      diário
+                    </span>
+                  )}
                 </span>
                 <span className="col-span-2 text-[12px] px-2 py-1 rounded-lg w-fit" style={styles.via}>
                   {m.via}
@@ -125,6 +156,13 @@ export const Medicamentos: React.FC = () => {
           })}
         </div>
       </div>
+
+      {isModalOpen && (
+        <NovoMedicamentoModal
+          onClose={() => setIsModalOpen(false)}
+          onSubmit={handleAddMedicamento}
+        />
+      )}
     </div>
   );
 };

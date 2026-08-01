@@ -1,0 +1,49 @@
+import React from "react";
+import { ChevronRight } from "lucide-react";
+import { DoctorCardProps } from "../dashboard.types";
+import { doctorCardStyles as styles, getPlantaoToggleStyle } from "./DoctorCard.styles";
+
+export const DoctorCard: React.FC<DoctorCardProps> = ({ doctor, beds, onOpenModal }) => {
+  const pacientesDoMedico = beds.filter(b => doctor.pacientes.includes(b.id) && b.status === "internado");
+
+  return (
+    <button
+      onClick={() => onOpenModal(doctor)}
+      className="text-left p-4 rounded-xl border hover:shadow-md transition-all w-full"
+      style={styles.card}
+    >
+      <div className="flex justify-between items-start mb-3">
+        <div>
+          <p className="font-semibold text-sm" style={styles.doctorName}>
+            {doctor.nome}
+          </p>
+          <p className="text-xs" style={styles.specialty}>
+            {doctor.especialidade}
+          </p>
+          <p className="text-xs" style={styles.crm}>
+            CRM {doctor.crm}
+          </p>
+        </div>
+
+        <div className="flex flex-col items-end gap-1">
+          <span
+            className="text-[10px] font-semibold px-2 py-1 rounded-lg"
+            style={getPlantaoToggleStyle(doctor.plantao)}
+          >
+            {doctor.plantao ? "De plantão" : "Fora de plantão"}
+          </span>
+          <span className="text-xs px-2 py-1 rounded-lg" style={styles.turnoBadge}>
+            {doctor.horarioInicio} - {doctor.horarioFim}
+          </span>
+        </div>
+      </div>
+
+      <div className="flex items-center justify-between">
+        <p className="text-xs font-semibold" style={styles.patientsTitle}>
+          {pacientesDoMedico.length} paciente{pacientesDoMedico.length !== 1 ? "s" : ""} sob cuidado
+        </p>
+        <ChevronRight size={16} />
+      </div>
+    </button>
+  );
+};

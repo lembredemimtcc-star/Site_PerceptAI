@@ -1,27 +1,29 @@
 import React, { useState } from "react";
 import { X } from "lucide-react";
 import { toast } from "sonner";
-import { Visita } from "./visitas.types";
+import { Medicamento } from "./medicamentos.types";
 import { beds } from "../../config/mockData";
-import { novaVisitaModalStyles as styles } from "./NovaVisitaModal.styles";
+import { novoMedicamentoModalStyles as styles } from "./NovoMedicamentoModal.styles";
 
-interface NovaVisitaModalProps {
+interface NovoMedicamentoModalProps {
   onClose: () => void;
-  onSubmit: (visita: Visita) => void;
+  onSubmit: (medicamento: Omit<Medicamento, "id" | "status">) => void;
 }
 
-export const NovaVisitaModal: React.FC<NovaVisitaModalProps> = ({ onClose, onSubmit }) => {
+const VIA_OPTIONS = ["EV", "VO", "SC", "IM", "Inalatória", "Tópica"];
+
+export const NovoMedicamentoModal: React.FC<NovoMedicamentoModalProps> = ({ onClose, onSubmit }) => {
   const [leito, setLeito] = useState("");
-  const [visitante, setVisitante] = useState("");
-  const [parentesco, setParentesco] = useState("");
-  const [entrada, setEntrada] = useState("");
-  const [saida, setSaida] = useState("");
+  const [nome, setNome] = useState("");
+  const [via, setVia] = useState(VIA_OPTIONS[0]);
+  const [horario, setHorario] = useState("");
+  const [recorrente, setRecorrente] = useState(true);
 
   const internados = beds.filter(b => b.status === "internado");
   const pacienteSelecionado = internados.find(b => b.id === leito);
 
   const handleSubmit = () => {
-    if (!leito || !visitante || !parentesco || !entrada || !saida) {
+    if (!leito || !nome || !via || !horario) {
       toast.error("Preencha todos os campos.");
       return;
     }
@@ -29,14 +31,18 @@ export const NovaVisitaModal: React.FC<NovaVisitaModalProps> = ({ onClose, onSub
     onSubmit({
       leito,
       paciente: pacienteSelecionado?.name ?? "",
-      visitante,
-      parentesco,
-      entrada,
-      saida,
-      status: "agendada",
+      nome,
+      via,
+      horario,
+      recorrente,
     });
 
-    toast.success("Visita agendada com sucesso!");
+    toast.success(
+      recorrente
+        ? "Medicamento adicionado à rotina diária!"
+        : "Medicamento agendado!"
+    );
+    onClose();
   };
 
   return (
@@ -45,10 +51,10 @@ export const NovaVisitaModal: React.FC<NovaVisitaModalProps> = ({ onClose, onSub
         <div className="flex items-start justify-between mb-5">
           <div>
             <p className="text-[15px] font-bold" style={styles.modalTitle}>
-              Agendar Visita
+              Novo Medicamento
             </p>
             <p className="text-[12px] mt-0.5" style={styles.modalSubtitle}>
-              Preencha os dados do visitante
+              Cadastre um medicamento e horário de administração
             </p>
           </div>
           <button onClick={onClose}>
@@ -78,27 +84,13 @@ export const NovaVisitaModal: React.FC<NovaVisitaModalProps> = ({ onClose, onSub
 
           <div>
             <label className="text-[12.5px] font-semibold" style={styles.fieldLabel}>
-              Nome do visitante
+              Medicamento
             </label>
             <input
               type="text"
-              value={visitante}
-              onChange={(e) => setVisitante(e.target.value)}
-              placeholder="Nome completo"
-              className="w-full h-11 rounded-xl border px-3 text-sm outline-none mt-1.5"
-              style={styles.fieldInput}
-            />
-          </div>
-
-          <div>
-            <label className="text-[12.5px] font-semibold" style={styles.fieldLabel}>
-              Parentesco
-            </label>
-            <input
-              type="text"
-              value={parentesco}
-              onChange={(e) => setParentesco(e.target.value)}
-              placeholder="Ex.: Filho, Esposa"
+              value={nome}
+              onChange={(e) => setNome(e.target.value)}
+              placeholder="Ex.: Dipirona 1g"
               className="w-full h-11 rounded-xl border px-3 text-sm outline-none mt-1.5"
               style={styles.fieldInput}
             />
@@ -107,29 +99,45 @@ export const NovaVisitaModal: React.FC<NovaVisitaModalProps> = ({ onClose, onSub
           <div className="grid grid-cols-2 gap-3">
             <div>
               <label className="text-[12.5px] font-semibold" style={styles.fieldLabel}>
-                Entrada
+                Via
               </label>
-              <input
-                type="time"
-                value={entrada}
-                onChange={(e) => setEntrada(e.target.value)}
+              <select
+                value={via}
+                onChange={(e) => setVia(e.target.value)}
                 className="w-full h-11 rounded-xl border px-3 text-sm outline-none mt-1.5"
                 style={styles.fieldInput}
-              />
+              >
+                {VIA_OPTIONS.map(opt => (
+                  <option key={opt} value={opt}>
+                    {opt}
+                  </option>
+                ))}
+              </select>
             </div>
             <div>
               <label className="text-[12.5px] font-semibold" style={styles.fieldLabel}>
-                Saída
+                Horário
               </label>
               <input
                 type="time"
-                value={saida}
-                onChange={(e) => setSaida(e.target.value)}
+                value={horario}
+                onChange={(e) => setHorario(e.target.value)}
                 className="w-full h-11 rounded-xl border px-3 text-sm outline-none mt-1.5"
                 style={styles.fieldInput}
               />
             </div>
           </div>
+
+          <label className="flex items-center gap-2 mt-1 cursor-pointer">
+            <input
+              type="checkbox"
+              checked={recorrente}
+              onChange={(e) => setRecorrente(e.target.checked)}
+            />
+            <span className="text-[13px]" style={styles.checkboxLabel}>
+              Repetir todos os dias neste horário
+            </span>
+          </label>
         </div>
 
         <div className="flex gap-3 mt-6">
@@ -137,7 +145,7 @@ export const NovaVisitaModal: React.FC<NovaVisitaModalProps> = ({ onClose, onSub
             Cancelar
           </button>
           <button onClick={handleSubmit} className="flex-1 h-11 rounded-xl text-sm font-semibold text-white" style={styles.confirmButton}>
-            Agendar
+            Adicionar
           </button>
         </div>
       </div>

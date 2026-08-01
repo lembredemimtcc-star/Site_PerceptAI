@@ -12,7 +12,6 @@ import { Medicamentos } from "./modules/medicamentos";
 import { Cadastro } from "./modules/cadastro";
 import { Visitas } from "./modules/visitas";
 import { Calendario } from "./modules/calendario";
-import { Mapa } from "./modules/mapa";
 import { Placeholder } from "./modules/placeholder";
 import { beds } from "./config/mockData";
 import { Bed } from "./types";
@@ -151,7 +150,6 @@ export default function PerceptAIPrototype() {
           {page === "cadastro" && <Cadastro />}
           {page === "visitas" && <Visitas />}
           {page === "calendario" && <Calendario />}
-          {page === "mapa" && <Mapa />}
         </div>
       )}
     </div>

@@ -3,7 +3,7 @@ import {
   LogIn, Stethoscope, LayoutGrid, UserPlus, Sparkles, Accessibility, Pill,
   Package, Users, Calendar, Map as MapIcon, Zap, Truck, Activity
 } from "lucide-react";
-import { Bed, ClinicalData, NavItem, VitalData, PainData, TremorEvent, RoomPosition, Equipment, MoodMeta, RecentPatient } from "../types";
+import { Bed, ClinicalData, NavItem, VitalData, PainData, TremorEvent, RoomPosition, Equipment, MoodMeta, RecentPatient, Doctor } from "../types";
 import { COLORS } from "./colors";
 
 export const moodMeta: Record<string, MoodMeta> = {
@@ -18,14 +18,50 @@ export const moodMeta: Record<string, MoodMeta> = {
 };
 
 export const beds: Bed[] = [
-  { id: "402", name: "M. Silva",   hr: 121, hrSeries: [78,82,88,95,101,110,121], mood: "dor",      conf: 92, risk: "critical", decubito: false, ts: "agora" },
-  { id: "403", name: "J. Andrade", hr: 74,  hrSeries: [70,72,71,73,74,74,74],     mood: "dormindo", conf: 96, risk: "normal",   decubito: true,  ts: "há 2 min" },
-  { id: "404", name: "R. Costa",   hr: 96,  hrSeries: [80,84,88,90,93,95,96],     mood: "medo",     conf: 81, risk: "attention",decubito: false, ts: "há 1 min" },
-  { id: "405", name: "A. Nunes",   hr: 70,  hrSeries: [68,69,70,70,71,70,70],     mood: "neutro",   conf: 95, risk: "normal",   decubito: false, ts: "há 4 min" },
-  { id: "406", name: "C. Prado",   hr: 89,  hrSeries: [75,78,81,84,86,88,89],     mood: "tristeza", conf: 74, risk: "attention",decubito: true,  ts: "há 1 min" },
-  { id: "407", name: "L. Ferreira",hr: 102, hrSeries: [80,85,90,94,97,100,102],   mood: "acordado", conf: 90, risk: "normal",   decubito: false, ts: "agora" },
-  { id: "408", name: "P. Martins", hr: 64,  hrSeries: [66,65,65,64,64,63,64],     mood: "dormindo", conf: 97, risk: "normal",   decubito: false, ts: "há 3 min" },
-  { id: "409", name: "V. Rocha",   hr: 111, hrSeries: [82,88,93,99,104,108,111],  mood: "enjoo",    conf: 79, risk: "attention",decubito: false, ts: "há 2 min" },
+  { id: "402", name: "M. Silva",   hr: 121, hrSeries: [78,82,88,95,101,110,121], mood: "dor",      conf: 92, risk: "critical", decubito: false, ts: "agora",    status: "internado" },
+  { id: "403", name: "J. Andrade", hr: 74,  hrSeries: [70,72,71,73,74,74,74],     mood: "dormindo", conf: 96, risk: "normal",   decubito: true,  ts: "há 2 min", status: "internado" },
+  { id: "404", name: "R. Costa",   hr: 96,  hrSeries: [80,84,88,90,93,95,96],     mood: "medo",     conf: 81, risk: "attention",decubito: false, ts: "há 1 min", status: "internado" },
+  { id: "405", name: "A. Nunes",   hr: 70,  hrSeries: [68,69,70,70,71,70,70],     mood: "neutro",   conf: 95, risk: "normal",   decubito: false, ts: "há 4 min", status: "internado" },
+  { id: "406", name: "C. Prado",   hr: 89,  hrSeries: [75,78,81,84,86,88,89],     mood: "tristeza", conf: 74, risk: "attention",decubito: true,  ts: "há 1 min", status: "internado" },
+  { id: "407", name: "L. Ferreira",hr: 102, hrSeries: [80,85,90,94,97,100,102],   mood: "acordado", conf: 90, risk: "normal",   decubito: false, ts: "agora",    status: "internado" },
+  { id: "408", name: "P. Martins", hr: 64,  hrSeries: [66,65,65,64,64,63,64],     mood: "dormindo", conf: 97, risk: "normal",   decubito: false, ts: "há 3 min", status: "internado" },
+  { id: "409", name: "V. Rocha",   hr: 111, hrSeries: [82,88,93,99,104,108,111],  mood: "enjoo",    conf: 79, risk: "attention",decubito: false, ts: "há 2 min", status: "internado" },
+];
+
+export const doctors: Doctor[] = [
+  {
+    id: "d1",
+    nome: "Dr. Almeida",
+    especialidade: "Cardiologia",
+    crm: "12345-SP",
+    turno: "manhã",
+    horarioInicio: "07:00",
+    horarioFim: "13:00",
+    plantao: true,
+    pacientes: ["402", "404", "409"],
+  },
+  {
+    id: "d2",
+    nome: "Dra. Ferraz",
+    especialidade: "Neurologia",
+    crm: "54321-SP",
+    turno: "tarde",
+    horarioInicio: "13:00",
+    horarioFim: "19:00",
+    plantao: true,
+    pacientes: ["403", "405", "408"],
+  },
+  {
+    id: "d3",
+    nome: "Dr. Klein",
+    especialidade: "Cirurgia Geral",
+    crm: "98765-SP",
+    turno: "noite",
+    horarioInicio: "19:00",
+    horarioFim: "07:00",
+    plantao: false,
+    pacientes: ["406", "407"],
+  },
 ];
 
 export const navItems: NavItem[] = [
@@ -39,7 +75,6 @@ export const navItems: NavItem[] = [
   { key: "estoque",         label: "Estoque",         icon: Package },
   { key: "visitas",         label: "Visitas",         icon: Users },
   { key: "calendario",      label: "Calendário",      icon: Calendar },
-  { key: "mapa",            label: "Mapa",            icon: MapIcon },
 ];
 
 export const vitalsData: VitalData[] = [

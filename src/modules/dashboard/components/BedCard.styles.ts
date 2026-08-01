@@ -26,8 +26,6 @@ export const bedCardStyles = {
   chevronColor: COLORS.slate,
 };
 
-// Estilos dinâmicos (dependem dos dados do leito)
-
 export const riskColors = {
   critical: { bg: COLORS.redSoft, text: COLORS.red },
   attention: { bg: COLORS.orangeSoft, text: COLORS.orange },
@@ -46,4 +44,9 @@ export const getDecubitoStyle = (decubito: boolean) => ({
 export const getHrBarStyle = (hr: number) => ({
   height: `${Math.min(12, (hr / 150) * 12)}px`,
   background: hr > 110 ? COLORS.red : hr > 85 ? COLORS.orange : COLORS.green,
+});
+
+export const getStatusToggleStyle = (isInternado: boolean) => ({
+  background: isInternado ? COLORS.greenSoft : COLORS.line,
+  color: isInternado ? COLORS.green : COLORS.slateSoft,
 });
