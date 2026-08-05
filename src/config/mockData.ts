@@ -1,7 +1,7 @@
 import {
   AlertTriangle, Frown, CloudRain, Meh, Moon, BedSingle, Sun, Minus,
   LogIn, Stethoscope, LayoutGrid, UserPlus, Sparkles, Accessibility, Pill,
-  Package, Users, Calendar, Map as MapIcon, Zap, Truck, Activity
+  Package, Users, Calendar, Map as MapIcon, Zap, Truck, Activity, FileText
 } from "lucide-react";
 import { Bed, ClinicalData, NavItem, VitalData, PainData, TremorEvent, RoomPosition, Equipment, MoodMeta, RecentPatient, Doctor } from "../types";
 import { COLORS } from "./colors";
@@ -72,6 +72,7 @@ export const navItems: NavItem[] = [
   { key: "info-ia",         label: "Info IA",         icon: Sparkles },
   { key: "acessibilidade",  label: "Acessibilidade",  icon: Accessibility },
   { key: "medicamentos",    label: "Medicamentos",    icon: Pill },
+  { key: "prontuario", label: "Prontuário", icon: FileText },
   { key: "estoque",         label: "Estoque",         icon: Package },
   { key: "visitas",         label: "Visitas",         icon: Users },
   { key: "calendario",      label: "Calendário",      icon: Calendar },

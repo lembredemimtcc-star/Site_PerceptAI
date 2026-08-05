@@ -18,6 +18,7 @@ import { Visitas } from "./modules/visitas";
 import { Calendario } from "./modules/calendario";
 import { Placeholder } from "./modules/placeholder";
 import { beds } from "./config/mockData";
+import { Prontuario } from "./modules/prontuario";
 import { Bed } from "./types";
 
 export default function PerceptAIPrototype() {
@@ -170,6 +171,7 @@ export default function PerceptAIPrototype() {
           {page === "cadastro" && <Cadastro />}
           {page === "visitas" && <Visitas />}
           {page === "calendario" && <Calendario />}
+          {page === "prontuario" && <Prontuario />}
         </div>
       )}
     </div>
