@@ -1,0 +1,1 @@
+export { Prontuario } from "./Prontuario";

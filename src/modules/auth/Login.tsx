@@ -107,7 +107,7 @@ export const LoginScreen: React.FC<LoginProps> = ({ onLogin }) => {
           </button>
 
           <p className="text-center text-xs mt-4" style={loginStyles.demoText}>
-            Demo: dr.almeida@hospital.com / demo123
+            Demo: dra.ferraz@hospital.com/ hash_senha_456
           </p>
         </form>
       </div>

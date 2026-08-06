@@ -30,7 +30,7 @@ html {
 
 html.a11y-contrast,
 html.a11y-contrast body {
-  background: #000000 !important;
+  background: #00000000 !important;
   color: #FFEB00 !important;
 }
 
@@ -45,7 +45,6 @@ html.a11y-contrast *::after {
 }
 
 html.a11y-contrast div,
-html.a11y-contrast section,
 html.a11y-contrast header,
 html.a11y-contrast footer,
 html.a11y-contrast nav,
@@ -60,7 +59,7 @@ html.a11y-contrast h1,
 html.a11y-contrast h2,
 html.a11y-contrast h3,
 html.a11y-contrast h4 {
-  background-color: transparent !important;
+  background-color: #00000000 !important;
 }
 
 html.a11y-contrast button,
@@ -119,6 +118,14 @@ html.a11y-reduce-motion :focus-visible {
   outline-offset: 2px;
 }
 
+html.a11y-contrast div {
+  background: #00000086 !important;
+}
+
+html.a11y-contrast .doctor-modal {
+  background: #000000 !important; /* ou a cor que você quiser */
+}
+
 /* Pré-visualização da página de Acessibilidade */
 @keyframes a11y-preview-pulse {
   0%, 100% { opacity: 1; transform: scale(1); }
@@ -159,6 +166,7 @@ html.a11y-contrast .a11y-preview[data-hc="off"] button {
   color: #1F2933 !important;
   border: 1px solid #E3E7EB !important;
 }
+
 
 .a11y-preview[data-hc="on"] span,
 .a11y-preview[data-hc="on"] p,

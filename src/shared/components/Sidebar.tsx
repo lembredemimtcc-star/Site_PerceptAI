@@ -2,6 +2,7 @@ import React from "react";
 import { LogOut } from "lucide-react";
 import { COLORS } from "../../config/colors";
 import { navItems } from "../../config/mockData";
+import { FileText } from "lucide-react";
 
 interface SidebarProps {
   current: string;

@@ -2,12 +2,12 @@ import React, { useState, useEffect } from "react";
 import { QueryClientProvider } from '@tanstack/react-query';
 import { queryClient } from './lib/queryClient';
 import { Toaster } from "sonner";
-import { supabase, isSupabaseConfigured } from "./lib/supabase";
+import { supabase } from "./lib/supabase";
 import { signOut } from "./lib/auth";
 import { FontsAndStyles } from "./config/fonts";
 import { COLORS } from "./config/colors";
 import { Sidebar } from "./shared/components";
-import { AccessibilityProvider, useAccessibility } from "./shared/accessibility";
+import { AccessibilityProvider } from "./shared/accessibility";
 import { LoginScreen } from "./modules/auth";
 import { Dashboard, DashMedicos } from "./modules/dashboard";
 import { Estoque } from "./modules/estoque";
@@ -19,17 +19,15 @@ import { Visitas } from "./modules/visitas";
 import { Calendario } from "./modules/calendario";
 import { Placeholder } from "./modules/placeholder";
 import { beds } from "./config/mockData";
+import { Prontuario } from "./modules/prontuario";
 import { Bed } from "./types";
 
 export default function PerceptAIPrototype() {
-  const [loggedIn, setLoggedIn] = useState(!isSupabaseConfigured);
+  const [loggedIn, setLoggedIn] = useState(false);
   const [page, setPage] = useState("dash-pacientes");
-  const [selectedBed, setSelectedBed] = useState<Bed>(beds.find(b => b.risk === "critical") ?? beds[0]!);
+  const [selectedBed, setSelectedBed] = useState<Bed>(beds.find(b => b.risk === "critical") || beds[0]);
 
   useEffect(() => {
-    // Sem credenciais configuradas: modo demonstração, sem autenticação.
-    if (!isSupabaseConfigured) return;
-
     supabase.auth.getSession().then(({ data: { session } }) => {
       setLoggedIn(!!session);
     });
@@ -45,7 +43,7 @@ export default function PerceptAIPrototype() {
 
   const navigate = async (key: string) => {
     if (key === "login") {
-      if (isSupabaseConfigured) await signOut();
+      await signOut();
       setLoggedIn(false);
       return;
     }
@@ -59,7 +57,7 @@ export default function PerceptAIPrototype() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <AccessibilityProvider>
+    <AccessibilityProvider>
       <div className="w-full h-screen" style={{ background: COLORS.bg }}>
       {FontsAndStyles()}
 
@@ -165,7 +163,6 @@ export default function PerceptAIPrototype() {
         <LoginScreen onLogin={() => setLoggedIn(true)} />
       ) : (
         <div className="flex h-screen w-full">
-          <PageAnnouncer page={page} />
           <Sidebar current={page} onNavigate={navigate} />
           {page === "dash-pacientes" && <Dashboard onOpenBed={openBed} />}
           {page === "dash-medicos" && <DashMedicos onOpenBed={openBed} />}
@@ -176,30 +173,11 @@ export default function PerceptAIPrototype() {
           {page === "cadastro" && <Cadastro />}
           {page === "visitas" && <Visitas />}
           {page === "calendario" && <Calendario />}
+          {page === "prontuario" && <Prontuario />}
         </div>
       )}
     </div>
-      </AccessibilityProvider>
+    </AccessibilityProvider>
     </QueryClientProvider>
   );
-}
-
-const PAGE_LABELS: Record<string, string> = {
-  "dash-pacientes": "Painel de pacientes",
-  "dash-medicos": "Painel de médicos",
-  "info-ia": "Detalhes do leito",
-  estoque: "Estoque",
-  acessibilidade: "Acessibilidade",
-  medicamentos: "Medicamentos",
-  cadastro: "Cadastro",
-  visitas: "Visitas",
-  calendario: "Calendário",
-};
-
-function PageAnnouncer({ page }: { page: string }) {
-  const { announce } = useAccessibility();
-  useEffect(() => {
-    announce(PAGE_LABELS[page] ?? page);
-  }, [page, announce]);
-  return null;
 }
