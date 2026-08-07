@@ -1,6 +1,6 @@
 import React /* , { useState } */ from "react";
 import { /* Send, */ Activity, Thermometer, ClipboardList } from "lucide-react";
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar } from "recharts";
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 import { TopBar } from "../../shared/components";
 import { Bed } from "../../types";
 import {
@@ -25,12 +25,6 @@ export const InfoIA: React.FC<InfoIAProps> = ({ bed, onBack }) => {
     t: new Date(v.registrado_em).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
     hr: v.hr,
     spo2: v.spo2,
-  }));
-
-  // Format expressions (pain) for chart
-  const painChartData = expressions.map((e: any) => ({
-    t: new Date(e.registrado_em).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-    intensidade: e.intensidade || 0,
   }));
 
   const latestExpression = expressions[expressions.length - 1];
@@ -93,22 +87,6 @@ export const InfoIA: React.FC<InfoIAProps> = ({ bed, onBack }) => {
                 <Line type="monotone" dataKey="hr" stroke={styles.chartLineHr} name="FC" strokeWidth={2} />
                 <Line type="monotone" dataKey="spo2" stroke={styles.chartLineSpo2} name="SpO2" strokeWidth={2} />
               </LineChart>
-            </ResponsiveContainer>
-          </div>
-
-          {/* Gráfico de dor */}
-          <div className="bg-white rounded-xl border p-4" style={styles.card}>
-            <p className="text-xs font-bold mb-2" style={styles.chartTitle}>
-              Intensidade de Dor (24h)
-            </p>
-            <ResponsiveContainer width="100%" height={160}>
-              <BarChart data={painChartData}>
-                <CartesianGrid strokeDasharray="3 3" stroke={styles.chartGrid} />
-                <XAxis dataKey="t" stroke={styles.chartAxis} style={{ fontSize: 12 }} />
-                <YAxis stroke={styles.chartAxis} style={{ fontSize: 12 }} />
-                <Tooltip contentStyle={styles.chartTooltip} />
-                <Bar dataKey="intensidade" fill={styles.chartBarPain} />
-              </BarChart>
             </ResponsiveContainer>
           </div>
 

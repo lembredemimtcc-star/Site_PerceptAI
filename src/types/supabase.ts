@@ -19,6 +19,7 @@ export interface Database {
           cpf: string;
           data_nascimento: string;
           diagnostico: string | null;
+          convenio: string | null;
           criado_em: string;
         };
       };

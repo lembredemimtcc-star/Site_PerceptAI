@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { ClipboardList, ChevronDown, Save, UserPlus, BedSingle } from "lucide-react";
+import { ClipboardList, Save, UserPlus, BedSingle } from "lucide-react";
 import { TopBar } from "../../shared/components";
 import { useLeitos, usePacientes } from "../../hooks";
 import { supabase } from "../../lib/supabase";
@@ -40,10 +40,14 @@ export const Cadastro: React.FC = () => {
   const [nome, setNome] = useState("");
   const [cpf, setCpf] = useState("");
   const [dataNascimento, setDataNascimento] = useState("");
+  const [convenio, setConvenio] = useState("");
   const [diagnostico, setDiagnostico] = useState("");
-  const [leitoId, setLeitoId] = useState("");
 
   const leitosLivresDb = leitos.filter((l: any) => l.status === "livre");
+  const atribuirLeitoAleatorio = (): any => {
+    if (leitosLivresDb.length === 0) return null;
+    return leitosLivresDb[Math.floor(Math.random() * leitosLivresDb.length)];
+  };
   const cadastrosRecentesDb = pacientes.slice(-5).reverse(); // últimos 5
 
   const handleCadastrar = async () => {
@@ -53,17 +57,17 @@ export const Cadastro: React.FC = () => {
     }
 
     try {
-      // 1. Criar paciente
       const { data: novoPaciente, error: pacError } = await supabase
         .from("pacientes")
-        .insert({ nome, cpf, data_nascimento: dataNascimento, diagnostico })
+        .insert({ nome, cpf, data_nascimento: dataNascimento, diagnostico, convenio })
         .select()
         .single();
-      
+
       if (pacError) throw pacError;
 
-      // 2. Criar internação se leito for selecionado
-      if (leitoId) {
+      const leitoAleatorio = atribuirLeitoAleatorio();
+      if (leitoAleatorio) {
+        const leitoId = leitoAleatorio.id;
         const { error: intError } = await supabase
           .from("internacoes")
           .insert({
@@ -73,15 +77,18 @@ export const Cadastro: React.FC = () => {
             risco: "normal",
             data_entrada: new Date().toISOString(),
           });
-        
+
         if (intError) throw intError;
-        
-        // Atualiza status do leito para ocupado
+
         await supabase.from("leitos").update({ status: "ocupado" }).eq("id", leitoId);
       }
 
-      toast.success("Paciente cadastrado com sucesso!");
-      setNome(""); setCpf(""); setDataNascimento(""); setDiagnostico(""); setLeitoId("");
+      toast.success(
+        leitoAleatorio
+          ? `Paciente cadastrado no leito ${leitoAleatorio.numero}!`
+          : "Paciente cadastrado! (nenhum leito disponível)"
+      );
+      setNome(""); setCpf(""); setDataNascimento(""); setConvenio(""); setDiagnostico("");
       setLgpd(false); setCamera(false);
       refetchLeitos();
       refetchPacientes();
@@ -108,30 +115,27 @@ export const Cadastro: React.FC = () => {
             <FormField label="Nome completo" placeholder="Nome do paciente" span={2} value={nome} onChange={setNome} />
             <FormField label="CPF" placeholder="000.000.000-00" value={cpf} onChange={setCpf} />
             <FormField label="Data de nascimento" type="date" value={dataNascimento} onChange={setDataNascimento} />
-            <FormField label="Convênio" placeholder="Ex.: SUS, Bradesco Saúde" value="" onChange={()=>{}} />
+            <FormField label="Convênio" placeholder="Ex.: SUS, Bradesco Saúde" value={convenio} onChange={setConvenio} />
 
             <div>
               <label className="text-[12.5px] font-semibold" style={styles.fieldLabel}>
                 Leito atribuído
               </label>
-              <div className="relative mt-1.5">
-                <select
-                  className="w-full h-11 rounded-xl border px-3 text-sm outline-none appearance-none"
+              <div className="mt-1.5 flex items-center gap-2">
+                <div
+                  className="flex-1 h-11 rounded-xl border px-3 flex items-center text-sm"
                   style={styles.fieldInput}
-                  value={leitoId}
-                  onChange={(e) => setLeitoId(e.target.value)}
                 >
-                  <option value="">Selecione um leito</option>
-                  {leitosLivresDb.map((l: any) => (
-                    <option key={l.id} value={l.id}>{l.numero} — livre</option>
-                  ))}
-                </select>
-                <ChevronDown
-                  size={15}
-                  color={styles.selectChevron.color}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none"
-                />
+                  <BedSingle size={15} color={styles.bedIconColor} className="mr-2" />
+                  Atribuição automática
+                  {leitosLivresDb.length > 0
+                    ? ` — ${leitosLivresDb.length} disponível${leitosLivresDb.length > 1 ? "is" : ""}`
+                    : " — nenhum leito livre"}
+                </div>
               </div>
+              <p className="text-[11px] mt-1" style={styles.fieldInput}>
+                O leito é sorteado automaticamente dentre os disponíveis.
+              </p>
             </div>
 
             <FormField label="Contato de emergência" placeholder="Nome e telefone" span={2} />

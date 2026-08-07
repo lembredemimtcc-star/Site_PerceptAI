@@ -2,7 +2,7 @@ import { COLORS } from "../../../config/colors";
 
 export const selecionarPacienteStyles = {
   overlay: {
-    background: "rgba(15, 23, 42, 0.45)",
+    background: "rgba(0, 0, 0, 0.5)",
   },
   modalCard: {
     borderColor: COLORS.line,

@@ -2,7 +2,7 @@ import { COLORS } from "../../../config/colors";
 
 export const novoEventoModalStyles = {
   overlay: {
-    background: "rgba(15, 23, 42, 0.45)",
+    background: "rgba(0, 0, 0, 0.5)",
   },
   card: {
     boxShadow: "0 20px 60px rgba(15, 23, 42, 0.25)",

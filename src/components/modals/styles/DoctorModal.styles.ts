@@ -2,7 +2,7 @@ import { COLORS } from "../../../config/colors";
 
 export const doctorModalStyles = {
   overlay: {
-    background: "#000000",
+    background: "rgba(0, 0, 0, 0.5)",
   },
   modal: {
     background: COLORS.card,

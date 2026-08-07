@@ -2,7 +2,7 @@ import { COLORS } from "../../../config/colors";
 
 export const novoMedicamentoModalStyles = {
   overlay: {
-    background: "rgba(15, 18, 22, 0.45)",
+    background: "rgba(0, 0, 0, 0.5)",
   },
   modal: {
     background: COLORS.card,
