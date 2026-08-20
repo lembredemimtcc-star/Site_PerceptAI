@@ -8,26 +8,55 @@ import { AlertBanner } from "../../components/AlertBanner";
 import { SearchInput } from "../../components/SearchInput";
 import { estoqueStyles as styles, getStockBadgeStyle } from "./Estoque.styles";
 
-import { useEstoque } from "../../hooks";
+import { useEstoque, useMedicamentos } from "../../hooks";
 import { supabase } from "../../lib/supabase";
 
 export const Estoque: React.FC = () => {
-  const { data: supabaseItems = [], refetch } = useEstoque();
-  
-  // Transform DB rows to local EstoqueItem
-  const items: EstoqueItem[] = supabaseItems.map((dbItem: any) => ({
-    id: dbItem.id,
-    nome: dbItem.item,
-    categoria: dbItem.categoria,
-    quantidade: dbItem.quantidade,
-    minimo: dbItem.quantidade_minima,
-    unidade: dbItem.unidade,
-  }));
-
   const [searchTerm, setSearchTerm] = useState("");
   const [modalOpen, setModalOpen] = useState(false);
   const [modalMode, setModalMode] = useState<"novo" | "editar">("novo");
   const [editingItem, setEditingItem] = useState<EstoqueItem | null>(null);
+
+  const { data: supabaseItems, refetch, isError, error, isLoading } = useEstoque();
+  const { data: medicamentos = [] } = useMedicamentos();
+
+  // Transform DB rows to local EstoqueItem
+  const items: EstoqueItem[] = (supabaseItems || []).map((dbItem: any) => ({
+    id: dbItem.id,
+    nome: dbItem.nome,
+    categoria: dbItem.categoria,
+    quantidade: dbItem.quantidade,
+    minimo: dbItem.minimo,
+    unidade: dbItem.unidade,
+  }));
+
+  if (isError) {
+    console.error("Estoque query error:", error);
+  }
+
+  if (isLoading) {
+    return (
+      <div className="flex-1 flex flex-col overflow-hidden">
+        <TopBar title="Estoque" subtitle="Controle de medicamentos e insumos" />
+        <div className="flex-1 flex items-center justify-center">
+          <p className="text-gray-500">Carregando estoque...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (isError) {
+    return (
+      <div className="flex-1 flex flex-col overflow-hidden">
+        <TopBar title="Estoque" subtitle="Controle de medicamentos e insumos" />
+        <AlertBanner
+          variant="warning"
+          title="Erro ao carregar estoque"
+          subtitle="Verifique a conexão ou tente novamente"
+        />
+      </div>
+    );
+  }
 
   const filteredItems = items.filter(item =>
     item.nome.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -50,23 +79,56 @@ export const Estoque: React.FC = () => {
     setModalOpen(true);
   };
 
+  const handleCloseModal = () => {
+    setModalOpen(false);
+    setEditingItem(null);
+  };
+
   const handleSaveItem = async (item: EstoqueItem) => {
     try {
-      const payload = {
-        item: item.nome,
-        categoria: item.categoria,
-        quantidade: item.quantidade,
-        quantidade_minima: item.minimo,
-        unidade: item.unidade,
-      };
-
       if (modalMode === "novo") {
-        await supabase.from("estoque").insert(payload);
+        // Buscar ou criar medicamento pelo nome
+        let med = medicamentos.find(m => m.nome.toLowerCase() === item.nome.toLowerCase());
+        if (!med) {
+          // Criar novo medicamento
+          const { data: newMed, error: medError } = await supabase
+            .from("medicamentos")
+            .insert({
+              nome: item.nome,
+              categoria: item.categoria,
+              unidade_medida: item.unidade,
+              principio_ativo: item.nome,
+              forma_farmaceutica: "outro",
+              concentracao: "",
+            })
+            .select()
+            .single();
+          if (medError) throw medError;
+          med = newMed;
+        }
+
+        // Inserir estoque com medicamento_id
+        const { error } = await supabase.from("estoque").insert({
+          medicamento_id: med.id,
+          quantidade_atual: item.quantidade,
+          quantidade_minima: item.minimo,
+        });
+        if (error) throw error;
       } else {
-        await supabase.from("estoque").update(payload).eq("id", item.id);
+        // Apenas atualizar quantidade (estoque table só tem essas colunas editáveis)
+        const { error } = await supabase
+          .from("estoque")
+          .update({
+            quantidade_atual: item.quantidade,
+            quantidade_minima: item.minimo,
+          })
+          .eq("id", item.id);
+        if (error) throw error;
       }
-      
+
       toast.success(modalMode === "novo" ? "Item adicionado ao estoque" : "Item atualizado");
+      setModalOpen(false);
+      setEditingItem(null);
       refetch();
     } catch (err: any) {
       toast.error(err.message || "Erro ao salvar item");
@@ -77,7 +139,7 @@ export const Estoque: React.FC = () => {
     <div className="flex-1 flex flex-col overflow-hidden">
       <TopBar title="Estoque" subtitle="Controle de medicamentos e insumos" />
 
-      <div className="flex-1 overflow-y-auto p-6 space-y-6">
+      <div className="flex-1 overflow-y-auto p-4 md:p-6 space-y-6">
         {lowStockItems.length > 0 && (
           <AlertBanner
             variant="warning"
@@ -151,7 +213,7 @@ export const Estoque: React.FC = () => {
         mode={modalMode}
         item={editingItem}
         categories={categories}
-        onClose={() => setModalOpen(false)}
+        onClose={handleCloseModal}
         onSave={handleSaveItem}
       />
     </div>

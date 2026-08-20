@@ -31,6 +31,7 @@ export const EstoqueItemModal: React.FC<EstoqueItemModalProps> = ({
   onSave,
 }) => {
   const [form, setForm] = useState(emptyForm);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     if (mode === "editar" && item) {
@@ -55,12 +56,14 @@ export const EstoqueItemModal: React.FC<EstoqueItemModalProps> = ({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    if (isSubmitting) return;
     if (!form.nome.trim() || !form.categoria.trim() || !form.unidade.trim()) return;
 
     const quantidade = Number(form.quantidade);
     const minimo = Number(form.minimo);
     if (Number.isNaN(quantidade) || Number.isNaN(minimo) || form.quantidade === "" || form.minimo === "") return;
 
+    setIsSubmitting(true);
     onSave({
       id: mode === "editar" && item ? item.id : crypto.randomUUID(),
       nome: form.nome.trim(),
@@ -71,6 +74,7 @@ export const EstoqueItemModal: React.FC<EstoqueItemModalProps> = ({
     });
 
     onClose();
+    setIsSubmitting(false);
   };
 
   return (
@@ -180,7 +184,7 @@ export const EstoqueItemModal: React.FC<EstoqueItemModalProps> = ({
             <button type="button" onClick={onClose} className="h-10 px-4 rounded-lg text-[13px] font-semibold" style={styles.cancelButton}>
               Cancelar
             </button>
-            <button type="submit" className="h-10 px-4 rounded-lg text-[13px] font-semibold" style={styles.saveButton}>
+            <button type="submit" disabled={isSubmitting} className="h-10 px-4 rounded-lg text-[13px] font-semibold disabled:opacity-60 disabled:cursor-not-allowed" style={styles.saveButton}>
               {mode === "novo" ? "Adicionar" : "Salvar alterações"}
             </button>
           </div>

@@ -8,6 +8,7 @@ import { supabase } from "../../lib/supabase";
 import { eventTypeMeta } from "./calendarioData";
 import type { TipoEventoKey } from "./calendario.types";
 import { NovoEventoModal, NovoEventoFormData } from "../../components/modals/NovoEventoModal";
+import { AlertBanner } from "../../components/AlertBanner";
 import {
   getWeekDays,
   getMonthDays,
@@ -30,20 +31,16 @@ import {
 type ViewMode = "semana" | "mes";
 
 export const Calendario: React.FC = () => {
-  const { data: supabaseEvents = [], refetch } = useCalendario();
   const [modalOpen, setModalOpen] = useState(false);
   const [viewMode, setViewMode] = useState<ViewMode>("semana");
-  
-  // Transform db events to local format
-  const events = supabaseEvents.map((dbEvt: any) => ({
-    id: dbEvt.id,
-    data: dbEvt.data_inicio.split("T")[0],
-    hora: new Date(dbEvt.data_inicio).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-    tipo: dbEvt.tipo,
-    titulo: dbEvt.titulo,
-  }));
   const [referenceDate, setReferenceDate] = useState(new Date());
 
+  const { data: supabaseEvents, refetch, isError, error, isLoading } = useCalendario();
+
+  // Transform db events to local format (já mapeado no hook)
+  const events = supabaseEvents || [];
+
+  // Hooks DEVEM vir antes de qualquer return early
   const days = useMemo(
     () => (viewMode === "semana" ? getWeekDays(referenceDate) : getMonthDays(referenceDate)),
     [viewMode, referenceDate]
@@ -61,15 +58,20 @@ export const Calendario: React.FC = () => {
 
   const handleSaveEvento = async (data: NovoEventoFormData) => {
     try {
+      const inicio = `${data.data}T${data.hora}:00`;
+      const fim = `${data.data}T${data.hora}:00`;
       const payload = {
         titulo: data.titulo,
         tipo: data.tipo,
-        data_inicio: `${data.data}T${data.hora}:00`,
-        data_fim: `${data.data}T${data.hora}:00`, // simplifying for now
+        data_hora_inicio: inicio,
+        data_hora_fim: fim,
         descricao: "",
       };
-      await supabase.from("calendario_eventos").insert(payload);
+      const { error } = await supabase.from("calendario_eventos").insert(payload);
+      if (error) throw error;
+
       toast.success("Evento adicionado ao calendário");
+      setModalOpen(false);
       refetch();
     } catch (err: any) {
       toast.error(err.message || "Erro ao criar evento");
@@ -83,7 +85,7 @@ export const Calendario: React.FC = () => {
     <div className="flex-1 flex flex-col overflow-hidden">
       <TopBar title="Calendário" subtitle="Plantões, consultas e procedimentos · Ala UTI 2" />
 
-      <div className="flex items-center justify-between px-8 pt-5">
+      <div className="flex items-center justify-between px-4 md:px-8 pt-5">
         <div className="flex items-center gap-3">
           <button onClick={handlePrev} className="w-9 h-9 rounded-lg border flex items-center justify-center" style={styles.navButton}>
             <ChevronLeft size={16} color={styles.navIconColor} />
@@ -132,7 +134,7 @@ export const Calendario: React.FC = () => {
       </div>
 
       <div
-        className={`flex-1 mx-8 my-5 bg-white rounded-2xl border overflow-hidden ${
+        className={`flex-1 mx-4 md:mx-8 my-4 md:my-5 bg-white rounded-2xl border overflow-hidden ${
           isMonthView ? "flex overflow-x-auto" : "grid grid-cols-7"
         }`}
         style={styles.gridBorder}
@@ -142,7 +144,7 @@ export const Calendario: React.FC = () => {
           return (
             <div
               key={iso}
-              className={`flex flex-col border-r last:border-0 overflow-y-auto ${isMonthView ? "flex-none w-[160px]" : ""}`}
+              className={`flex flex-col border-r last:border-0 overflow-y-auto ${isMonthView ? "flex-none w-[140px] md:w-[160px]" : ""}`}
               style={styles.gridBorder}
             >
               <div className="h-11 flex items-center justify-center border-b shrink-0" style={styles.dayHeader}>

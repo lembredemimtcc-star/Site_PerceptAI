@@ -51,6 +51,7 @@ export const DashMedicos: React.FC<DashMedicosProps> = ({ onOpenBed }) => {
 
       {selectedDoctor && (
         <DoctorModal
+          key={selectedDoctor.id}
           doctor={selectedDoctor}
           allBeds={beds}
           onClose={() => setSelectedDoctor(null)}

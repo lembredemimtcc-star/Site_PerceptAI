@@ -6,8 +6,9 @@ import { supabase } from "./lib/supabase";
 import { signOut } from "./lib/auth";
 import { FontsAndStyles } from "./config/fonts";
 import { COLORS } from "./config/colors";
-import { Sidebar } from "./shared/components";
+import { Sidebar, MobileNavbar } from "./shared/components";
 import { AccessibilityProvider } from "./shared/accessibility";
+import { useIsMobile } from "./hooks/use-mobile";
 import { LoginScreen } from "./modules/auth";
 import { Dashboard, DashMedicos } from "./modules/dashboard";
 import { Estoque } from "./modules/estoque";
@@ -26,6 +27,8 @@ export default function PerceptAIPrototype() {
   const [loggedIn, setLoggedIn] = useState(false);
   const [page, setPage] = useState("dash-pacientes");
   const [selectedBed, setSelectedBed] = useState<Bed>(beds.find(b => b.risk === "critical") || beds[0]);
+  const [isMobileNavbarOpen, setIsMobileNavbarOpen] = useState(false);
+  const isMobile = useIsMobile();
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -48,6 +51,11 @@ export default function PerceptAIPrototype() {
       return;
     }
     setPage(key);
+    setIsMobileNavbarOpen(false);
+  };
+
+  const toggleMobileNavbar = () => {
+    setIsMobileNavbarOpen(prev => !prev);
   };
 
   const openBed = (bed: Bed) => {
@@ -164,16 +172,19 @@ export default function PerceptAIPrototype() {
       ) : (
         <div className="flex h-screen w-full">
           <Sidebar current={page} onNavigate={navigate} />
-          {page === "dash-pacientes" && <Dashboard onOpenBed={openBed} />}
-          {page === "dash-medicos" && <DashMedicos onOpenBed={openBed} />}
-          {page === "info-ia" && <InfoIA bed={selectedBed} onBack={() => setPage("dash-pacientes")} />}
-          {page === "estoque" && <Estoque />}
-          {page === "acessibilidade" && <Acessibilidade />}
-          {page === "medicamentos" && <Medicamentos />}
-          {page === "cadastro" && <Cadastro />}
-          {page === "visitas" && <Visitas />}
-          {page === "calendario" && <Calendario />}
-          {page === "prontuario" && <Prontuario />}
+          <MobileNavbar current={page} onNavigate={navigate} isOpen={isMobileNavbarOpen} onToggle={toggleMobileNavbar} />
+          <div className="flex-1 min-w-0 pt-14 md:pt-0">
+            {page === "dash-pacientes" && <Dashboard onOpenBed={openBed} />}
+            {page === "dash-medicos" && <DashMedicos onOpenBed={openBed} />}
+            {page === "info-ia" && <InfoIA bed={selectedBed} onBack={() => setPage("dash-pacientes")} />}
+            {page === "estoque" && <Estoque />}
+            {page === "acessibilidade" && <Acessibilidade />}
+            {page === "medicamentos" && <Medicamentos />}
+            {page === "cadastro" && <Cadastro />}
+            {page === "visitas" && <Visitas />}
+            {page === "calendario" && <Calendario />}
+            {page === "prontuario" && <Prontuario />}
+          </div>
         </div>
       )}
     </div>

@@ -18,16 +18,19 @@ export const NovoMedicamentoModal: React.FC<NovoMedicamentoModalProps> = ({ onCl
   const [via, setVia] = useState(VIA_OPTIONS[0]);
   const [horario, setHorario] = useState("");
   const [recorrente, setRecorrente] = useState(true);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const internados = beds.filter(b => b.status === "internado");
   const pacienteSelecionado = internados.find(b => b.id === leito);
 
   const handleSubmit = () => {
+    if (isSubmitting) return;
     if (!leito || !nome || !via || !horario) {
       toast.error("Preencha todos os campos.");
       return;
     }
 
+    setIsSubmitting(true);
     onSubmit({
       leito,
       paciente: pacienteSelecionado?.name ?? "",
@@ -43,6 +46,7 @@ export const NovoMedicamentoModal: React.FC<NovoMedicamentoModalProps> = ({ onCl
         : "Medicamento agendado!"
     );
     onClose();
+    setIsSubmitting(false);
   };
 
   return (
@@ -144,7 +148,7 @@ export const NovoMedicamentoModal: React.FC<NovoMedicamentoModalProps> = ({ onCl
           <button onClick={onClose} className="flex-1 h-11 rounded-xl border text-sm font-semibold" style={styles.cancelButton}>
             Cancelar
           </button>
-          <button onClick={handleSubmit} className="flex-1 h-11 rounded-xl text-sm font-semibold text-white" style={styles.confirmButton}>
+          <button onClick={handleSubmit} disabled={isSubmitting} className="flex-1 h-11 rounded-xl text-sm font-semibold text-white disabled:opacity-60 disabled:cursor-not-allowed" style={styles.confirmButton}>
             Adicionar
           </button>
         </div>

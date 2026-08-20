@@ -16,16 +16,19 @@ export const NovaVisitaModal: React.FC<NovaVisitaModalProps> = ({ onClose, onSub
   const [parentesco, setParentesco] = useState("");
   const [entrada, setEntrada] = useState("");
   const [saida, setSaida] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const internados = beds.filter(b => b.status === "internado");
   const pacienteSelecionado = internados.find(b => b.id === leito);
 
   const handleSubmit = () => {
+    if (isSubmitting) return;
     if (!leito || !visitante || !parentesco || !entrada || !saida) {
       toast.error("Preencha todos os campos.");
       return;
     }
 
+    setIsSubmitting(true);
     onSubmit({
       leito,
       paciente: pacienteSelecionado?.name ?? "",
@@ -37,6 +40,7 @@ export const NovaVisitaModal: React.FC<NovaVisitaModalProps> = ({ onClose, onSub
     });
 
     toast.success("Visita agendada com sucesso!");
+    setIsSubmitting(false);
   };
 
   return (
@@ -136,7 +140,7 @@ export const NovaVisitaModal: React.FC<NovaVisitaModalProps> = ({ onClose, onSub
           <button onClick={onClose} className="flex-1 h-11 rounded-xl border text-sm font-semibold" style={styles.cancelButton}>
             Cancelar
           </button>
-          <button onClick={handleSubmit} className="flex-1 h-11 rounded-xl text-sm font-semibold text-white" style={styles.confirmButton}>
+          <button onClick={handleSubmit} disabled={isSubmitting} className="flex-1 h-11 rounded-xl text-sm font-semibold text-white disabled:opacity-60 disabled:cursor-not-allowed" style={styles.confirmButton}>
             Agendar
           </button>
         </div>

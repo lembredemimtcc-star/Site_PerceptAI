@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useMemo } from "react";
 import { Filter, ChevronDown } from "lucide-react";
 import { TopBar } from "../../../shared/components";
 import { BedCard } from "../../../components/BedCard";
@@ -21,20 +21,33 @@ const FILTER_OPTIONS: { value: RiskLevel | "all"; label: string }[] = [
 
 export const Dashboard: React.FC<DashboardProps> = ({ onOpenBed }) => {
   const { data: internacoes = [], isLoading } = useInternacoes();
-  
-  const bedsState: Bed[] = internacoes.map(int => ({
+
+  const initialBeds = useMemo(() => internacoes.map(int => ({
     id: int.leito?.numero || "??",
     internacaoId: int.id,
     name: int.paciente?.nome || "Desconhecido",
-    hr: 0, // will be loaded by BedCard
-    hrSeries: [], // will be loaded by BedCard
-    mood: "neutro", // will be loaded by BedCard
+    hr: 0,
+    hrSeries: [],
+    mood: "neutro",
     conf: 0,
     risk: int.risco as RiskLevel,
     acordado: true,
     ts: "",
     status: int.ativo ? "internado" : "alta",
-  }));
+  })), [internacoes]);
+
+  const [bedsState, setBedsState] = useState<Bed[]>(initialBeds);
+
+  // Sync with server data - compare by content to avoid infinite loop
+  useEffect(() => {
+    const hasChanged = initialBeds.some((newBed, i) => {
+      const oldBed = bedsState[i];
+      return !oldBed || oldBed.internacaoId !== newBed.internacaoId || oldBed.risk !== newBed.risk || oldBed.status !== newBed.status;
+    });
+    if (hasChanged || initialBeds.length !== bedsState.length) {
+      setBedsState(initialBeds);
+    }
+  }, [initialBeds]);
 
   const [filter, setFilter] = useState<RiskLevel | "all">("all");
   const [searchTerm, setSearchTerm] = useState("");
@@ -52,11 +65,15 @@ export const Dashboard: React.FC<DashboardProps> = ({ onOpenBed }) => {
   }, []);
 
   const handleChangeRisk = (bedId: string, risk: RiskLevel) => {
-    // TODO: Mutation for supabase
+    setBedsState(prev => prev.map(bed =>
+      bed.id === bedId ? { ...bed, risk } : bed
+    ));
   };
 
   const handleToggleStatus = (bedId: string) => {
-    // TODO: Mutation for supabase
+    setBedsState(prev => prev.map(bed =>
+      bed.id === bedId ? { ...bed, status: bed.status === "internado" ? "alta" : "internado" } : bed
+    ));
   };
 
   const filteredBeds = bedsState.filter(bed => {
@@ -143,12 +160,12 @@ export const Dashboard: React.FC<DashboardProps> = ({ onOpenBed }) => {
         </div>
 
         {/* Cards dos leitos */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-4">
           {isLoading ? (
             <p className="text-gray-500 text-sm py-4">Carregando pacientes...</p>
-          ) : filteredBeds.map(bed => (
+          ) : filteredBeds.map((bed, index) => (
             <BedCard
-              key={bed.id}
+              key={bed.internacaoId || bed.id + "-" + index}
               bed={bed}
               onSelect={onOpenBed}
               onChangeRisk={handleChangeRisk}
@@ -164,7 +181,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ onOpenBed }) => {
           </p>
           <div className="space-y-2">
             {bedsState.filter(b => b.risk === "critical" || b.risk === "attention").slice(0, 5).map((patient, i) => (
-              <div key={i} className="flex items-center justify-between p-3 rounded-lg" style={styles.patientRow}>
+              <div key={patient.internacaoId || patient.id + "-" + i} className="flex items-center justify-between p-3 rounded-lg" style={styles.patientRow}>
                 <div>
                   <p className="text-sm font-semibold" style={styles.patientName}>
                     {patient.name}

@@ -28,7 +28,7 @@ export const BedCard: React.FC<BedCardProps> = ({ bed, onSelect, onChangeRisk, o
   // Extract latest vital sign
   const latestVital = vitals[vitals.length - 1];
   const hr = latestVital?.hr ?? bed.hr;
-  
+
   // Extract latest expression
   const latestExpression = expressions[expressions.length - 1];
   const moodName = latestExpression?.mood ?? bed.mood;
@@ -38,6 +38,9 @@ export const BedCard: React.FC<BedCardProps> = ({ bed, onSelect, onChangeRisk, o
   const acordado = moodName !== "dormindo";
   const hrSeries = vitals.length > 0 ? vitals.map(v => v.hr ?? 0) : bed.hrSeries;
   const ts = latestVital ? new Date(latestVital.registrado_em).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : bed.ts;
+
+  // Validate risk value
+  const validRisk = (["normal", "attention", "critical"] as const).includes(bed.risk) ? bed.risk : "normal";
 
   return (
     <div
@@ -72,11 +75,11 @@ export const BedCard: React.FC<BedCardProps> = ({ bed, onSelect, onChangeRisk, o
           {/* Select de risco (só editável se internado) */}
           {isInternado && (
             <select
-              value={bed.risk}
+              value={validRisk}
               onClick={(e) => e.stopPropagation()}
               onChange={(e) => onChangeRisk(bed.id, e.target.value as RiskLevel)}
               className="text-xs font-semibold px-2 py-1 rounded-lg border-none outline-none"
-              style={getRiskBadgeStyle(bed.risk)}
+              style={getRiskBadgeStyle(validRisk)}
             >
               {RISK_OPTIONS.map(opt => (
                 <option key={opt.value} value={opt.value}>

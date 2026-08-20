@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { X } from "lucide-react";
 import { Doctor } from "../../types";
 import { DoctorModalProps } from "../../modules/dashboard/dashboard.types";
@@ -10,6 +10,14 @@ export const DoctorModal: React.FC<DoctorModalProps> = ({ doctor, allBeds, onClo
   const [horarioInicio, setHorarioInicio] = useState(doctor.horarioInicio);
   const [horarioFim, setHorarioFim] = useState(doctor.horarioFim);
   const [pacientesSelecionados, setPacientesSelecionados] = useState<string[]>(doctor.pacientes);
+
+  useEffect(() => {
+    setPlantao(doctor.plantao);
+    setTurno(doctor.turno);
+    setHorarioInicio(doctor.horarioInicio);
+    setHorarioFim(doctor.horarioFim);
+    setPacientesSelecionados(doctor.pacientes);
+  }, [doctor.id]);
 
   const internados = allBeds.filter(b => b.status === "internado");
 

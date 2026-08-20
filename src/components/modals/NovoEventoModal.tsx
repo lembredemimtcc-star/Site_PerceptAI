@@ -29,13 +29,16 @@ export const NovoEventoModal: React.FC<NovoEventoModalProps> = ({ open, onClose,
   const [data, setData] = useState(() => new Date().toISOString().slice(0, 10));
   const [hora, setHora] = useState("");
   const [observacoes, setObservacoes] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   if (!open) return null;
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    if (isSubmitting) return;
     if (!titulo.trim() || !hora.trim()) return;
 
+    setIsSubmitting(true);
     onSave({ tipo, titulo, data, hora, observacoes });
 
     setTipo(tipoKeys[0]!);
@@ -44,6 +47,7 @@ export const NovoEventoModal: React.FC<NovoEventoModalProps> = ({ open, onClose,
     setHora("");
     setObservacoes("");
     onClose();
+    setIsSubmitting(false);
   };
 
   return (
@@ -146,7 +150,7 @@ export const NovoEventoModal: React.FC<NovoEventoModalProps> = ({ open, onClose,
             <button type="button" onClick={onClose} className="h-10 px-4 rounded-lg text-[13px] font-semibold" style={styles.cancelButton}>
               Cancelar
             </button>
-            <button type="submit" className="h-10 px-4 rounded-lg text-[13px] font-semibold" style={styles.saveButton}>
+            <button type="submit" disabled={isSubmitting} className="h-10 px-4 rounded-lg text-[13px] font-semibold disabled:opacity-60 disabled:cursor-not-allowed" style={styles.saveButton}>
               Salvar evento
             </button>
           </div>

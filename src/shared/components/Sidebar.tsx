@@ -11,7 +11,7 @@ interface SidebarProps {
 
 export const Sidebar: React.FC<SidebarProps> = ({ current, onNavigate }) => {
   return (
-    <div className="w-64 flex flex-col border-r overflow-hidden" style={{ borderColor: COLORS.line, background: COLORS.card }}>
+    <div className="hidden md:flex w-64 flex-col border-r overflow-hidden" style={{ borderColor: COLORS.line, background: COLORS.card }}>
       <div className="p-6 border-b" style={{ borderColor: COLORS.line }}>
         <h2 className="text-lg font-bold" style={{ color: COLORS.orange }}>
           PerceptAI
