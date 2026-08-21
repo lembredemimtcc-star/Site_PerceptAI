@@ -26,7 +26,9 @@ import { Bed } from "./types";
 export default function PerceptAIPrototype() {
   const [loggedIn, setLoggedIn] = useState(false);
   const [page, setPage] = useState("dash-pacientes");
-  const [selectedBed, setSelectedBed] = useState<Bed>(beds.find(b => b.risk === "critical") || beds[0]);
+  const [selectedBed, setSelectedBed] = useState<Bed>(
+    (beds.find(b => b.risk === "critical") ?? beds[0])!
+  );
   const [isMobileNavbarOpen, setIsMobileNavbarOpen] = useState(false);
   const isMobile = useIsMobile();
 

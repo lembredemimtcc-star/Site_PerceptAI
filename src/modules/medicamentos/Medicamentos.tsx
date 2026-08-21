@@ -50,13 +50,13 @@ export const Medicamentos: React.FC = () => {
   // Mapear dados do Supabase para o formato da UI
   const items: Medicamento[] = administracoes.map((admin: any) => ({
     id: admin.id,
-    leito: admin.internacao?.leito?.numero || "??",
-    paciente: admin.internacao?.paciente?.nome || "Desconhecido",
-    nome: admin.medicamento?.nome || "Desconhecido",
-    via: admin.medicamento?.forma || "-",
-    horario: admin.horario_previsto ? new Date(admin.horario_previsto).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : "??",
+    leito: admin.prescricao?.internacao?.leito?.numero || "??",
+    paciente: admin.prescricao?.internacao?.paciente?.nome || "Desconhecido",
+    nome: admin.prescricao?.medicamento?.nome || "Desconhecido",
+    via: admin.prescricao?.via_administracao || admin.prescricao?.medicamento?.forma_farmaceutica || "-",
+    horario: admin.data_hora_planejada ? new Date(admin.data_hora_planejada).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : "??",
     status: admin.status as any,
-    recorrente: false, // Pode ser ajustado baseado no modelo real se tiver cronograma
+    recorrente: false,
   }));
 
   const toggleAdministrado = async (id: string, currentStatus: string) => {

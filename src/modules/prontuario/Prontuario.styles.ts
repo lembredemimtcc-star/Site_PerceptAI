@@ -51,7 +51,7 @@ export const prontuarioStyles = {
   },
   footer: {
     borderColor: COLORS.line,
-    background: COLORS.white ?? "#ffffff",
+    background: COLORS.card,
   },
   cancelButton: {
     borderColor: COLORS.line,

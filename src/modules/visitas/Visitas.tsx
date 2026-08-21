@@ -26,10 +26,10 @@ export const Visitas: React.FC = () => {
   const visitasData: Visita[] = supabaseVisitas.map((dbVisita: any) => {
     const formatTime = (ts: string | null) => ts ? new Date(ts).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : "??:??";
     return {
-      leito: dbVisita.internacao?.leito?.numero || "??",
-      paciente: dbVisita.internacao?.paciente?.nome || "",
-      visitante: dbVisita.visitante?.nome || "Desconhecido",
-      parentesco: dbVisita.visitante?.parentesco || "-",
+      leito: "??", // Em um setup real, faríamos join com internacoes via paciente_id se necessário
+      paciente: dbVisita.paciente?.nome || "",
+      visitante: dbVisita.nome_visitante || "Desconhecido",
+      parentesco: dbVisita.parentesco || "-",
       entrada: formatTime(dbVisita.data_entrada),
       saida: formatTime(dbVisita.data_saida) === "??:??" ? "---" : formatTime(dbVisita.data_saida),
       status: dbVisita.status === "concluida" ? "finalizada" : (dbVisita.data_saida ? "agendada" : "em-andamento"),

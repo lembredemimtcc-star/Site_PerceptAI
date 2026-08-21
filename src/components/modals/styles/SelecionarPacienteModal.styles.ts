@@ -45,5 +45,5 @@ export const selecionarPacienteStyles = {
 
 export const getPatientRowStyle = () => ({
   borderColor: COLORS.line,
-  background: COLORS.white ?? "#ffffff",
+  background: COLORS.card,
 });

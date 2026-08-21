@@ -16,6 +16,7 @@ export function useExpressoes(internacaoId?: string) {
           event: 'INSERT',
           schema: 'public',
           table: 'expressoes_faciais',
+          // internacao_id é UUID/string — sem aspas o filtro Realtime funciona
           filter: `internacao_id=eq.${internacaoId}`,
         },
         (payload) => {
@@ -36,15 +37,18 @@ export function useExpressoes(internacaoId?: string) {
     queryKey: ['expressoes_faciais', internacaoId],
     queryFn: async () => {
       if (!internacaoId) return [];
-      
+
       const { data, error } = await supabase
         .from('expressoes_faciais')
         .select('*')
         .eq('internacao_id', internacaoId)
-        .order('registrado_em', { ascending: true })
+        .order('timestamp', { ascending: true })
         .limit(100);
-      
-      if (error) throw error;
+
+      if (error) {
+        console.error('[useExpressoes] erro Supabase:', error.message, error.details, error.hint);
+        throw error;
+      }
       return data;
     },
     enabled: !!internacaoId,

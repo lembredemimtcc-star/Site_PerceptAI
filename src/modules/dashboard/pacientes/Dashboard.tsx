@@ -23,17 +23,17 @@ export const Dashboard: React.FC<DashboardProps> = ({ onOpenBed }) => {
   const { data: internacoes = [], isLoading } = useInternacoes();
 
   const initialBeds = useMemo(() => internacoes.map(int => ({
-    id: int.leito?.numero || "??",
-    internacaoId: int.id,
+    id: String(int.leito?.numero ?? "??"),
+    internacaoId: String(int.id),
     name: int.paciente?.nome || "Desconhecido",
     hr: 0,
-    hrSeries: [],
-    mood: "neutro",
+    hrSeries: [] as number[],
+    mood: "neutro" as import("../../../types").MoodType,
     conf: 0,
-    risk: int.risco as RiskLevel,
+    risk: int.risco as import("../../../types").RiskLevel,
     acordado: true,
     ts: "",
-    status: int.ativo ? "internado" : "alta",
+    status: (int.ativo ? "internado" : "alta") as import("../../../types").PatientStatus,
   })), [internacoes]);
 
   const [bedsState, setBedsState] = useState<Bed[]>(initialBeds);

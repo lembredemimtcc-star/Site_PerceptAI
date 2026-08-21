@@ -1,6 +1,6 @@
 import { supabase } from './supabase';
 
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5198';
+const BACKEND_URL = import.meta.env['VITE_BACKEND_URL'] || 'http://localhost:5198';
 
 export interface DetectionRequest {
   Image: string;

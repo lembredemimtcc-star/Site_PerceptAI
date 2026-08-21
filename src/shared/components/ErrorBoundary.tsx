@@ -13,17 +13,17 @@ interface State {
 }
 
 export class ErrorBoundary extends Component<Props, State> {
-  public state: State = { hasError: false, error: null };
+  public override state: State = { hasError: false, error: null };
 
   public static getDerivedStateFromError(error: Error): State {
     return { hasError: true, error };
   }
 
-  public componentDidCatch(error: Error, errorInfo: ErrorInfo): void {
+  public override componentDidCatch(error: Error, errorInfo: ErrorInfo): void {
     console.error("ErrorBoundary caught:", error, errorInfo);
   }
 
-  public render(): ReactNode {
+  public override render(): ReactNode {
     if (this.state.hasError) {
       if (this.props.fallback) {
         return this.props.fallback;

@@ -36,15 +36,18 @@ export function useSinaisVitais(internacaoId?: string) {
     queryKey: ['sinais_vitais', internacaoId],
     queryFn: async () => {
       if (!internacaoId) return [];
-      
+
       const { data, error } = await supabase
         .from('sinais_vitais')
         .select('*')
         .eq('internacao_id', internacaoId)
-        .order('registrado_em', { ascending: true })
+        .order('timestamp', { ascending: true })
         .limit(100);
-      
-      if (error) throw error;
+
+      if (error) {
+        console.error('[useSinaisVitais] erro Supabase:', error.message, error.details, error.hint);
+        throw error;
+      }
       return data;
     },
     enabled: !!internacaoId,

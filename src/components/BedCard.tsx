@@ -31,8 +31,8 @@ export const BedCard: React.FC<BedCardProps> = ({ bed, onSelect, onChangeRisk, o
 
   // Extract latest expression
   const latestExpression = expressions[expressions.length - 1];
-  const moodName = latestExpression?.mood ?? bed.mood;
-  const mood = moodMeta[moodName as MoodType] ?? moodMeta["neutro"]!;
+  const moodName = (latestExpression?.mood ?? bed.mood) as MoodType;
+  const mood = moodMeta[moodName] ?? moodMeta["neutro"]!;
   const MoodIcon = mood.icon;
   const conf = latestExpression?.confianca ?? bed.conf;
   const acordado = moodName !== "dormindo";

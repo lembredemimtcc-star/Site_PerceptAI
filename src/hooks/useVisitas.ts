@@ -5,17 +5,18 @@ export function useVisitas(internacaoId?: string) {
   return useQuery({
     queryKey: ['visitas', internacaoId],
     queryFn: async () => {
-      let query = supabase.from('visitas').select(`
+      // O banco real usa a tabela "visitantes", ligada a "pacientes"
+      let query = supabase.from('visitantes').select(`
         *,
-        visitante:visitantes(*),
-        internacao:internacoes(leito:leitos(numero))
+        paciente:pacientes(nome)
       `);
-      if (internacaoId) {
-        query = query.eq('internacao_id', internacaoId);
-      }
-      
+
       const { data, error } = await query;
-      if (error) throw error;
+
+      if (error) {
+        console.error('[useVisitas] erro Supabase:', error.message, error.details, error.hint);
+        throw error;
+      }
       return data;
     },
   });
