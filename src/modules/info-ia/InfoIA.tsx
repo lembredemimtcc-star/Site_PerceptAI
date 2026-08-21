@@ -22,6 +22,7 @@ import { Bed, MoodType } from "../../types";
 import { tremorEvents, moodMeta, clinicalData } from "../../config/mockData";
 import { useSinaisVitais, useExpressoes } from "../../hooks";
 import { infoIAStyles as styles } from "./InfoIA.styles";
+import { COLORS } from "../../config/colors";
 import {
   detectEmotion,
   captureFrame,
@@ -164,11 +165,11 @@ export const InfoIA: React.FC<InfoIAProps> = ({ bed, onBack }) => {
         onBack={onBack}
       />
 
-      <div className="flex-1 grid grid-cols-2 gap-5 p-6 overflow-hidden">
+      <div className="flex-1 grid grid-cols-2 gap-6 px-8 py-7 overflow-hidden">
         {/* ── ESQUERDA: gráficos e histórico ── */}
         <div className="flex flex-col gap-4 overflow-y-auto">
           {/* Info do paciente */}
-          <div className="bg-white rounded-xl border p-4" style={styles.card}>
+          <div className="bg-white border p-4" style={styles.card}>
             <div className="flex items-center justify-between mb-3">
               <div>
                 <p className="text-xs" style={styles.patientInfoLabel}>
@@ -181,7 +182,7 @@ export const InfoIA: React.FC<InfoIAProps> = ({ bed, onBack }) => {
                   Médico: {clinical.medico}
                 </p>
               </div>
-              <div className="flex items-center gap-2 p-3 rounded-lg" style={styles.moodBox}>
+              <div className="flex items-center gap-2 p-3 " style={styles.moodBox}>
                 <MoodIcon size={16} color={mood.color} />
                 <span className="text-xs font-semibold" style={styles.moodText}>
                   {mood.label} ({currentConf}%)
@@ -191,8 +192,8 @@ export const InfoIA: React.FC<InfoIAProps> = ({ bed, onBack }) => {
           </div>
 
           {/* Gráfico de vitais */}
-          <div className="bg-white rounded-xl border p-4" style={styles.card}>
-            <p className="text-xs font-bold mb-2" style={styles.chartTitle}>
+          <div className="bg-white border p-4" style={styles.card}>
+            <p className="kicker mb-3" style={styles.chartTitle}>
               Sinais Vitais (24h)
             </p>
             <ResponsiveContainer width="100%" height={180}>
@@ -220,15 +221,15 @@ export const InfoIA: React.FC<InfoIAProps> = ({ bed, onBack }) => {
           </div>
 
           {/* Eventos neurológicos */}
-          <div className="bg-white rounded-xl border p-4" style={styles.card}>
-            <p className="text-xs font-bold mb-2" style={styles.chartTitle}>
+          <div className="bg-white border p-4" style={styles.card}>
+            <p className="kicker mb-3" style={styles.chartTitle}>
               Eventos Neurológicos
             </p>
             <div className="space-y-2">
               {tremorEvents.map((evt, i) => (
                 <div
                   key={i}
-                  className="flex items-center gap-2 p-2 rounded-lg"
+                  className="flex items-center gap-2 p-2 "
                   style={styles.eventRow}
                 >
                   <Activity size={14} color={styles.eventIconColor} />
@@ -249,9 +250,9 @@ export const InfoIA: React.FC<InfoIAProps> = ({ bed, onBack }) => {
         {/* ── DIREITA: câmera + detecção em tempo real ── */}
         <div className="flex flex-col gap-4 overflow-y-auto">
           {/* Card da câmera */}
-          <div className="bg-white rounded-xl border p-4 flex flex-col gap-3" style={styles.card}>
+          <div className="bg-white border p-4 flex flex-col gap-3" style={styles.card}>
             <div className="flex items-center justify-between">
-              <p className="text-xs font-bold" style={styles.chartTitle}>
+              <p className="kicker" style={styles.chartTitle}>
                 Monitoramento em Tempo Real
               </p>
               {/* Indicador de status */}
@@ -260,15 +261,15 @@ export const InfoIA: React.FC<InfoIAProps> = ({ bed, onBack }) => {
                   <>
                     <span
                       className="w-2 h-2 rounded-full animate-pulse"
-                      style={{ background: "#22c55e" }}
+                      style={{ background: COLORS.green }}
                     />
-                    <span className="text-[11px] font-semibold" style={{ color: "#22c55e" }}>
+                    <span className="text-[11px] font-semibold" style={{ color: COLORS.green }}>
                       AO VIVO
                     </span>
                   </>
                 )}
                 {cameraState === "starting" && (
-                  <span className="text-[11px]" style={{ color: "#f97316" }}>
+                  <span className="text-[11px]" style={{ color: COLORS.orange }}>
                     Iniciando…
                   </span>
                 )}
@@ -278,7 +279,7 @@ export const InfoIA: React.FC<InfoIAProps> = ({ bed, onBack }) => {
                   </span>
                 )}
                 {cameraState === "error" && (
-                  <span className="text-[11px] font-semibold" style={{ color: "#ef4444" }}>
+                  <span className="text-[11px] font-semibold" style={{ color: COLORS.red }}>
                     Erro
                   </span>
                 )}
@@ -287,8 +288,8 @@ export const InfoIA: React.FC<InfoIAProps> = ({ bed, onBack }) => {
 
             {/* Vídeo */}
             <div
-              className="relative w-full rounded-xl overflow-hidden bg-gray-900 flex items-center justify-center"
-              style={{ aspectRatio: "4/3", minHeight: 200 }}
+              className="relative w-full overflow-hidden flex items-center justify-center"
+              style={{ aspectRatio: "4/3", minHeight: 200, background: COLORS.ink }}
             >
               <video
                 ref={videoRef}
@@ -303,11 +304,11 @@ export const InfoIA: React.FC<InfoIAProps> = ({ bed, onBack }) => {
               />
 
               {cameraState !== "active" && (
-                <div className="flex flex-col items-center gap-2 text-gray-400">
+                <div className="flex flex-col items-center gap-2" style={{ color: COLORS.slateSoft }}>
                   {cameraState === "starting" ? (
                     <Loader2 size={32} className="animate-spin" />
                   ) : cameraState === "error" ? (
-                    <AlertTriangle size={32} color="#ef4444" />
+                    <AlertTriangle size={32} color={COLORS.red} />
                   ) : (
                     <CameraOff size={32} />
                   )}
@@ -323,7 +324,7 @@ export const InfoIA: React.FC<InfoIAProps> = ({ bed, onBack }) => {
 
               {/* Overlay de detecção em curso */}
               {cameraState === "active" && isDetecting && (
-                <div className="absolute bottom-2 right-2 flex items-center gap-1 bg-black/50 rounded-lg px-2 py-1">
+                <div className="absolute bottom-2 right-2 flex items-center gap-1 bg-black/50  px-2 py-1">
                   <Loader2 size={12} color="white" className="animate-spin" />
                   <span className="text-[10px] text-white">Analisando…</span>
                 </div>
@@ -334,10 +335,10 @@ export const InfoIA: React.FC<InfoIAProps> = ({ bed, onBack }) => {
             <button
               onClick={cameraState === "active" ? stopCamera : startCamera}
               disabled={cameraState === "starting"}
-              className="w-full h-10 rounded-xl font-semibold text-[13px] flex items-center justify-center gap-2 transition-all"
+              className="w-full h-10 font-semibold text-[13px] flex items-center justify-center gap-2"
               style={{
-                background: cameraState === "active" ? "#fee2e2" : "#f97316",
-                color: cameraState === "active" ? "#ef4444" : "white",
+                background: cameraState === "active" ? COLORS.redSoft : COLORS.orange,
+                color: cameraState === "active" ? COLORS.red : COLORS.card,
                 opacity: cameraState === "starting" ? 0.6 : 1,
                 cursor: cameraState === "starting" ? "not-allowed" : "pointer",
               }}
@@ -358,29 +359,29 @@ export const InfoIA: React.FC<InfoIAProps> = ({ bed, onBack }) => {
             </button>
 
             {!bed.internacaoId && (
-              <p className="text-[11px] text-center" style={{ color: "#f97316" }}>
+              <p className="text-[11px] text-center" style={{ color: COLORS.orange }}>
                 ⚠️ Este leito não possui internação ativa — detecções não serão salvas.
               </p>
             )}
           </div>
 
           {/* Card de resultado da IA */}
-          <div className="bg-white rounded-xl border p-4 flex flex-col gap-3" style={styles.card}>
-            <p className="text-xs font-bold" style={styles.chartTitle}>
+          <div className="bg-white border p-4 flex flex-col gap-3" style={styles.card}>
+            <p className="kicker" style={styles.chartTitle}>
               Última Detecção IA
             </p>
 
             {liveMood && LiveMoodIcon ? (
               <div className="flex items-center gap-3">
                 <div
-                  className="w-12 h-12 rounded-xl flex items-center justify-center shrink-0"
+                  className="w-12 h-12 flex items-center justify-center shrink-0"
                   style={{ background: `${liveMood.color}18` }}
                 >
                   <LiveMoodIcon size={24} color={liveMood.color} />
                 </div>
                 <div>
                   <p
-                    className="font-bold text-[18px]"
+                    className="display font-semibold text-[1.35rem]"
                     style={{ color: liveMood.color }}
                   >
                     {liveMood.label}
@@ -389,10 +390,10 @@ export const InfoIA: React.FC<InfoIAProps> = ({ bed, onBack }) => {
                     Confiança: {detectedConf}% · {lastDetectionTs}
                   </p>
                 </div>
-                <CheckCircle size={20} color="#22c55e" className="ml-auto shrink-0" />
+                <CheckCircle size={20} color={COLORS.green} className="ml-auto shrink-0" />
               </div>
             ) : (
-              <div className="flex items-center gap-3 text-gray-400">
+              <div className="flex items-center gap-3" style={{ color: COLORS.slateSoft }}>
                 <Camera size={20} />
                 <p className="text-xs">
                   {cameraState === "active"
@@ -418,7 +419,7 @@ export const InfoIA: React.FC<InfoIAProps> = ({ bed, onBack }) => {
                       return (
                         <div
                           key={i}
-                          className="flex items-center gap-2 text-[11px] px-2 py-1 rounded-lg"
+                          className="flex items-center gap-2 text-[11px] px-2 py-1 "
                           style={styles.eventRow}
                         >
                           <ExpIcon size={12} color={m.color} />
@@ -435,40 +436,40 @@ export const InfoIA: React.FC<InfoIAProps> = ({ bed, onBack }) => {
           </div>
 
           {/* Informações rápidas */}
-          <div className="bg-white rounded-xl border p-4" style={styles.card}>
-            <p className="text-xs font-bold mb-2" style={styles.chartTitle}>
+          <div className="bg-white border p-4" style={styles.card}>
+            <p className="kicker mb-3" style={styles.chartTitle}>
               Resumo Clínico
             </p>
             <div className="grid grid-cols-2 gap-2">
-              <div className="p-2 rounded-lg" style={styles.eventRow}>
+              <div className="p-2 " style={styles.eventRow}>
                 <p className="text-[10px] font-semibold" style={styles.patientInfoLabel}>
                   SpO2
                 </p>
-                <p className="font-bold text-sm" style={styles.patientInfoTitle}>
+                <p className="font-semibold text-sm" style={styles.patientInfoTitle}>
                   {clinical.spo2}%
                 </p>
               </div>
-              <div className="p-2 rounded-lg" style={styles.eventRow}>
+              <div className="p-2 " style={styles.eventRow}>
                 <p className="text-[10px] font-semibold" style={styles.patientInfoLabel}>
                   Dias internado
                 </p>
-                <p className="font-bold text-sm" style={styles.patientInfoTitle}>
+                <p className="font-semibold text-sm" style={styles.patientInfoTitle}>
                   {clinical.internacao}
                 </p>
               </div>
-              <div className="p-2 rounded-lg" style={styles.eventRow}>
+              <div className="p-2 " style={styles.eventRow}>
                 <p className="text-[10px] font-semibold" style={styles.patientInfoLabel}>
                   Emoção atual (DB)
                 </p>
-                <p className="font-bold text-sm" style={{ color: mood.color }}>
+                <p className="font-semibold text-sm" style={{ color: mood.color }}>
                   {mood.label}
                 </p>
               </div>
-              <div className="p-2 rounded-lg" style={styles.eventRow}>
+              <div className="p-2 " style={styles.eventRow}>
                 <p className="text-[10px] font-semibold" style={styles.patientInfoLabel}>
                   Confiança (DB)
                 </p>
-                <p className="font-bold text-sm" style={styles.patientInfoTitle}>
+                <p className="font-semibold text-sm" style={styles.patientInfoTitle}>
                   {currentConf}%
                 </p>
               </div>

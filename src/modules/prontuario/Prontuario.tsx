@@ -50,12 +50,12 @@ interface SectionProps {
 function Section({ icon: Icon, title, children }: SectionProps) {
   return (
     <div
-      className="bg-white rounded-2xl border p-5 h-full flex flex-col"
+      className="bg-white border p-5 h-full flex flex-col"
       style={styles.sectionCard}
     >
       <div className="flex items-center gap-2 mb-3 shrink-0">
         <Icon size={16} color={styles.sectionIconColor as string} />
-        <h3 className="text-[13px] font-semibold" style={styles.sectionTitle}>
+        <h3 className="kicker" style={styles.sectionTitle}>
           {title}
         </h3>
       </div>
@@ -185,12 +185,12 @@ export function Prontuario() {
       <div className="flex-1 overflow-y-auto px-8 py-6">
         {/* Barra de informações do paciente */}
         <div
-          className="flex items-center justify-between bg-white rounded-2xl border px-5 py-3 mb-5"
+          className="flex items-center justify-between bg-white border px-5 py-3 mb-5"
           style={styles.patientBar}
         >
           <div className="flex items-center gap-2">
             <FileText size={16} color={styles.sectionIconColor as string} />
-            <span className="text-[14px] font-bold" style={styles.patientName}>
+            <span className="display text-[1.2rem] font-semibold" style={styles.patientName}>
               {pacienteSelecionado.nome}
             </span>
           </div>
@@ -202,7 +202,7 @@ export function Prontuario() {
             <span>{dataAtual}</span>
             <button
               onClick={handleTrocarPaciente}
-              className="flex items-center gap-1.5 ml-2 px-2.5 py-1 rounded-lg border text-[11.5px] font-semibold"
+              className="flex items-center gap-1.5 ml-2 px-2.5 py-1 border text-[11.5px] font-semibold"
               style={styles.trocarPacienteButton}
             >
               <UserCog size={13} />
@@ -214,7 +214,7 @@ export function Prontuario() {
         <div className="grid grid-cols-2 gap-5 items-stretch">
           <Section icon={ClipboardList} title="Queixa principal">
             <textarea
-              className="w-full flex-1 min-h-[112px] rounded-xl border p-3 text-[13px] resize-none outline-none"
+              className="w-full flex-1 min-h-[112px] border p-3 text-[13px] resize-none outline-none"
               style={styles.textarea}
               placeholder="Digite aqui..."
               value={queixaPrincipal}
@@ -224,7 +224,7 @@ export function Prontuario() {
 
           <Section icon={Stethoscope} title="História da doença / Anamnese">
             <textarea
-              className="w-full flex-1 min-h-[112px] rounded-xl border p-3 text-[13px] resize-none outline-none"
+              className="w-full flex-1 min-h-[112px] border p-3 text-[13px] resize-none outline-none"
               style={styles.textarea}
               placeholder="Digite aqui..."
               value={historiaDoenca}
@@ -247,7 +247,7 @@ export function Prontuario() {
                     {campo.label}
                   </label>
                   <input
-                    className="w-full rounded-xl border px-2.5 py-2 text-[13px] text-center outline-none mono"
+                    className="w-full border px-2.5 py-2 text-[13px] text-center outline-none mono"
                     style={styles.input}
                     placeholder={campo.placeholder}
                     value={sinaisVitais[campo.key]}
@@ -263,7 +263,7 @@ export function Prontuario() {
 
           <Section icon={FileText} title="Avaliação / Hipótese diagnóstica">
             <textarea
-              className="w-full flex-1 min-h-[112px] rounded-xl border p-3 text-[13px] resize-none outline-none"
+              className="w-full flex-1 min-h-[112px] border p-3 text-[13px] resize-none outline-none"
               style={styles.textarea}
               placeholder="Digite aqui..."
               value={avaliacao}
@@ -273,10 +273,10 @@ export function Prontuario() {
         </div>
 
         {/* Prescrição */}
-        <div className="bg-white rounded-2xl border p-5 mt-5" style={styles.sectionCard}>
+        <div className="bg-white border p-5 mt-5" style={styles.sectionCard}>
           <div className="flex items-center gap-2 mb-3">
             <Pill size={16} color={styles.sectionIconColor as string} />
-            <h3 className="text-[13px] font-semibold" style={styles.sectionTitle}>
+            <h3 className="kicker" style={styles.sectionTitle}>
               Prescrição
             </h3>
           </div>
@@ -297,7 +297,7 @@ export function Prontuario() {
             {prescricoes.map((item) => (
               <div key={item.id} className="grid grid-cols-12 gap-3 items-center">
                 <input
-                  className="col-span-3 rounded-xl border px-3 py-2 text-[13px] outline-none"
+                  className="col-span-3 border px-3 py-2 text-[13px] outline-none"
                   style={styles.input}
                   placeholder="Nome do medicamento"
                   value={item.medicamento}
@@ -306,14 +306,14 @@ export function Prontuario() {
                   }
                 />
                 <input
-                  className="col-span-2 rounded-xl border px-3 py-2 text-[13px] outline-none"
+                  className="col-span-2 border px-3 py-2 text-[13px] outline-none"
                   style={styles.input}
                   placeholder="Ex: 500 mg"
                   value={item.dose}
                   onChange={(e) => atualizarPrescricao(item.id, "dose", e.target.value)}
                 />
                 <input
-                  className="col-span-2 rounded-xl border px-3 py-2 text-[13px] outline-none"
+                  className="col-span-2 border px-3 py-2 text-[13px] outline-none"
                   style={styles.input}
                   placeholder="Ex: 8/8h"
                   value={item.frequencia}
@@ -322,7 +322,7 @@ export function Prontuario() {
                   }
                 />
                 <input
-                  className="col-span-2 rounded-xl border px-3 py-2 text-[13px] outline-none"
+                  className="col-span-2 border px-3 py-2 text-[13px] outline-none"
                   style={styles.input}
                   placeholder="Ex: 5 dias"
                   value={item.duracao}
@@ -331,7 +331,7 @@ export function Prontuario() {
                   }
                 />
                 <input
-                  className="col-span-2 rounded-xl border px-3 py-2 text-[13px] outline-none"
+                  className="col-span-2 border px-3 py-2 text-[13px] outline-none"
                   style={styles.input}
                   placeholder="Opcional"
                   value={item.observacoes}
@@ -342,7 +342,7 @@ export function Prontuario() {
                 <div className="col-span-1 flex justify-end">
                   <button
                     onClick={() => removerPrescricao(item.id)}
-                    className="w-8 h-8 rounded-lg flex items-center justify-center border"
+                    className="w-8 h-8 flex items-center justify-center border"
                     style={getRemoveButtonStyle(prescricoes.length === 1)}
                     disabled={prescricoes.length === 1}
                   >
@@ -355,7 +355,7 @@ export function Prontuario() {
 
           <button
             onClick={adicionarPrescricao}
-            className="flex items-center gap-2 mt-3 px-3 py-2 rounded-xl text-[12.5px] font-semibold border"
+            className="flex items-center gap-2 mt-3 px-3 py-2 text-[12.5px] font-semibold border"
             style={styles.addMedButton}
           >
             <Plus size={14} />
@@ -364,10 +364,10 @@ export function Prontuario() {
         </div>
 
         {/* Solicitação de exames */}
-        <div className="bg-white rounded-2xl border p-5 mt-5" style={styles.sectionCard}>
+        <div className="bg-white border p-5 mt-5" style={styles.sectionCard}>
           <div className="flex items-center gap-2 mb-3">
             <FlaskConical size={16} color={styles.sectionIconColor as string} />
-            <h3 className="text-[13px] font-semibold" style={styles.sectionTitle}>
+            <h3 className="kicker" style={styles.sectionTitle}>
               Solicitação de exames
             </h3>
           </div>
@@ -387,14 +387,14 @@ export function Prontuario() {
             {exames.map((item) => (
               <div key={item.id} className="grid grid-cols-12 gap-3 items-center">
                 <input
-                  className="col-span-4 rounded-xl border px-3 py-2 text-[13px] outline-none"
+                  className="col-span-4 border px-3 py-2 text-[13px] outline-none"
                   style={styles.input}
                   placeholder="Ex: Hemograma completo"
                   value={item.nome}
                   onChange={(e) => atualizarExame(item.id, "nome", e.target.value)}
                 />
                 <select
-                  className="col-span-2 rounded-xl border px-3 py-2 text-[13px] outline-none"
+                  className="col-span-2 border px-3 py-2 text-[13px] outline-none"
                   style={styles.input}
                   value={item.tipo}
                   onChange={(e) => atualizarExame(item.id, "tipo", e.target.value as any)}
@@ -406,7 +406,7 @@ export function Prontuario() {
                   <option value="outro">Outro</option>
                 </select>
                 <select
-                  className="col-span-2 rounded-xl border px-3 py-2 text-[13px] outline-none"
+                  className="col-span-2 border px-3 py-2 text-[13px] outline-none"
                   style={styles.input}
                   value={item.urgencia}
                   onChange={(e) => atualizarExame(item.id, "urgencia", e.target.value as any)}
@@ -417,7 +417,7 @@ export function Prontuario() {
                   <option value="emergencia">Emergência</option>
                 </select>
                 <input
-                  className="col-span-3 rounded-xl border px-3 py-2 text-[13px] outline-none"
+                  className="col-span-3 border px-3 py-2 text-[13px] outline-none"
                   style={styles.input}
                   placeholder="Opcional"
                   value={item.observacoes}
@@ -428,7 +428,7 @@ export function Prontuario() {
                 <div className="col-span-1 flex justify-end">
                   <button
                     onClick={() => removerExame(item.id)}
-                    className="w-8 h-8 rounded-lg flex items-center justify-center border"
+                    className="w-8 h-8 flex items-center justify-center border"
                     style={getRemoveButtonStyle(exames.length === 1)}
                     disabled={exames.length === 1}
                   >
@@ -441,7 +441,7 @@ export function Prontuario() {
 
           <button
             onClick={adicionarExame}
-            className="flex items-center gap-2 mt-3 px-3 py-2 rounded-xl text-[12.5px] font-semibold border"
+            className="flex items-center gap-2 mt-3 px-3 py-2 text-[12.5px] font-semibold border"
             style={styles.addMedButton}
           >
             <Plus size={14} />
@@ -453,7 +453,7 @@ export function Prontuario() {
         <div className="mt-5">
           <Section icon={ClipboardList} title="Orientações / Conduta">
             <textarea
-              className="w-full flex-1 min-h-[96px] rounded-xl border p-3 text-[13px] resize-none outline-none"
+              className="w-full flex-1 min-h-[96px] border p-3 text-[13px] resize-none outline-none"
               style={styles.textarea}
               placeholder="Digite aqui..."
               value={orientacoes}
@@ -468,12 +468,12 @@ export function Prontuario() {
         className="flex items-center justify-end gap-3 px-8 py-4 border-t shrink-0"
         style={styles.footer}
       >
-        <button className="px-4 py-2.5 rounded-xl text-[13px] font-semibold border" style={styles.cancelButton}>
+        <button className="px-4 py-2.5 text-[13px] font-semibold border" style={styles.cancelButton}>
           Cancelar
         </button>
         <button
           onClick={handleSalvar}
-          className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-[13px] font-semibold text-white"
+          className="flex items-center gap-2 px-5 py-2.5 text-[13px] font-semibold text-white"
           style={styles.saveButton}
         >
           <Save size={16} />

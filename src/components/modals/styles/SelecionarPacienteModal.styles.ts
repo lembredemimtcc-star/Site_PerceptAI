@@ -1,8 +1,8 @@
-import { COLORS } from "../../../config/colors";
+import { COLORS, INK_OVERLAY } from "../../../config/colors";
 
 export const selecionarPacienteStyles = {
   overlay: {
-    background: "rgba(0, 0, 0, 0.5)",
+    background: INK_OVERLAY,
   },
   modalCard: {
     borderColor: COLORS.line,
@@ -22,7 +22,7 @@ export const selecionarPacienteStyles = {
   searchIconColor: COLORS.slateSoft,
   searchInput: {
     borderColor: COLORS.line,
-    background: COLORS.bg,
+    background: COLORS.card,
     color: COLORS.ink,
   },
   emptyText: {

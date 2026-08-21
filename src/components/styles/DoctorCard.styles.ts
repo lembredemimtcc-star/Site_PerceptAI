@@ -2,7 +2,7 @@ import { COLORS } from "../../config/colors";
 
 export const doctorCardStyles = {
   card: {
-    borderColor: COLORS.line,
+    border: `1px solid ${COLORS.line}`,
     background: COLORS.card,
   },
   doctorName: {

@@ -46,14 +46,14 @@ export const DoctorModal: React.FC<DoctorModalProps> = ({ doctor, allBeds, onClo
       onClick={onClose}
     >
       <div
-        className="w-full max-w-lg rounded-xl border p-6 max-h-[85vh] overflow-y-auto"
+        className="w-full max-w-lg border p-6 max-h-[85vh] overflow-y-auto"
         style={styles.modal}
         onClick={(e) => e.stopPropagation()}
       >
         {/* Cabeçalho */}
         <div className="flex justify-between items-start mb-4">
           <div>
-            <p className="font-bold text-lg" style={styles.title}>
+            <p className="display text-[1.35rem] font-semibold leading-tight" style={styles.title}>
               {doctor.nome}
             </p>
             <p className="text-sm" style={styles.subtitle}>
@@ -73,7 +73,7 @@ export const DoctorModal: React.FC<DoctorModalProps> = ({ doctor, allBeds, onClo
           <button
             type="button"
             onClick={() => setPlantao(prev => !prev)}
-            className="px-3 py-2 rounded-lg text-sm font-semibold"
+            className="px-3 py-2 text-sm font-semibold"
             style={getPlantaoToggleStyle(plantao)}
           >
             {plantao ? "De plantão" : "Fora de plantão"}
@@ -88,7 +88,7 @@ export const DoctorModal: React.FC<DoctorModalProps> = ({ doctor, allBeds, onClo
           <select
             value={turno}
             onChange={(e) => setTurno(e.target.value as Doctor["turno"])}
-            className="w-full px-3 py-2 rounded-lg border text-sm"
+            className="w-full px-3 py-2 border text-sm"
             style={styles.input}
           >
             <option value="manhã">Manhã</option>
@@ -107,7 +107,7 @@ export const DoctorModal: React.FC<DoctorModalProps> = ({ doctor, allBeds, onClo
               type="time"
               value={horarioInicio}
               onChange={(e) => setHorarioInicio(e.target.value)}
-              className="flex-1 px-3 py-2 rounded-lg border text-sm"
+              className="flex-1 px-3 py-2 border text-sm"
               style={styles.input}
             />
             <span style={styles.label}>até</span>
@@ -115,7 +115,7 @@ export const DoctorModal: React.FC<DoctorModalProps> = ({ doctor, allBeds, onClo
               type="time"
               value={horarioFim}
               onChange={(e) => setHorarioFim(e.target.value)}
-              className="flex-1 px-3 py-2 rounded-lg border text-sm"
+              className="flex-1 px-3 py-2 border text-sm"
               style={styles.input}
             />
           </div>
@@ -132,7 +132,7 @@ export const DoctorModal: React.FC<DoctorModalProps> = ({ doctor, allBeds, onClo
               return (
                 <div
                   key={bed.id}
-                  className="flex items-center justify-between p-2 rounded-lg"
+                  className="flex items-center justify-between p-2"
                   style={styles.patientRow}
                 >
                   <label className="flex items-center gap-2 flex-1 cursor-pointer">
@@ -169,7 +169,7 @@ export const DoctorModal: React.FC<DoctorModalProps> = ({ doctor, allBeds, onClo
           <button
             type="button"
             onClick={onClose}
-            className="px-4 py-2 rounded-lg border text-sm"
+            className="px-4 py-2 border text-sm"
             style={styles.cancelButton}
           >
             Cancelar
@@ -177,7 +177,7 @@ export const DoctorModal: React.FC<DoctorModalProps> = ({ doctor, allBeds, onClo
           <button
             type="button"
             onClick={handleSave}
-            className="px-4 py-2 rounded-lg text-sm font-semibold"
+            className="px-4 py-2 text-sm font-semibold"
             style={styles.saveButton}
           >
             Salvar

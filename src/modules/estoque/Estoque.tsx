@@ -6,6 +6,7 @@ import { EstoqueItem } from "./estoque.types";
 import { EstoqueItemModal } from "../../components/modals/EstoqueItemModal";
 import { AlertBanner } from "../../components/AlertBanner";
 import { SearchInput } from "../../components/SearchInput";
+import { COLORS } from "../../config/colors";
 import { estoqueStyles as styles, getStockBadgeStyle } from "./Estoque.styles";
 
 import { useEstoque, useMedicamentos } from "../../hooks";
@@ -39,7 +40,7 @@ export const Estoque: React.FC = () => {
       <div className="flex-1 flex flex-col overflow-hidden">
         <TopBar title="Estoque" subtitle="Controle de medicamentos e insumos" />
         <div className="flex-1 flex items-center justify-center">
-          <p className="text-gray-500">Carregando estoque...</p>
+          <p style={{ color: COLORS.slateSoft }}>Carregando estoque...</p>
         </div>
       </div>
     );
@@ -139,7 +140,7 @@ export const Estoque: React.FC = () => {
     <div className="flex-1 flex flex-col overflow-hidden">
       <TopBar title="Estoque" subtitle="Controle de medicamentos e insumos" />
 
-      <div className="flex-1 overflow-y-auto p-4 md:p-6 space-y-6">
+      <div className="flex-1 overflow-y-auto px-8 py-7 space-y-7">
         {lowStockItems.length > 0 && (
           <AlertBanner
             variant="warning"
@@ -162,7 +163,7 @@ export const Estoque: React.FC = () => {
 
           return (
             <div key={category}>
-              <p className="text-sm font-bold mb-2" style={styles.categoryTitle}>
+              <p className="text-[13px] font-semibold mb-3" style={styles.categoryTitle}>
                 {category}
               </p>
               <div className="space-y-2">
@@ -172,7 +173,7 @@ export const Estoque: React.FC = () => {
                     <button
                       key={item.id}
                       onClick={() => handleOpenEditar(item)}
-                      className="w-full p-4 rounded-xl border flex items-center justify-between text-left"
+                      className="w-full p-4 border flex items-center justify-between text-left"
                       style={styles.itemCard}
                     >
                       <div className="flex-1">
@@ -185,7 +186,7 @@ export const Estoque: React.FC = () => {
                       </div>
                       <div className="text-right">
                         <div
-                          className="text-sm font-bold px-3 py-1 rounded-lg inline-block"
+                          className="text-xs font-semibold px-2 py-0.5 inline-block"
                           style={getStockBadgeStyle(isLow)}
                         >
                           {isLow ? "Baixo" : "OK"}
@@ -201,7 +202,7 @@ export const Estoque: React.FC = () => {
 
         <button
           onClick={handleOpenNovo}
-          className="w-full py-3 rounded-xl text-white font-semibold flex items-center justify-center gap-2 text-sm"
+          className="w-full py-2.5 text-white font-semibold flex items-center justify-center gap-2 text-sm"
           style={styles.addButton}
         >
           <Plus size={16} /> Adicionar item

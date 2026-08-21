@@ -12,7 +12,7 @@ export const AlertBanner: React.FC<AlertBannerProps> = ({ title, subtitle, varia
   const styles = getAlertBannerStyle(variant);
 
   return (
-    <div className="p-4 rounded-xl border-2 flex items-center gap-3" style={styles.alertBox}>
+    <div className="px-5 py-4 border-l-[6px] flex items-center gap-3" style={styles.alertBox}>
       <AlertTriangle size={20} color={styles.alertIconColor} className="shrink-0" />
       <div>
         <p className="font-semibold text-sm" style={styles.alertTitle}>

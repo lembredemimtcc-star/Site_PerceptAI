@@ -4,9 +4,11 @@ import { RiskLevel, MoodType } from "../types";
 import { BedCardProps } from "../modules/dashboard/dashboard.types";
 import { useSinaisVitais, useExpressoes } from "../hooks";
 import { moodMeta } from "../config/mockData";
+import { COLORS } from "../config/colors";
 import {
   bedCardStyles as styles,
   getRiskBadgeStyle,
+  getRiskStripe,
   getAcordadoStyle,
   getHrBarStyle,
   getStatusToggleStyle,
@@ -44,16 +46,20 @@ export const BedCard: React.FC<BedCardProps> = ({ bed, onSelect, onChangeRisk, o
 
   return (
     <div
-      className="w-full text-left p-4 rounded-xl border transition-all hover:shadow-md"
-      style={{ ...styles.button, opacity: isInternado ? 1 : 0.55 }}
+      className="w-full text-left p-5 pl-4 border"
+      style={{
+        ...styles.button,
+        opacity: isInternado ? 1 : 0.55,
+        borderLeft: `5px solid ${isInternado ? getRiskStripe(validRisk) : COLORS.line}`,
+      }}
     >
       {/* Cabeçalho */}
       <div className="flex items-start justify-between mb-3">
         <button onClick={() => onSelect(bed)} className="text-left">
-          <p className="text-xs font-semibold" style={styles.bedLabel}>
+          <p className="kicker mb-1" style={styles.bedLabel}>
             Leito {bed.id}
           </p>
-          <p className="font-semibold text-sm" style={styles.bedName}>
+          <p className="display font-semibold text-[1.05rem] leading-tight" style={styles.bedName}>
             {bed.name}
           </p>
         </button>
@@ -66,7 +72,7 @@ export const BedCard: React.FC<BedCardProps> = ({ bed, onSelect, onChangeRisk, o
               e.stopPropagation();
               onToggleStatus(bed.id);
             }}
-            className="text-[10px] font-semibold px-2 py-1 rounded-lg"
+            className="text-[10px] font-semibold px-2 py-0.5"
             style={getStatusToggleStyle(isInternado)}
           >
             {isInternado ? "Internado" : "Alta"}
@@ -78,7 +84,7 @@ export const BedCard: React.FC<BedCardProps> = ({ bed, onSelect, onChangeRisk, o
               value={validRisk}
               onClick={(e) => e.stopPropagation()}
               onChange={(e) => onChangeRisk(bed.id, e.target.value as RiskLevel)}
-              className="text-xs font-semibold px-2 py-1 rounded-lg border-none outline-none"
+              className="text-xs font-semibold px-2 py-0.5 border-none outline-none"
               style={getRiskBadgeStyle(validRisk)}
             >
               {RISK_OPTIONS.map(opt => (
@@ -95,7 +101,7 @@ export const BedCard: React.FC<BedCardProps> = ({ bed, onSelect, onChangeRisk, o
         <>
           {/* Mood */}
           <div className="flex items-center gap-2 mb-3">
-            <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={styles.moodIconBox}>
+            <div className="w-8 h-8 flex items-center justify-center" style={styles.moodIconBox}>
               <MoodIcon size={16} color={mood.color} />
             </div>
             <div>

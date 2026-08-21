@@ -31,8 +31,8 @@ interface KPICardProps {
 }
 
 const KPICard: React.FC<KPICardProps> = ({ icon: Icon, label, value, accent }) => (
-  <div className="bg-white rounded-2xl border p-4 flex items-center gap-3" style={styles.kpiCard}>
-    <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0" style={getKpiIconBoxStyle(accent)}>
+  <div className="bg-white border p-4 flex items-center gap-3" style={styles.kpiCard}>
+    <div className="w-9 h-9 flex items-center justify-center shrink-0" style={getKpiIconBoxStyle(accent)}>
       <Icon size={18} color={accent} />
     </div>
     <div>
@@ -103,7 +103,7 @@ export const Medicamentos: React.FC = () => {
       <div className="flex justify-end px-8 mt-4">
         <button
           onClick={() => setIsModalOpen(true)}
-          className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold text-white"
+          className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white"
           style={styles.addButton}
         >
           <Plus size={16} />
@@ -111,7 +111,7 @@ export const Medicamentos: React.FC = () => {
         </button>
       </div>
 
-      <div className="flex-1 mx-8 my-5 bg-white rounded-2xl border overflow-hidden flex flex-col" style={styles.tableCard}>
+      <div className="flex-1 mx-8 my-5 bg-white border overflow-hidden flex flex-col" style={styles.tableCard}>
         <div className="grid grid-cols-12 px-5 h-11 items-center border-b shrink-0" style={styles.tableHeader}>
           {["Horário", "Leito", "Paciente", "Medicamento", "Via", "Status", ""].map((h, i) => (
             <span
@@ -149,10 +149,10 @@ export const Medicamentos: React.FC = () => {
                     </span>
                   )}
                 </span>
-                <span className="col-span-2 text-[12px] px-2 py-1 rounded-lg w-fit" style={styles.via}>
+                <span className="col-span-2 text-[12px] px-2 py-1 w-fit" style={styles.via}>
                   {m.via}
                 </span>
-                <div className="col-span-2 flex items-center gap-1.5 px-2 py-1 rounded-lg w-fit" style={getStatusBadgeStyle(cfg.bg)}>
+                <div className="col-span-2 flex items-center gap-1.5 px-2 py-1 w-fit" style={getStatusBadgeStyle(cfg.bg)}>
                   <StatusIcon size={13} color={cfg.fg} />
                   <span className="text-[11.5px] font-semibold" style={getStatusLabelStyle(cfg.fg)}>
                     {cfg.label}
@@ -161,7 +161,7 @@ export const Medicamentos: React.FC = () => {
                 <div className="col-span-1 flex justify-end">
                   <button
                     onClick={() => toggleAdministrado(m.id as unknown as string, m.status)}
-                    className="text-[11px] font-semibold px-3 py-1.5 rounded-full border"
+                    className="text-[11px] font-semibold px-3 py-1.5 border"
                     style={getToggleButtonStyle(m.status === "administrado")}
                   >
                     {m.status === "administrado" ? "Desfazer" : "Confirmar"}

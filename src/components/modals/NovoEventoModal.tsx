@@ -52,17 +52,17 @@ export const NovoEventoModal: React.FC<NovoEventoModalProps> = ({ open, onClose,
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center" style={styles.overlay}>
-      <div className="w-[440px] max-w-[92vw] rounded-2xl bg-white overflow-hidden" style={styles.card}>
+      <div className="w-[440px] max-w-[92vw] bg-white overflow-hidden" style={styles.card}>
         <div className="flex items-center justify-between px-6 py-5 border-b" style={styles.header}>
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={styles.headerIconWrap}>
+            <div className="w-8 h-8 flex items-center justify-center" style={styles.headerIconWrap}>
               <CalendarPlus size={16} color={styles.headerIconColor} />
             </div>
-            <p className="text-[15px] font-bold" style={styles.title}>
+            <p className="display text-[1.25rem] font-semibold" style={styles.title}>
               Novo Evento
             </p>
           </div>
-          <button type="button" onClick={onClose} className="w-7 h-7 rounded-lg flex items-center justify-center">
+          <button type="button" onClick={onClose} className="w-7 h-7 flex items-center justify-center">
             <X size={16} color={styles.closeIconColor} />
           </button>
         </div>
@@ -81,7 +81,7 @@ export const NovoEventoModal: React.FC<NovoEventoModalProps> = ({ open, onClose,
                     type="button"
                     key={k}
                     onClick={() => setTipo(k)}
-                    className="px-3 h-8 rounded-lg text-[12px] font-semibold flex items-center gap-1.5"
+                    className="px-3 h-8 text-[12px] font-semibold flex items-center gap-1.5"
                     style={getTypeChipStyle(meta.color, selected)}
                   >
                     <span className="w-2 h-2 rounded-full" style={{ background: meta.color }} />
@@ -100,7 +100,7 @@ export const NovoEventoModal: React.FC<NovoEventoModalProps> = ({ open, onClose,
               value={titulo}
               onChange={(e) => setTitulo(e.target.value)}
               placeholder="Ex: Consulta pós-operatória"
-              className="h-10 rounded-lg px-3 text-[13px] border outline-none"
+              className="h-10 px-3 text-[13px] border outline-none"
               style={styles.input}
             />
           </div>
@@ -114,7 +114,7 @@ export const NovoEventoModal: React.FC<NovoEventoModalProps> = ({ open, onClose,
                 type="date"
                 value={data}
                 onChange={(e) => setData(e.target.value)}
-                className="h-10 rounded-lg px-3 text-[13px] border outline-none"
+                className="h-10 px-3 text-[13px] border outline-none"
                 style={styles.input}
               />
             </div>
@@ -126,7 +126,7 @@ export const NovoEventoModal: React.FC<NovoEventoModalProps> = ({ open, onClose,
                 type="time"
                 value={hora}
                 onChange={(e) => setHora(e.target.value)}
-                className="h-10 rounded-lg px-3 text-[13px] border outline-none"
+                className="h-10 px-3 text-[13px] border outline-none"
                 style={styles.input}
               />
             </div>
@@ -141,16 +141,16 @@ export const NovoEventoModal: React.FC<NovoEventoModalProps> = ({ open, onClose,
               onChange={(e) => setObservacoes(e.target.value)}
               rows={3}
               placeholder="Detalhes adicionais sobre o evento..."
-              className="rounded-lg px-3 py-2 text-[13px] border outline-none resize-none"
+              className="px-3 py-2 text-[13px] border outline-none resize-none"
               style={styles.input}
             />
           </div>
 
           <div className="flex items-center justify-end gap-3 pt-2">
-            <button type="button" onClick={onClose} className="h-10 px-4 rounded-lg text-[13px] font-semibold" style={styles.cancelButton}>
+            <button type="button" onClick={onClose} className="h-10 px-4 text-[13px] font-semibold" style={styles.cancelButton}>
               Cancelar
             </button>
-            <button type="submit" disabled={isSubmitting} className="h-10 px-4 rounded-lg text-[13px] font-semibold disabled:opacity-60 disabled:cursor-not-allowed" style={styles.saveButton}>
+            <button type="submit" disabled={isSubmitting} className="h-10 px-4 text-[13px] font-semibold disabled:opacity-60 disabled:cursor-not-allowed" style={styles.saveButton}>
               Salvar evento
             </button>
           </div>

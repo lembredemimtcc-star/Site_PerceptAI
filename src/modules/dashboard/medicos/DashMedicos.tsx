@@ -30,7 +30,7 @@ export const DashMedicos: React.FC<DashMedicosProps> = ({ onOpenBed }) => {
     <div className="flex-1 flex flex-col overflow-hidden">
       <TopBar title="Dashboard Médicos" subtitle={`${emPlantao} de ${doctorsState.length} médicos de plantão`} />
 
-      <div className="flex-1 overflow-y-auto p-6 space-y-4">
+      <div className="flex-1 overflow-y-auto px-8 py-7 space-y-5">
         <SearchInput
           value={searchTerm}
           onChange={setSearchTerm}

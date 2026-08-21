@@ -39,12 +39,12 @@ export function SelecionarPacienteModal({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center" style={styles.overlay}>
       <div
-        className="w-full max-w-md bg-white rounded-2xl border shadow-xl flex flex-col max-h-[80vh]"
+        className="w-full max-w-md bg-white border flex flex-col max-h-[80vh]"
         style={styles.modalCard}
       >
         <div className="flex items-center justify-between px-5 py-4 border-b shrink-0" style={styles.header}>
           <div>
-            <h2 className="text-[15px] font-bold" style={styles.title}>
+            <h2 className="display text-[1.25rem] font-semibold" style={styles.title}>
               Selecionar paciente
             </h2>
             <p className="text-[12px]" style={styles.subtitle}>
@@ -52,7 +52,7 @@ export function SelecionarPacienteModal({
             </p>
           </div>
           {onClose && (
-            <button onClick={onClose} className="p-1.5 rounded-lg" style={styles.closeButton}>
+            <button onClick={onClose} className="p-1.5" style={styles.closeButton}>
               <X size={16} />
             </button>
           )}
@@ -67,7 +67,7 @@ export function SelecionarPacienteModal({
             />
             <input
               autoFocus
-              className="w-full rounded-xl border pl-9 pr-3 py-2.5 text-[13px] outline-none"
+              className="w-full border pl-9 pr-3 py-2.5 text-[13px] outline-none"
               style={styles.searchInput}
               placeholder="Buscar por nome ou leito..."
               value={busca}
@@ -87,11 +87,11 @@ export function SelecionarPacienteModal({
                 <button
                   key={paciente.id}
                   onClick={() => onSelect(paciente)}
-                  className="flex items-center gap-3 w-full text-left px-3 py-2.5 rounded-xl border"
+                  className="flex items-center gap-3 w-full text-left px-3 py-2.5 border"
                   style={getPatientRowStyle()}
                 >
                   <div
-                    className="w-9 h-9 rounded-full flex items-center justify-center shrink-0"
+                    className="w-9 h-9 flex items-center justify-center shrink-0"
                     style={styles.avatar}
                   >
                     <User size={16} color={styles.avatarIconColor as string} />

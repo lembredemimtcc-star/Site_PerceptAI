@@ -6,6 +6,7 @@ import { AlertBanner } from "../../../components/AlertBanner";
 import { SearchInput } from "../../../components/SearchInput";
 import { useInternacoes } from "../../../hooks";
 import { Bed, RiskLevel } from "../../../types";
+import { COLORS } from "../../../config/colors";
 import { dashboardStyles as styles, getRiskBadgeStyle, getFilterOptionStyle } from "./Dashboard.styles";
 
 
@@ -92,7 +93,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ onOpenBed }) => {
     <div className="flex-1 flex flex-col overflow-hidden">
       <TopBar title="Dashboard de Pacientes" subtitle={`${bedsState.length} leitos monitorados`} />
 
-      <div className="flex-1 overflow-y-auto p-6 space-y-6">
+      <div className="flex-1 overflow-y-auto px-8 py-7 space-y-7">
         {/* Alertas críticos */}
         {criticalCount > 0 && (
           <AlertBanner
@@ -103,8 +104,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ onOpenBed }) => {
         )}
 
         {/* Filtros e busca */}
-        <div className="bg-white rounded-xl border p-4" style={styles.filterCard}>
-          <div className="flex gap-2 mb-3">
+        <div className="flex items-end gap-4 pb-2" style={{ borderBottom: `1px solid ${COLORS.line}` }}>
             <SearchInput
               value={searchTerm}
               onChange={setSearchTerm}
@@ -115,7 +115,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ onOpenBed }) => {
             <div className="relative" ref={filterRef}>
               <button
                 type="button"
-                className="px-3 py-2 rounded-lg border flex items-center gap-2 text-sm"
+                className="px-3 py-2 border flex items-center gap-2 text-sm"
                 style={styles.filterButton}
                 onClick={() => setIsFilterOpen(prev => !prev)}
               >
@@ -130,7 +130,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ onOpenBed }) => {
 
               {isFilterOpen && (
                 <div
-                  className="absolute right-0 mt-1 w-40 rounded-lg border shadow-lg overflow-hidden z-10"
+                  className="absolute right-0 mt-1 w-40 border overflow-hidden z-10"
                   style={styles.filterDropdownMenu}
                 >
                   {FILTER_OPTIONS.map(option => (
@@ -156,13 +156,12 @@ export const Dashboard: React.FC<DashboardProps> = ({ onOpenBed }) => {
                 </div>
               )}
             </div>
-          </div>
         </div>
 
         {/* Cards dos leitos */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-4">
           {isLoading ? (
-            <p className="text-gray-500 text-sm py-4">Carregando pacientes...</p>
+            <p className="text-sm py-4" style={{ color: COLORS.slateSoft }}>Carregando pacientes...</p>
           ) : filteredBeds.map((bed, index) => (
             <BedCard
               key={bed.internacaoId || bed.id + "-" + index}
@@ -175,13 +174,13 @@ export const Dashboard: React.FC<DashboardProps> = ({ onOpenBed }) => {
         </div>
 
         {/* Pacientes recentes */}
-        <div className="bg-white rounded-xl border p-4" style={styles.sectionCard}>
-          <p className="text-sm font-bold mb-3" style={styles.sectionTitle}>
+        <div className="border p-5" style={styles.sectionCard}>
+          <p className="kicker mb-4" style={styles.sectionTitle}>
             Pacientes sob monitoramento intenso
           </p>
           <div className="space-y-2">
             {bedsState.filter(b => b.risk === "critical" || b.risk === "attention").slice(0, 5).map((patient, i) => (
-              <div key={patient.internacaoId || patient.id + "-" + i} className="flex items-center justify-between p-3 rounded-lg" style={styles.patientRow}>
+              <div key={patient.internacaoId || patient.id + "-" + i} className="flex items-center justify-between px-3 py-2.5" style={styles.patientRow}>
                 <div>
                   <p className="text-sm font-semibold" style={styles.patientName}>
                     {patient.name}
@@ -191,7 +190,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ onOpenBed }) => {
                   </p>
                 </div>
                 <div
-                  className="text-xs font-semibold px-2 py-1 rounded-lg"
+                  className="text-xs font-semibold px-2 py-0.5"
                   style={getRiskBadgeStyle(patient.risk)}
                 >
                   {patient.risk === "critical" ? "Crítico" : "Atenção"}

@@ -2,6 +2,7 @@ import React from "react";
 import { ChevronRight } from "lucide-react";
 import { DoctorCardProps } from "../modules/dashboard/dashboard.types";
 import { doctorCardStyles as styles, getPlantaoToggleStyle } from "./styles/DoctorCard.styles";
+import { COLORS } from "../config/colors";
 
 export const DoctorCard: React.FC<DoctorCardProps> = ({ doctor, beds, onOpenModal }) => {
   const pacientesDoMedico = beds.filter(b => doctor.pacientes.includes(b.id) && b.status === "internado");
@@ -9,12 +10,15 @@ export const DoctorCard: React.FC<DoctorCardProps> = ({ doctor, beds, onOpenModa
   return (
     <button
       onClick={() => onOpenModal(doctor)}
-      className="text-left p-4 rounded-xl border hover:shadow-md transition-all w-full"
-      style={styles.card}
+      className="text-left p-5 w-full"
+      style={{
+        ...styles.card,
+        borderLeft: `5px solid ${doctor.plantao ? COLORS.green : COLORS.line}`,
+      }}
     >
       <div className="flex justify-between items-start mb-3">
         <div>
-          <p className="font-semibold text-sm" style={styles.doctorName}>
+          <p className="display font-semibold text-[1.15rem] leading-tight" style={styles.doctorName}>
             {doctor.nome}
           </p>
           <p className="text-xs" style={styles.specialty}>
@@ -27,12 +31,12 @@ export const DoctorCard: React.FC<DoctorCardProps> = ({ doctor, beds, onOpenModa
 
         <div className="flex flex-col items-end gap-1">
           <span
-            className="text-[10px] font-semibold px-2 py-1 rounded-lg"
+            className="text-[10px] font-semibold px-2 py-0.5"
             style={getPlantaoToggleStyle(doctor.plantao)}
           >
             {doctor.plantao ? "De plantão" : "Fora de plantão"}
           </span>
-          <span className="text-xs px-2 py-1 rounded-lg" style={styles.turnoBadge}>
+          <span className="text-xs px-2 py-0.5" style={styles.turnoBadge}>
             {doctor.horarioInicio} - {doctor.horarioFim}
           </span>
         </div>

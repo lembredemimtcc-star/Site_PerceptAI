@@ -14,7 +14,7 @@ export const RiskTag: React.FC<RiskTagProps> = ({ risk }) => {
   }[risk];
 
   return (
-    <span className="text-[11px] font-semibold px-2 py-0.5 rounded-full" style={{ background: cfg.bg, color: cfg.fg }}>
+    <span className="text-[11px] font-semibold px-2 py-0.5" style={{ background: cfg.bg, color: cfg.fg }}>
       {cfg.label}
     </span>
   );

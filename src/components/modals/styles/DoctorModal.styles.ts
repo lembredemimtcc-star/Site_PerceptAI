@@ -1,8 +1,8 @@
-import { COLORS } from "../../../config/colors";
+import { COLORS, INK_OVERLAY } from "../../../config/colors";
 
 export const doctorModalStyles = {
   overlay: {
-    background: "rgba(0, 0, 0, 0.5)",
+    background: INK_OVERLAY,
   },
   modal: {
     background: COLORS.card,
@@ -19,7 +19,7 @@ export const doctorModalStyles = {
   },
   input: {
     borderColor: COLORS.line,
-    background: COLORS.bg,
+    background: COLORS.card,
     color: COLORS.ink,
   },
   patientRow: {

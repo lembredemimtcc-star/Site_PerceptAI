@@ -13,7 +13,7 @@ export const SearchInput: React.FC<SearchInputProps> = ({ value, onChange, place
 
   return (
     <div className="flex-1 relative">
-      <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2" color={styles.iconColor} />
+      <Search size={16} className="absolute left-0 top-1/2 -translate-y-1/2" color={styles.iconColor} />
       <input
         type="text"
         placeholder={placeholder}
@@ -21,7 +21,7 @@ export const SearchInput: React.FC<SearchInputProps> = ({ value, onChange, place
         onChange={(e) => onChange(e.target.value)}
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
-        className="w-full pl-9 pr-4 py-2 rounded-lg border text-sm outline-none transition-shadow duration-150"
+        className="w-full pl-7 pr-2 py-2.5 text-[15px] outline-none"
         style={getSearchInputStyle(isFocused)}
       />
     </div>

@@ -5,7 +5,9 @@ export const searchInputStyles = {
 };
 
 export const getSearchInputStyle = (isFocused: boolean) => ({
-  background: COLORS.card,
-  borderColor: isFocused ? COLORS.orange : COLORS.line,
+  background: "transparent",
+  border: "none",
+  borderBottom: `2px solid ${isFocused ? COLORS.orange : COLORS.ink}`,
+  borderRadius: 0,
   color: COLORS.ink,
 });

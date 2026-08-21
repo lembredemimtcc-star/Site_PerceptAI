@@ -3,6 +3,7 @@ import { COLORS } from "../../config/colors";
 export const medicamentosStyles = {
   kpiCard: {
     borderColor: COLORS.line,
+    borderLeft: `5px solid ${COLORS.orange}`,
   },
   kpiValue: {
     color: COLORS.ink,
@@ -14,11 +15,11 @@ export const medicamentosStyles = {
     borderColor: COLORS.line,
   },
   tableHeader: {
-    borderColor: COLORS.line,
-    background: COLORS.bg,
+    borderColor: COLORS.ink,
+    background: COLORS.ink,
   },
   tableHeaderLabel: {
-    color: COLORS.slateSoft,
+    color: COLORS.card,
   },
   row: {
     borderColor: COLORS.line,

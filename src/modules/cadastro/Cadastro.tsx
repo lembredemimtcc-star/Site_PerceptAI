@@ -23,7 +23,7 @@ const FormField = ({ label, value, onChange, placeholder, type = "text", span = 
       value={value}
       onChange={(e) => onChange(e.target.value)}
       placeholder={placeholder}
-      className="w-full h-11 rounded-xl border px-3 text-sm outline-none mt-1.5"
+      className="w-full h-11 border px-3 text-sm outline-none mt-1.5"
       style={styles.fieldInput}
     />
   </div>
@@ -101,12 +101,12 @@ export const Cadastro: React.FC = () => {
     <div className="flex-1 flex flex-col overflow-hidden">
       <TopBar title="Cadastro de Pacientes" subtitle="Admissão e vinculação de leito · Ala UTI 2" />
 
-      <div className="flex-1 grid grid-cols-5 gap-5 p-6 overflow-hidden">
+      <div className="flex-1 grid grid-cols-5 gap-6 px-8 py-7 overflow-hidden">
         {/* Formulário */}
-        <div className="col-span-3 bg-white rounded-2xl border p-6 overflow-y-auto" style={styles.cardBorder}>
+        <div className="col-span-3 bg-white border p-6 overflow-y-auto" style={styles.cardBorder}>
           <div className="flex items-center gap-2 mb-5">
             <ClipboardList size={17} color={styles.cadastroIconColor} />
-            <p className="text-[14px] font-bold" style={styles.cardTitle}>
+            <p className="display text-[1.15rem] font-semibold" style={styles.cardTitle}>
               Dados do paciente
             </p>
           </div>
@@ -123,7 +123,7 @@ export const Cadastro: React.FC = () => {
               </label>
               <div className="mt-1.5 flex items-center gap-2">
                 <div
-                  className="flex-1 h-11 rounded-xl border px-3 flex items-center text-sm"
+                  className="flex-1 h-11 border px-3 flex items-center text-sm"
                   style={styles.fieldInput}
                 >
                   <BedSingle size={15} color={styles.bedIconColor} className="mr-2" />
@@ -150,7 +150,7 @@ export const Cadastro: React.FC = () => {
                 rows={3}
                 value={diagnostico}
                 onChange={e => setDiagnostico(e.target.value)}
-                className="w-full rounded-xl border px-3 py-2.5 mt-1.5 text-sm outline-none resize-none"
+                className="w-full border px-3 py-2.5 mt-1.5 text-sm outline-none resize-none"
                 style={styles.fieldInput}
               />
             </div>
@@ -187,7 +187,7 @@ export const Cadastro: React.FC = () => {
           <button
             onClick={handleCadastrar}
             disabled={!podeSubmeter}
-            className="w-full h-12 rounded-xl text-white font-semibold text-sm mt-6 flex items-center justify-center gap-2 transition-opacity"
+            className="w-full h-12 text-white font-semibold text-sm mt-6 flex items-center justify-center gap-2"
             style={getSubmitButtonStyle(podeSubmeter)}
           >
             <Save size={16} /> Cadastrar Paciente
@@ -196,13 +196,13 @@ export const Cadastro: React.FC = () => {
 
         {/* Lateral direita */}
         <div className="col-span-2 flex flex-col gap-4">
-          <div className="bg-white rounded-2xl border p-5" style={styles.cardBorder}>
-            <p className="text-[13px] font-bold mb-3" style={styles.cardTitle}>
+          <div className="bg-white border p-5" style={styles.cardBorder}>
+            <p className="kicker mb-3" style={styles.cardTitle}>
               Leitos disponíveis
             </p>
             <div className="flex flex-col gap-2">
               {leitosLivresDb.map((l: any) => (
-                <div key={l.id} className="flex items-center justify-between px-3 py-2.5 rounded-xl" style={styles.bedRow}>
+                <div key={l.id} className="flex items-center justify-between px-3 py-2.5" style={styles.bedRow}>
                   <div className="flex items-center gap-2">
                     <BedSingle size={15} color={styles.bedIconColor} />
                     <span className="text-[12.5px] font-semibold" style={styles.bedLabel}>
@@ -217,14 +217,14 @@ export const Cadastro: React.FC = () => {
             </div>
           </div>
 
-          <div className="bg-white rounded-2xl border p-5 flex-1 overflow-y-auto" style={styles.cardBorder}>
-            <p className="text-[13px] font-bold mb-3" style={styles.cardTitle}>
+          <div className="bg-white border p-5 flex-1 overflow-y-auto" style={styles.cardBorder}>
+            <p className="kicker mb-3" style={styles.cardTitle}>
               Cadastros recentes
             </p>
             <div className="flex flex-col gap-3">
               {cadastrosRecentesDb.map((c: any, i: number) => (
                 <div key={i} className="flex items-center gap-3 pb-3 border-b last:border-0" style={styles.cardBorder}>
-                  <div className="w-9 h-9 rounded-full flex items-center justify-center shrink-0" style={styles.cadastroIconBox}>
+                  <div className="w-9 h-9 flex items-center justify-center shrink-0" style={styles.cadastroIconBox}>
                     <UserPlus size={15} color={styles.cadastroIconColor} />
                   </div>
                   <div className="min-w-0">

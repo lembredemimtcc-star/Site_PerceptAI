@@ -86,11 +86,11 @@ export default function PerceptAIPrototype() {
             border: `1px solid ${COLORS.line}`,
             borderLeft: `4px solid ${COLORS.orange}`,
             color: COLORS.ink,
-            borderRadius: "14px",
+            borderRadius: "4px",
             fontSize: "13px",
             fontWeight: 500,
-            padding: "14px 16px",
-            boxShadow: "0 8px 24px rgba(0,0,0,0.08)",
+            padding: "12px 14px",
+            boxShadow: "none",
           },
         }}
         icons={{
@@ -102,7 +102,7 @@ export default function PerceptAIPrototype() {
                 justifyContent: "center",
                 width: 22,
                 height: 22,
-                borderRadius: "50%",
+                borderRadius: "2px",
                 background: COLORS.greenSoft,
                 color: COLORS.green,
                 fontSize: 13,
@@ -120,7 +120,7 @@ export default function PerceptAIPrototype() {
                 justifyContent: "center",
                 width: 22,
                 height: 22,
-                borderRadius: "50%",
+                borderRadius: "2px",
                 background: COLORS.redSoft,
                 color: COLORS.red,
                 fontSize: 13,
@@ -138,7 +138,7 @@ export default function PerceptAIPrototype() {
                 justifyContent: "center",
                 width: 22,
                 height: 22,
-                borderRadius: "50%",
+                borderRadius: "2px",
                 background: COLORS.orangeSoft,
                 color: COLORS.orange,
                 fontSize: 13,
@@ -156,7 +156,7 @@ export default function PerceptAIPrototype() {
                 justifyContent: "center",
                 width: 22,
                 height: 22,
-                borderRadius: "50%",
+                borderRadius: "2px",
                 background: COLORS.orangeSoft,
                 color: COLORS.orange,
                 fontSize: 13,
@@ -172,10 +172,10 @@ export default function PerceptAIPrototype() {
       {!loggedIn ? (
         <LoginScreen onLogin={() => setLoggedIn(true)} />
       ) : (
-        <div className="flex h-screen w-full">
+        <div className="flex h-screen w-full overflow-hidden">
           <Sidebar current={page} onNavigate={navigate} />
           <MobileNavbar current={page} onNavigate={navigate} isOpen={isMobileNavbarOpen} onToggle={toggleMobileNavbar} />
-          <div className="flex-1 min-w-0 pt-14 md:pt-0">
+          <div className="flex-1 min-w-0 flex flex-col pt-14 md:pt-0 overflow-y-auto">
             {page === "dash-pacientes" && <Dashboard onOpenBed={openBed} />}
             {page === "dash-medicos" && <DashMedicos onOpenBed={openBed} />}
             {page === "info-ia" && <InfoIA bed={selectedBed} onBack={() => setPage("dash-pacientes")} />}

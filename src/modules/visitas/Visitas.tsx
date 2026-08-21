@@ -51,14 +51,14 @@ export const Visitas: React.FC = () => {
       <div className="flex justify-end px-8 mt-5">
         <button
           onClick={() => setModalOpen(true)}
-          className="flex items-center gap-2 text-[12.5px] font-semibold text-white px-4 py-2.5 rounded-xl"
+          className="flex items-center gap-2 text-[12.5px] font-semibold text-white px-4 py-2.5"
           style={styles.addButton}
         >
           <Plus size={15} /> Nova Visita
         </button>
       </div>
 
-      <div className="flex items-center gap-2 mx-8 mt-4 px-4 py-2.5 rounded-xl" style={styles.infoBanner}>
+      <div className="flex items-center gap-2 mx-8 mt-4 px-4 py-2.5 border-l-[3px]" style={styles.infoBanner}>
         <Info size={15} color={styles.infoIconColor} />
         <p className="text-[12.5px] font-semibold" style={styles.infoText}>
           Horário de visitas da ala: 13h–13h30 e 15h–15h30. Máximo 1 acompanhante por leito.
@@ -70,15 +70,15 @@ export const Visitas: React.FC = () => {
           const cfg = statusCfg[v.status];
           const Icon = statusIconMap[v.status];
           return (
-            <div key={i} className="bg-white rounded-2xl border p-5" style={styles.card}>
+            <div key={i} className="bg-white border p-5" style={styles.card}>
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-2">
-                  <span className="font-bold text-[14px]" style={styles.leitoLabel}>
+                  <span className="kicker" style={styles.leitoLabel}>
                     Leito {v.leito}
                   </span>
                 </div>
                 <span
-                  className="flex items-center gap-1.5 text-[11px] font-semibold px-2 py-1 rounded-full"
+                  className="flex items-center gap-1.5 text-[11px] font-semibold px-2 py-0.5"
                   style={getStatusBadgeStyle(cfg.bg, cfg.fg)}
                 >
                   <Icon size={12} />
@@ -106,12 +106,12 @@ export const Visitas: React.FC = () => {
                   </span>
                 </div>
                 {v.status === "agendada" && (
-                  <button className="text-[11px] font-semibold px-3 py-1.5 rounded-full text-white" style={styles.checkinButton}>
+                  <button className="text-[11px] font-semibold px-3 py-1.5 text-white" style={styles.checkinButton}>
                     Check-in
                   </button>
                 )}
                 {v.status === "em-andamento" && (
-                  <button className="text-[11px] font-semibold px-3 py-1.5 rounded-full border" style={styles.checkoutButton}>
+                  <button className="text-[11px] font-semibold px-3 py-1.5 border" style={styles.checkoutButton}>
                     Check-out
                   </button>
                 )}

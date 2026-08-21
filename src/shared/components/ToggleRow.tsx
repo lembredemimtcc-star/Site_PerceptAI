@@ -12,9 +12,9 @@ interface ToggleRowProps {
 
 export const ToggleRow: React.FC<ToggleRowProps> = ({ icon: Icon, title, desc, checked, onChange }) => {
   return (
-    <div className="py-4 flex items-center justify-between">
+    <div className="py-4 flex items-center justify-between" style={{ borderBottom: `1px solid ${COLORS.line}` }}>
       <div className="flex items-center gap-3">
-        <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0" style={{ background: COLORS.orangeSoft }}>
+        <div className="w-9 h-9 flex items-center justify-center shrink-0" style={{ background: COLORS.orangeSoft }}>
           <Icon size={17} color={COLORS.orange} />
         </div>
         <div>

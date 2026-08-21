@@ -16,7 +16,7 @@ export const Placeholder: React.FC<PlaceholderProps> = ({ page }) => {
     <div className="flex-1 flex flex-col overflow-hidden">
       <TopBar title={item?.label || "Página"} />
       <div className="flex-1 flex flex-col items-center justify-center gap-3">
-        <div className="w-14 h-14 rounded-2xl flex items-center justify-center" style={styles.iconBox}>
+        <div className="w-14 h-14 flex items-center justify-center" style={styles.iconBox}>
           <Icon size={24} color={styles.iconColor} />
         </div>
         <p className="font-semibold" style={styles.title}>

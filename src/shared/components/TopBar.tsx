@@ -10,18 +10,32 @@ interface TopBarProps {
 
 export const TopBar: React.FC<TopBarProps> = ({ title, subtitle, onBack }) => {
   return (
-    <div className="flex items-center gap-4 px-6 py-4 border-b" style={{ borderColor: COLORS.line, background: COLORS.card }}>
+    <div
+      className="flex items-end gap-5 px-8 pt-6 pb-5"
+      style={{
+        background: COLORS.card,
+        borderBottom: `1px solid ${COLORS.line}`,
+        boxShadow: `inset 0 4px 0 ${COLORS.orange}`,
+      }}
+    >
       {onBack && (
-        <button onClick={onBack} className="p-2 hover:bg-gray-100 rounded-lg">
-          <ArrowLeft size={20} color={COLORS.ink} />
+        <button
+          onClick={onBack}
+          className="mb-1 p-2"
+          style={{ background: COLORS.ink, color: COLORS.card }}
+        >
+          <ArrowLeft size={18} strokeWidth={1.75} />
         </button>
       )}
-      <div>
-        <h1 className="text-xl font-bold" style={{ color: COLORS.ink }}>
+      <div className="min-w-0">
+        <p className="kicker mb-2" style={{ color: COLORS.orange }}>
+          PerceptAI
+        </p>
+        <h1 className="display text-[1.85rem] font-semibold leading-[1.15]" style={{ color: COLORS.ink }}>
           {title}
         </h1>
         {subtitle && (
-          <p className="text-sm" style={{ color: COLORS.slateSoft }}>
+          <p className="text-[14px] mt-1.5" style={{ color: COLORS.slate }}>
             {subtitle}
           </p>
         )}

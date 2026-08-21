@@ -51,10 +51,10 @@ export const NovoMedicamentoModal: React.FC<NovoMedicamentoModalProps> = ({ onCl
 
   return (
     <div className="fixed inset-0 flex items-center justify-center z-50" style={styles.overlay} onClick={onClose}>
-      <div className="w-full max-w-md rounded-2xl border p-6" style={styles.modal} onClick={(e) => e.stopPropagation()}>
+      <div className="w-full max-w-md border p-6" style={styles.modal} onClick={(e) => e.stopPropagation()}>
         <div className="flex items-start justify-between mb-5">
           <div>
-            <p className="text-[15px] font-bold" style={styles.modalTitle}>
+            <p className="display text-[1.25rem] font-semibold" style={styles.modalTitle}>
               Novo Medicamento
             </p>
             <p className="text-[12px] mt-0.5" style={styles.modalSubtitle}>
@@ -74,7 +74,7 @@ export const NovoMedicamentoModal: React.FC<NovoMedicamentoModalProps> = ({ onCl
             <select
               value={leito}
               onChange={(e) => setLeito(e.target.value)}
-              className="w-full h-11 rounded-xl border px-3 text-sm outline-none mt-1.5"
+              className="w-full h-11 border px-3 text-sm outline-none mt-1.5"
               style={styles.fieldInput}
             >
               <option value="">Selecione o paciente</option>
@@ -95,7 +95,7 @@ export const NovoMedicamentoModal: React.FC<NovoMedicamentoModalProps> = ({ onCl
               value={nome}
               onChange={(e) => setNome(e.target.value)}
               placeholder="Ex.: Dipirona 1g"
-              className="w-full h-11 rounded-xl border px-3 text-sm outline-none mt-1.5"
+              className="w-full h-11 border px-3 text-sm outline-none mt-1.5"
               style={styles.fieldInput}
             />
           </div>
@@ -108,7 +108,7 @@ export const NovoMedicamentoModal: React.FC<NovoMedicamentoModalProps> = ({ onCl
               <select
                 value={via}
                 onChange={(e) => setVia(e.target.value)}
-                className="w-full h-11 rounded-xl border px-3 text-sm outline-none mt-1.5"
+                className="w-full h-11 border px-3 text-sm outline-none mt-1.5"
                 style={styles.fieldInput}
               >
                 {VIA_OPTIONS.map(opt => (
@@ -126,7 +126,7 @@ export const NovoMedicamentoModal: React.FC<NovoMedicamentoModalProps> = ({ onCl
                 type="time"
                 value={horario}
                 onChange={(e) => setHorario(e.target.value)}
-                className="w-full h-11 rounded-xl border px-3 text-sm outline-none mt-1.5"
+                className="w-full h-11 border px-3 text-sm outline-none mt-1.5"
                 style={styles.fieldInput}
               />
             </div>
@@ -145,10 +145,10 @@ export const NovoMedicamentoModal: React.FC<NovoMedicamentoModalProps> = ({ onCl
         </div>
 
         <div className="flex gap-3 mt-6">
-          <button onClick={onClose} className="flex-1 h-11 rounded-xl border text-sm font-semibold" style={styles.cancelButton}>
+          <button onClick={onClose} className="flex-1 h-11 border text-sm font-semibold" style={styles.cancelButton}>
             Cancelar
           </button>
-          <button onClick={handleSubmit} disabled={isSubmitting} className="flex-1 h-11 rounded-xl text-sm font-semibold text-white disabled:opacity-60 disabled:cursor-not-allowed" style={styles.confirmButton}>
+          <button onClick={handleSubmit} disabled={isSubmitting} className="flex-1 h-11 text-sm font-semibold text-white disabled:opacity-60 disabled:cursor-not-allowed" style={styles.confirmButton}>
             Adicionar
           </button>
         </div>

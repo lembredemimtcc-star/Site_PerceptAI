@@ -2,7 +2,6 @@ import React from "react";
 import { LogOut } from "lucide-react";
 import { COLORS } from "../../config/colors";
 import { navItems } from "../../config/mockData";
-import { FileText } from "lucide-react";
 
 interface SidebarProps {
   current: string;
@@ -11,17 +10,23 @@ interface SidebarProps {
 
 export const Sidebar: React.FC<SidebarProps> = ({ current, onNavigate }) => {
   return (
-    <div className="hidden md:flex w-64 flex-col border-r overflow-hidden" style={{ borderColor: COLORS.line, background: COLORS.card }}>
-      <div className="p-6 border-b" style={{ borderColor: COLORS.line }}>
-        <h2 className="text-lg font-bold" style={{ color: COLORS.orange }}>
+    <div
+      className="hidden md:flex w-[248px] flex-col overflow-hidden"
+      style={{ background: COLORS.ink }}
+    >
+      <div className="px-6 pt-8 pb-7" style={{ borderBottom: `1px solid rgba(255,255,255,0.08)` }}>
+        <p className="kicker mb-3" style={{ color: COLORS.orange }}>
+          Hospital
+        </p>
+        <h2 className="display text-[1.7rem] font-semibold leading-none" style={{ color: COLORS.card }}>
           PerceptAI
         </h2>
-        <p className="text-xs mt-1" style={{ color: COLORS.slateSoft }}>
+        <p className="text-[13px] mt-3 leading-snug" style={{ color: COLORS.line }}>
           Monitoramento hospitalar
         </p>
       </div>
 
-      <nav className="flex-1 overflow-y-auto p-4 space-y-2">
+      <nav className="flex-1 overflow-y-auto px-3 py-5">
         {navItems.filter(item => item.key !== "login").map(item => {
           const Icon = item.icon;
           const isActive = current === item.key;
@@ -29,26 +34,27 @@ export const Sidebar: React.FC<SidebarProps> = ({ current, onNavigate }) => {
             <button
               key={item.key}
               onClick={() => onNavigate(item.key)}
-              className="w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors text-sm font-medium"
+              className="w-full flex items-center gap-3 px-3 py-2.5 mb-1 text-[13.5px] text-left"
               style={{
-                background: isActive ? COLORS.orangeSoft : "transparent",
-                color: isActive ? COLORS.orange : COLORS.slate,
+                background: isActive ? COLORS.orange : "transparent",
+                color: isActive ? COLORS.card : COLORS.line,
+                fontWeight: isActive ? 600 : 400,
               }}
             >
-              <Icon size={18} />
+              <Icon size={16} strokeWidth={1.75} />
               {item.label}
             </button>
           );
         })}
       </nav>
 
-      <div className="p-4 border-t" style={{ borderColor: COLORS.line }}>
+      <div className="px-3 py-5" style={{ borderTop: `1px solid rgba(255,255,255,0.08)` }}>
         <button
           onClick={() => onNavigate("login")}
-          className="w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors text-sm font-medium"
-          style={{ color: COLORS.red }}
+          className="w-full flex items-center gap-3 px-3 py-2.5 text-[13.5px] font-medium text-left"
+          style={{ color: COLORS.redSoft }}
         >
-          <LogOut size={18} />
+          <LogOut size={16} strokeWidth={1.75} />
           Sair
         </button>
       </div>

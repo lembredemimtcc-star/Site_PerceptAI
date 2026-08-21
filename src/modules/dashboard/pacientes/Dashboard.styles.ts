@@ -21,11 +21,11 @@ export const dashboardStyles = {
     background: COLORS.bg,
   },
   filterButton: {
-    borderColor: COLORS.line,
-    background: COLORS.card,
-    color: COLORS.ink,
+    borderColor: COLORS.ink,
+    background: COLORS.ink,
+    color: COLORS.card,
   },
-  filterIconColor: COLORS.slate,
+  filterIconColor: COLORS.card,
   filterDropdownMenu: {
     background: COLORS.card,
     borderColor: COLORS.line,
@@ -34,7 +34,7 @@ export const dashboardStyles = {
     borderColor: COLORS.line,
   },
   sectionTitle: {
-    color: COLORS.ink,
+    color: COLORS.orange,
   },
   patientRow: {
     background: COLORS.bg,

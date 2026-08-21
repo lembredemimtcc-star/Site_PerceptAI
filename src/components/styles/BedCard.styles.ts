@@ -2,11 +2,14 @@ import { COLORS } from "../../config/colors";
 
 export const bedCardStyles = {
   button: {
-    borderColor: COLORS.line,
+    border: `1px solid ${COLORS.line}`,
     background: COLORS.card,
   },
   bedLabel: {
-    color: COLORS.slateSoft,
+    color: COLORS.orange,
+    letterSpacing: "0.1em",
+    textTransform: "uppercase" as const,
+    fontWeight: 600,
   },
   bedName: {
     color: COLORS.ink,
@@ -31,6 +34,9 @@ export const riskColors = {
   attention: { bg: COLORS.orangeSoft, text: COLORS.orange },
   normal: { bg: COLORS.greenSoft, text: COLORS.green },
 };
+
+export const getRiskStripe = (risk: keyof typeof riskColors) =>
+  riskColors[risk].text;
 
 export const getRiskBadgeStyle = (risk: keyof typeof riskColors) => ({
   background: riskColors[risk].bg,

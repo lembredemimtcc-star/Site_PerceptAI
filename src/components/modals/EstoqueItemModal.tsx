@@ -80,24 +80,24 @@ export const EstoqueItemModal: React.FC<EstoqueItemModalProps> = ({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={styles.overlay}>
       <div
-        className="w-[500px] max-w-[92vw] max-h-[85vh] rounded-2xl bg-white overflow-hidden flex flex-col"
+        className="w-[500px] max-w-[92vw] max-h-[85vh] bg-white overflow-hidden flex flex-col"
         style={styles.card}
       >
         {/* Header (fixo) */}
         <div className="flex items-center justify-between px-6 py-5 border-b shrink-0" style={styles.header}>
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={styles.headerIconWrap}>
+            <div className="w-8 h-8 flex items-center justify-center" style={styles.headerIconWrap}>
               {mode === "novo" ? (
                 <PackagePlus size={16} color={styles.headerIconColor} />
               ) : (
                 <Package size={16} color={styles.headerIconColor} />
               )}
             </div>
-            <p className="text-[15px] font-bold" style={styles.title}>
+            <p className="display text-[1.25rem] font-semibold" style={styles.title}>
               {mode === "novo" ? "Adicionar item" : "Editar item"}
             </p>
           </div>
-          <button type="button" onClick={onClose} className="w-7 h-7 rounded-lg flex items-center justify-center">
+          <button type="button" onClick={onClose} className="w-7 h-7 flex items-center justify-center">
             <X size={16} color={styles.closeIconColor} />
           </button>
         </div>
@@ -113,7 +113,7 @@ export const EstoqueItemModal: React.FC<EstoqueItemModalProps> = ({
                 value={form.nome}
                 onChange={(e) => setForm((f) => ({ ...f, nome: e.target.value }))}
                 placeholder="Ex: Máscara N95"
-                className="h-10 rounded-lg px-3 text-[13px] border outline-none"
+                className="h-10 px-3 text-[13px] border outline-none"
                 style={styles.input}
               />
             </div>
@@ -127,7 +127,7 @@ export const EstoqueItemModal: React.FC<EstoqueItemModalProps> = ({
                 value={form.categoria}
                 onChange={(e) => setForm((f) => ({ ...f, categoria: e.target.value }))}
                 placeholder="Ex: EPI, Curativo, Medicamento..."
-                className="h-10 rounded-lg px-3 text-[13px] border outline-none"
+                className="h-10 px-3 text-[13px] border outline-none"
                 style={styles.input}
               />
               <datalist id="categorias-existentes">
@@ -146,7 +146,7 @@ export const EstoqueItemModal: React.FC<EstoqueItemModalProps> = ({
                 inputMode="numeric"
                 value={form.quantidade}
                 onChange={handleNumericChange("quantidade")}
-                className="h-10 rounded-lg px-3 text-[13px] border outline-none"
+                className="h-10 px-3 text-[13px] border outline-none"
                 style={styles.input}
               />
             </div>
@@ -160,7 +160,7 @@ export const EstoqueItemModal: React.FC<EstoqueItemModalProps> = ({
                 inputMode="numeric"
                 value={form.minimo}
                 onChange={handleNumericChange("minimo")}
-                className="h-10 rounded-lg px-3 text-[13px] border outline-none"
+                className="h-10 px-3 text-[13px] border outline-none"
                 style={styles.input}
               />
             </div>
@@ -173,7 +173,7 @@ export const EstoqueItemModal: React.FC<EstoqueItemModalProps> = ({
                 value={form.unidade}
                 onChange={(e) => setForm((f) => ({ ...f, unidade: e.target.value }))}
                 placeholder="un, caixa, L..."
-                className="h-10 rounded-lg px-3 text-[13px] border outline-none"
+                className="h-10 px-3 text-[13px] border outline-none"
                 style={styles.input}
               />
             </div>
@@ -181,10 +181,10 @@ export const EstoqueItemModal: React.FC<EstoqueItemModalProps> = ({
 
           {/* Ações (fixas) */}
           <div className="flex items-center justify-end gap-3 px-6 py-4 border-t shrink-0" style={styles.header}>
-            <button type="button" onClick={onClose} className="h-10 px-4 rounded-lg text-[13px] font-semibold" style={styles.cancelButton}>
+            <button type="button" onClick={onClose} className="h-10 px-4 text-[13px] font-semibold" style={styles.cancelButton}>
               Cancelar
             </button>
-            <button type="submit" disabled={isSubmitting} className="h-10 px-4 rounded-lg text-[13px] font-semibold disabled:opacity-60 disabled:cursor-not-allowed" style={styles.saveButton}>
+            <button type="submit" disabled={isSubmitting} className="h-10 px-4 text-[13px] font-semibold disabled:opacity-60 disabled:cursor-not-allowed" style={styles.saveButton}>
               {mode === "novo" ? "Adicionar" : "Salvar alterações"}
             </button>
           </div>

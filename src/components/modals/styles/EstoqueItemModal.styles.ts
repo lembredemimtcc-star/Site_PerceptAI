@@ -1,11 +1,12 @@
-import { COLORS } from "../../../config/colors";
+import { COLORS, INK_OVERLAY } from "../../../config/colors";
 
 export const estoqueItemModalStyles = {
   overlay: {
-    background: "rgba(0, 0, 0, 0.5)",
+    background: INK_OVERLAY,
   },
   card: {
-    boxShadow: "0 20px 60px rgba(15, 23, 42, 0.25)",
+    border: `1px solid ${COLORS.line}`,
+    background: COLORS.card,
   },
   header: {
     borderColor: COLORS.line,
@@ -24,7 +25,7 @@ export const estoqueItemModalStyles = {
   input: {
     borderColor: COLORS.line,
     color: COLORS.ink,
-    background: COLORS.bg,
+    background: COLORS.card,
   },
   cancelButton: {
     color: COLORS.slate,

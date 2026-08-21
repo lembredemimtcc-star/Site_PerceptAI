@@ -1,22 +1,48 @@
 import React from "react";
+import { COLORS } from "./colors";
 
 export const FontsAndStyles = () => (
   <style>{`
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap');
-    * { font-family: 'Inter', system-ui, sans-serif; box-sizing: border-box; }
-    .mono { font-family: 'JetBrains Mono', monospace; }
+    @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap');
+
+    html, body, button, input, select, textarea {
+      font-family: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+    }
+
+    .display {
+      font-family: "Fraunces", Georgia, "Times New Roman", serif;
+      letter-spacing: -0.03em;
+      font-optical-sizing: auto;
+    }
+
+    .kicker {
+      font-family: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    .mono {
+      font-family: ui-monospace, "IBM Plex Mono", "Cascadia Mono", monospace;
+    }
+
     @keyframes pulseRingRed {
-      0% { box-shadow: 0 0 0 0 rgba(225,69,69,0.35); }
-      70% { box-shadow: 0 0 0 9px rgba(225,69,69,0); }
-      100% { box-shadow: 0 0 0 0 rgba(225,69,69,0); }
+      0%, 100% { box-shadow: 0 0 0 0 rgba(225, 69, 69, 0); }
+      50% { box-shadow: 0 0 0 3px rgba(225, 69, 69, 0.22); }
     }
     @keyframes pulseDot {
-      0%,100% { opacity: 1; transform: scale(1); }
-      50% { opacity: .45; transform: scale(1.35); }
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
     }
-    .pulse-critical { animation: pulseRingRed 2.2s infinite; }
-    .pulse-dot { animation: pulseDot 1.6s infinite; }
-    ::-webkit-scrollbar { width: 8px; height: 8px; }
-    ::-webkit-scrollbar-thumb { background: #D8DEE5; border-radius: 8px; }
+    .pulse-critical { animation: pulseRingRed 2.4s ease-in-out infinite; }
+    .pulse-dot { animation: pulseDot 1.8s ease-in-out infinite; }
+
+    ::-webkit-scrollbar { width: 10px; height: 10px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb {
+      background: ${COLORS.line};
+      border: 2px solid ${COLORS.bg};
+    }
   `}</style>
 );

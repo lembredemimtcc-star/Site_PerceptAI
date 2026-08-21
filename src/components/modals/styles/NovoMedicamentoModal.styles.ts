@@ -1,8 +1,8 @@
-import { COLORS } from "../../../config/colors";
+import { COLORS, INK_OVERLAY } from "../../../config/colors";
 
 export const novoMedicamentoModalStyles = {
   overlay: {
-    background: "rgba(0, 0, 0, 0.5)",
+    background: INK_OVERLAY,
   },
   modal: {
     background: COLORS.card,
@@ -21,6 +21,7 @@ export const novoMedicamentoModalStyles = {
   fieldInput: {
     borderColor: COLORS.line,
     color: COLORS.ink,
+    background: COLORS.card,
   },
   checkboxLabel: {
     color: COLORS.slate,
