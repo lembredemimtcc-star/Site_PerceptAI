@@ -23,15 +23,15 @@ export const cadastroStyles = {
   checkboxText: {
     color: COLORS.slate,
   },
-  bedIconColor: COLORS.green,
+  bedIconColor: COLORS.orange,
   bedRow: {
-    background: COLORS.greenSoft,
+    background: COLORS.orangeSoft,
   },
   bedLabel: {
     color: COLORS.ink,
   },
   bedStatus: {
-    color: COLORS.green,
+    color: COLORS.orange,
   },
   cadastroIconBox: {
     background: COLORS.orangeSoft,
@@ -47,6 +47,7 @@ export const cadastroStyles = {
 
 // Estilo dinâmico (depende do estado podeSubmeter)
 export const getSubmitButtonStyle = (podeSubmeter: boolean) => ({
-  background: podeSubmeter ? COLORS.orange : COLORS.slateSoft,
+  background: podeSubmeter ? COLORS.orange : COLORS.orangeDark,
+  opacity: podeSubmeter ? 1 : 0.55,
   cursor: podeSubmeter ? "pointer" : "not-allowed",
 });

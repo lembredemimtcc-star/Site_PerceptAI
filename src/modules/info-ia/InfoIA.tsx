@@ -261,9 +261,9 @@ export const InfoIA: React.FC<InfoIAProps> = ({ bed, onBack }) => {
                   <>
                     <span
                       className="w-2 h-2 rounded-full animate-pulse"
-                      style={{ background: COLORS.green }}
+                      style={{ background: COLORS.orange }}
                     />
-                    <span className="text-[11px] font-semibold" style={{ color: COLORS.green }}>
+                    <span className="text-[11px] font-semibold" style={{ color: COLORS.orange }}>
                       AO VIVO
                     </span>
                   </>
@@ -289,7 +289,7 @@ export const InfoIA: React.FC<InfoIAProps> = ({ bed, onBack }) => {
             {/* Vídeo */}
             <div
               className="relative w-full overflow-hidden flex items-center justify-center"
-              style={{ aspectRatio: "4/3", minHeight: 200, background: COLORS.ink }}
+              style={{ aspectRatio: "4/3", minHeight: 200, background: COLORS.orangePainel }}
             >
               <video
                 ref={videoRef}
@@ -304,7 +304,7 @@ export const InfoIA: React.FC<InfoIAProps> = ({ bed, onBack }) => {
               />
 
               {cameraState !== "active" && (
-                <div className="flex flex-col items-center gap-2" style={{ color: COLORS.slateSoft }}>
+                <div className="flex flex-col items-center gap-2" style={{ color: COLORS.orangeSoft }}>
                   {cameraState === "starting" ? (
                     <Loader2 size={32} className="animate-spin" />
                   ) : cameraState === "error" ? (
@@ -360,7 +360,7 @@ export const InfoIA: React.FC<InfoIAProps> = ({ bed, onBack }) => {
 
             {!bed.internacaoId && (
               <p className="text-[11px] text-center" style={{ color: COLORS.orange }}>
-                ⚠️ Este leito não possui internação ativa — detecções não serão salvas.
+                Este leito não possui internação ativa — detecções não serão salvas.
               </p>
             )}
           </div>
@@ -390,7 +390,7 @@ export const InfoIA: React.FC<InfoIAProps> = ({ bed, onBack }) => {
                     Confiança: {detectedConf}% · {lastDetectionTs}
                   </p>
                 </div>
-                <CheckCircle size={20} color={COLORS.green} className="ml-auto shrink-0" />
+                <CheckCircle size={20} color={COLORS.orange} className="ml-auto shrink-0" />
               </div>
             ) : (
               <div className="flex items-center gap-3" style={{ color: COLORS.slateSoft }}>

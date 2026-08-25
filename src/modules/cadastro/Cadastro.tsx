@@ -194,8 +194,8 @@ export const Cadastro: React.FC = () => {
           </button>
         </div>
 
-        {/* Lateral direita */}
-        <div className="col-span-2 flex flex-col gap-4">
+        {/* Lateral direita — coluna inteira rolável */}
+        <div className="col-span-2 flex flex-col gap-4 overflow-y-auto min-h-0 scroll-orange pr-1">
           <div className="bg-white border p-5" style={styles.cardBorder}>
             <p className="kicker mb-3" style={styles.cardTitle}>
               Leitos disponíveis
@@ -217,7 +217,7 @@ export const Cadastro: React.FC = () => {
             </div>
           </div>
 
-          <div className="bg-white border p-5 flex-1 overflow-y-auto" style={styles.cardBorder}>
+          <div className="bg-white border p-5" style={styles.cardBorder}>
             <p className="kicker mb-3" style={styles.cardTitle}>
               Cadastros recentes
             </p>

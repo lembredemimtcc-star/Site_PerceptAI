@@ -13,7 +13,7 @@ export const DoctorCard: React.FC<DoctorCardProps> = ({ doctor, beds, onOpenModa
       className="text-left p-5 w-full"
       style={{
         ...styles.card,
-        borderLeft: `5px solid ${doctor.plantao ? COLORS.green : COLORS.line}`,
+        borderLeft: `5px solid ${doctor.plantao ? COLORS.orange : COLORS.line}`,
       }}
     >
       <div className="flex justify-between items-start mb-3">

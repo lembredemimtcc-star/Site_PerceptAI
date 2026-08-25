@@ -6,6 +6,7 @@ import { useAccessibility, type FontSize } from "../../shared/accessibility";
 import {
   acessibilidadeStyles as styles,
   getFonteButtonStyle,
+  getSaveButtonStyle,
   getPreviewBoxStyle,
   getPreviewIconColor,
   getPreviewTitleStyle,
@@ -133,7 +134,7 @@ export const Acessibilidade: React.FC = () => {
           <button
             onClick={handleSave}
             disabled={!dirty}
-            style={{ ...styles.saveButton, opacity: dirty ? 1 : 0.55 }}
+            style={getSaveButtonStyle(dirty)}
             className="w-full h-12 text-white font-semibold text-sm mt-4 flex items-center justify-center gap-2"
           >
             <Save size={16} /> {dirty ? "Salvar preferências" : "Preferências salvas"}

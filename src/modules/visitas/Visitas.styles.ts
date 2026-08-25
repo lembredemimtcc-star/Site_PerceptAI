@@ -5,11 +5,13 @@ export const visitasStyles = {
     background: COLORS.orange,
   },
   infoBanner: {
-    background: COLORS.orangeSoft,
+    background: COLORS.card,
+    borderColor: COLORS.line,
+    borderLeftColor: COLORS.orange,
   },
-  infoIconColor: COLORS.orangeDark,
+  infoIconColor: COLORS.orange,
   infoText: {
-    color: COLORS.orangeDark,
+    color: COLORS.slate,
   },
   card: {
     borderColor: COLORS.line,
@@ -41,8 +43,8 @@ export const visitasStyles = {
 };
 
 export const statusCfg = {
-  "em-andamento": { label: "Em andamento", bg: COLORS.greenSoft, fg: COLORS.green },
-  "agendada": { label: "Agendada", bg: COLORS.orangeSoft, fg: COLORS.orangeDark },
+  "em-andamento": { label: "Em andamento", bg: COLORS.orangeSoft, fg: COLORS.orangeDark },
+  "agendada": { label: "Agendada", bg: COLORS.bg, fg: COLORS.slateSoft },
   "finalizada": { label: "Finalizada", bg: COLORS.bg, fg: COLORS.slateSoft },
 };
 

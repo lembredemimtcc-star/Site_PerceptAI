@@ -22,11 +22,10 @@ export const Visitas: React.FC = () => {
   const { data: supabaseVisitas = [], refetch } = useVisitas();
   const [modalOpen, setModalOpen] = useState(false);
 
-  // Transform DB rows to local Visita array
   const visitasData: Visita[] = supabaseVisitas.map((dbVisita: any) => {
     const formatTime = (ts: string | null) => ts ? new Date(ts).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : "??:??";
     return {
-      leito: "??", // Em um setup real, faríamos join com internacoes via paciente_id se necessário
+      leito: "??",
       paciente: dbVisita.paciente?.nome || "",
       visitante: dbVisita.nome_visitante || "Desconhecido",
       parentesco: dbVisita.parentesco || "-",
@@ -38,14 +37,14 @@ export const Visitas: React.FC = () => {
   });
 
   const handleAddVisita = async (visita: Visita) => {
-    // TODO: save real visita + visitante records using supabase
-    // for now just close modal
     setModalOpen(false);
   };
 
   return (
-    <div className="flex-1 flex flex-col overflow-hidden">
-      <TopBar title="Visitas" subtitle="Controle de acesso de visitantes · Ala UTI 2" />
+    <div className="flex flex-col">
+      <div className="sticky top-0 z-10">
+        <TopBar title="Visitas" subtitle="Controle de acesso de visitantes · Ala UTI 2" />
+      </div>
 
       {/* Botão nova visita */}
       <div className="flex justify-end px-8 mt-5">
@@ -58,14 +57,14 @@ export const Visitas: React.FC = () => {
         </button>
       </div>
 
-      <div className="flex items-center gap-2 mx-8 mt-4 px-4 py-2.5 border-l-[3px]" style={styles.infoBanner}>
+      <div className="flex items-center gap-2 mx-8 mt-4 px-4 py-2.5 border border-l-[3px]" style={styles.infoBanner}>
         <Info size={15} color={styles.infoIconColor} />
-        <p className="text-[12.5px] font-semibold" style={styles.infoText}>
+        <p className="text-[12.5px] font-medium" style={styles.infoText}>
           Horário de visitas da ala: 13h–13h30 e 15h–15h30. Máximo 1 acompanhante por leito.
         </p>
       </div>
 
-      <div className="grid grid-cols-2 gap-4 px-8 py-6 overflow-y-auto">
+      <div className="grid grid-cols-2 gap-4 px-8 py-6">
         {visitasData.map((v, i) => {
           const cfg = statusCfg[v.status];
           const Icon = statusIconMap[v.status];

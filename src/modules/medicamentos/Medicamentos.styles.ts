@@ -15,8 +15,8 @@ export const medicamentosStyles = {
     borderColor: COLORS.line,
   },
   tableHeader: {
-    borderColor: COLORS.ink,
-    background: COLORS.ink,
+    borderColor: COLORS.orangePainel,
+    background: COLORS.orangePainel,
   },
   tableHeaderLabel: {
     color: COLORS.card,
@@ -47,8 +47,8 @@ export const medicamentosStyles = {
 };
 
 export const statusCfg = {
-  administrado: { label: "Administrado", bg: COLORS.greenSoft, fg: COLORS.green },
-  pendente: { label: "Pendente", bg: COLORS.orangeSoft, fg: COLORS.orangeDark },
+  administrado: { label: "Administrado", bg: COLORS.orangeSoft, fg: COLORS.orangeDark },
+  pendente: { label: "Pendente", bg: COLORS.bg, fg: COLORS.slateSoft },
   atrasado: { label: "Atrasado", bg: COLORS.redSoft, fg: COLORS.red },
 };
 

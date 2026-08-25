@@ -21,8 +21,8 @@ export const dashboardStyles = {
     background: COLORS.bg,
   },
   filterButton: {
-    borderColor: COLORS.ink,
-    background: COLORS.ink,
+    borderColor: COLORS.orangePainel,
+    background: COLORS.orangePainel,
     color: COLORS.card,
   },
   filterIconColor: COLORS.card,

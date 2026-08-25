@@ -21,10 +21,14 @@ export const TopBar: React.FC<TopBarProps> = ({ title, subtitle, onBack }) => {
       {onBack && (
         <button
           onClick={onBack}
-          className="mb-1 p-2"
-          style={{ background: COLORS.ink, color: COLORS.card }}
+          className="mb-1 p-1 flex items-center justify-center transition-colors hover:opacity-70"
+          style={{
+            background: "transparent",
+            border: "none",
+            color: COLORS.slate,
+          }}
         >
-          <ArrowLeft size={18} strokeWidth={1.75} />
+          <ArrowLeft size={20} strokeWidth={1.75} />
         </button>
       )}
       <div className="min-w-0">

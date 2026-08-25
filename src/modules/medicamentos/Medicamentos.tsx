@@ -47,7 +47,6 @@ export const Medicamentos: React.FC = () => {
   const queryClient = useQueryClient();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // Mapear dados do Supabase para o formato da UI
   const items: Medicamento[] = administracoes.map((admin: any) => ({
     id: admin.id,
     leito: admin.prescricao?.internacao?.leito?.numero || "??",
@@ -61,8 +60,7 @@ export const Medicamentos: React.FC = () => {
 
   const toggleAdministrado = async (id: string, currentStatus: string) => {
     const newStatus = currentStatus === "administrado" ? "pendente" : "administrado";
-    
-    // Optimistic update
+
     queryClient.setQueryData(['administracoes', undefined], (old: any) => {
       if (!old) return old;
       return old.map((m: any) => m.id === id ? { ...m, status: newStatus } : m);
@@ -77,20 +75,21 @@ export const Medicamentos: React.FC = () => {
       if (error) throw error;
     } catch (err) {
       console.error(err);
-      queryClient.invalidateQueries({ queryKey: ['administracoes'] }); // revert
+      queryClient.invalidateQueries({ queryKey: ['administracoes'] });
     }
   };
 
   const handleAddMedicamento = (novo: Omit<Medicamento, "id" | "status">) => {
-    // TODO: implement real add with Supabase
     setIsModalOpen(false);
   };
 
   const pendentesOuAtrasados = items.filter(m => m.status !== "administrado").length;
 
   return (
-    <div className="flex-1 flex flex-col overflow-hidden">
-      <TopBar title="Medicamentos" subtitle="Administração e horários por leito · Ala UTI 2" />
+    <div className="flex flex-col">
+      <div className="sticky top-0 z-10">
+        <TopBar title="Medicamentos" subtitle="Administração e horários por leito · Ala UTI 2" />
+      </div>
 
       <div className="flex items-center justify-between px-8 pt-6">
         <div className="grid grid-cols-3 gap-4 flex-1">
@@ -111,7 +110,7 @@ export const Medicamentos: React.FC = () => {
         </button>
       </div>
 
-      <div className="flex-1 mx-8 my-5 bg-white border overflow-hidden flex flex-col" style={styles.tableCard}>
+      <div className="mx-8 my-5 bg-white border overflow-hidden flex flex-col" style={styles.tableCard}>
         <div className="grid grid-cols-12 px-5 h-11 items-center border-b shrink-0" style={styles.tableHeader}>
           {["Horário", "Leito", "Paciente", "Medicamento", "Via", "Status", ""].map((h, i) => (
             <span
@@ -125,7 +124,7 @@ export const Medicamentos: React.FC = () => {
             </span>
           ))}
         </div>
-        <div className="flex-1 overflow-y-auto">
+        <div>
           {items.sort((a, b) => a.horario.localeCompare(b.horario)).map(m => {
             const cfg = statusIcons[m.status];
             const StatusIcon = statusIconMap[m.status];

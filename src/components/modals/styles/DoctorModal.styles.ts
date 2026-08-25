@@ -42,6 +42,6 @@ export const doctorModalStyles = {
 };
 
 export const getPlantaoToggleStyle = (plantao: boolean) => ({
-  background: plantao ? COLORS.greenSoft : COLORS.line,
-  color: plantao ? COLORS.green : COLORS.slateSoft,
+  background: plantao ? COLORS.orangeSoft : COLORS.line,
+  color: plantao ? COLORS.orange : COLORS.slateSoft,
 });

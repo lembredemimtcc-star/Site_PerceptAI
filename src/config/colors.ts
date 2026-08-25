@@ -6,6 +6,7 @@ export const COLORS = {
   slateSoft: "#53606C",
   line: "#E5E9EE",
   orange: "#F2652E",
+  orangePainel: '#76290b',
   orangeDark: "#C94F1F",
   orangeSoft: "#FFF0E6",
   red: "#E14545",

@@ -26,7 +26,7 @@ export const infoIAStyles = {
     border: `1px solid ${COLORS.line}`,
   },
   chartLineHr: COLORS.red,
-  chartLineSpo2: COLORS.green,
+  chartLineSpo2: COLORS.orangeDark,
   chartBarPain: COLORS.orange,
   eventRow: {
     background: COLORS.bg,

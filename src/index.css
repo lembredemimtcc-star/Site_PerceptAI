@@ -227,3 +227,37 @@ html.a11y-reduce-motion .a11y-preview [style*="a11y-preview-pulse"] {
   animation-duration: 1.2s !important;
   animation-iteration-count: infinite !important;
 }
+
+/* Scrollbar customizada do menu lateral (Sidebar) */
+.sidebar-nav {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.35) transparent;
+}
+
+.sidebar-nav::-webkit-scrollbar {
+  width: 6px;
+}
+
+.sidebar-nav::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.sidebar-nav::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.35);
+  border-radius: 999px;
+}
+
+.sidebar-nav::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(255, 255, 255, 0.55);
+}
+
+/* Scrollbar temática para áreas com fundo claro (ex: coluna direita do Cadastro) */
+.scroll-orange {
+  scrollbar-width: thin;
+  scrollbar-color: rgb(229,233,238) transparent; /* COLORS.orangeDark em rgba */
+}
+
+.scroll-orange::-webkit-scrollbar {
+  width: 6px;
+}
+
