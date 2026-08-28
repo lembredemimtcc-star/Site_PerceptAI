@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Info, UserCheck, Clock, UserX, Plus } from "lucide-react";
+import { toast } from "sonner";
 import { TopBar, WireframeAvatar } from "../../shared/components";
 import { Visita } from "./visitas.types";
 import { NovaVisitaModal } from "../../components/modals/NovaVisitaModal";
@@ -9,35 +10,70 @@ import {
   getStatusBadgeStyle,
 } from "./Visitas.styles";
 
-import { useVisitas } from "../../hooks";
-import { supabase } from "../../lib/supabase";
+import { useBeds, useVisitas } from "../../hooks";
+import { atualizarVisitaStatus, criarVisita } from "../../lib/mutations";
 
 const statusIconMap = {
   "em-andamento": UserCheck,
-  "agendada": Clock,
-  "finalizada": UserX,
+  agendada: Clock,
+  finalizada: UserX,
 };
+
+function mapStatus(raw: string | null | undefined, dataSaida: string | null): Visita["status"] {
+  if (raw === "concluida" || raw === "finalizada") return "finalizada";
+  if (raw === "em-andamento" || raw === "em_andamento") return "em-andamento";
+  if (raw === "agendada") return "agendada";
+  return dataSaida ? "finalizada" : "agendada";
+}
 
 export const Visitas: React.FC = () => {
   const { data: supabaseVisitas = [], refetch } = useVisitas();
+  const { data: beds = [] } = useBeds();
   const [modalOpen, setModalOpen] = useState(false);
 
   const visitasData: Visita[] = supabaseVisitas.map((dbVisita: any) => {
-    const formatTime = (ts: string | null) => ts ? new Date(ts).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : "??:??";
+    const formatTime = (ts: string | null) =>
+      ts ? new Date(ts).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) : "??:??";
     return {
-      leito: "??",
-      paciente: dbVisita.paciente?.nome || "",
-      visitante: dbVisita.nome_visitante || "Desconhecido",
+      id: dbVisita.id,
+      internacaoId: dbVisita.internacao_id,
+      pacienteId: dbVisita.paciente_id,
+      leito: dbVisita.leito || "??",
+      paciente: dbVisita.paciente || "",
+      visitante: dbVisita.visitante || "Desconhecido",
       parentesco: dbVisita.parentesco || "-",
       entrada: formatTime(dbVisita.data_entrada),
       saida: formatTime(dbVisita.data_saida) === "??:??" ? "---" : formatTime(dbVisita.data_saida),
-      status: dbVisita.status === "concluida" ? "finalizada" : (dbVisita.data_saida ? "agendada" : "em-andamento"),
-      id: dbVisita.id,
+      status: mapStatus(dbVisita.status, dbVisita.data_saida),
     };
   });
 
   const handleAddVisita = async (visita: Visita) => {
-    setModalOpen(false);
+    try {
+      await criarVisita({
+        ...(visita.internacaoId !== undefined ? { internacaoId: visita.internacaoId } : {}),
+        ...(visita.pacienteId !== undefined ? { pacienteId: visita.pacienteId } : {}),
+        visitante: visita.visitante,
+        parentesco: visita.parentesco,
+        entrada: visita.entrada,
+        saida: visita.saida,
+      });
+      toast.success("Visita agendada com sucesso!");
+      setModalOpen(false);
+      refetch();
+    } catch (err: any) {
+      toast.error(err.message || "Erro ao agendar visita");
+    }
+  };
+
+  const handleStatus = async (id: string | undefined, status: Visita["status"]) => {
+    if (!id) return;
+    try {
+      await atualizarVisitaStatus(id, status);
+      refetch();
+    } catch (err: any) {
+      toast.error(err.message || "Erro ao atualizar visita");
+    }
   };
 
   return (
@@ -46,7 +82,6 @@ export const Visitas: React.FC = () => {
         <TopBar title="Visitas" subtitle="Controle de acesso de visitantes · Ala UTI 2" />
       </div>
 
-      {/* Botão nova visita */}
       <div className="flex justify-end px-8 mt-5">
         <button
           onClick={() => setModalOpen(true)}
@@ -65,11 +100,11 @@ export const Visitas: React.FC = () => {
       </div>
 
       <div className="grid grid-cols-2 gap-4 px-8 py-6">
-        {visitasData.map((v, i) => {
+        {visitasData.map((v) => {
           const cfg = statusCfg[v.status];
           const Icon = statusIconMap[v.status];
           return (
-            <div key={i} className="bg-white border p-5" style={styles.card}>
+            <div key={v.id} className="bg-white border p-5" style={styles.card}>
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-2">
                   <span className="kicker" style={styles.leitoLabel}>
@@ -92,7 +127,7 @@ export const Visitas: React.FC = () => {
                     {v.visitante}
                   </p>
                   <p className="text-[11.5px]" style={styles.visitanteParentesco}>
-                    {v.parentesco}
+                    {v.parentesco} {v.paciente ? `· ${v.paciente}` : ""}
                   </p>
                 </div>
               </div>
@@ -105,12 +140,20 @@ export const Visitas: React.FC = () => {
                   </span>
                 </div>
                 {v.status === "agendada" && (
-                  <button className="text-[11px] font-semibold px-3 py-1.5 text-white" style={styles.checkinButton}>
+                  <button
+                    className="text-[11px] font-semibold px-3 py-1.5 text-white"
+                    style={styles.checkinButton}
+                    onClick={() => handleStatus(v.id, "em-andamento")}
+                  >
                     Check-in
                   </button>
                 )}
                 {v.status === "em-andamento" && (
-                  <button className="text-[11px] font-semibold px-3 py-1.5 border" style={styles.checkoutButton}>
+                  <button
+                    className="text-[11px] font-semibold px-3 py-1.5 border"
+                    style={styles.checkoutButton}
+                    onClick={() => handleStatus(v.id, "finalizada")}
+                  >
                     Check-out
                   </button>
                 )}
@@ -121,7 +164,7 @@ export const Visitas: React.FC = () => {
       </div>
 
       {modalOpen && (
-        <NovaVisitaModal onClose={() => setModalOpen(false)} onSubmit={handleAddVisita} />
+        <NovaVisitaModal beds={beds} onClose={() => setModalOpen(false)} onSubmit={handleAddVisita} />
       )}
     </div>
   );

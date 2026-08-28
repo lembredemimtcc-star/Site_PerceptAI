@@ -4,7 +4,7 @@ import { toast } from "sonner";
 import { TopBar } from "../../shared/components";
 import { COLORS } from "../../config/colors";
 import { useCalendario } from "../../hooks";
-import { supabase } from "../../lib/supabase";
+import { salvarEventoCalendario } from "../../lib/mutations";
 import { eventTypeMeta } from "./calendarioData";
 import type { TipoEventoKey } from "./calendario.types";
 import { NovoEventoModal, NovoEventoFormData } from "../../components/modals/NovoEventoModal";
@@ -58,18 +58,7 @@ export const Calendario: React.FC = () => {
 
   const handleSaveEvento = async (data: NovoEventoFormData) => {
     try {
-      const inicio = `${data.data}T${data.hora}:00`;
-      const fim = `${data.data}T${data.hora}:00`;
-      const payload = {
-        titulo: data.titulo,
-        tipo: data.tipo,
-        data_hora_inicio: inicio,
-        data_hora_fim: fim,
-        descricao: "",
-      };
-      const { error } = await supabase.from("calendario_eventos").insert(payload);
-      if (error) throw error;
-
+      await salvarEventoCalendario(data);
       toast.success("Evento adicionado ao calendário");
       setModalOpen(false);
       refetch();

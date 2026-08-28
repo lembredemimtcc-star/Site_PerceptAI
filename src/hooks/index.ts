@@ -9,3 +9,5 @@ export * from './useAdministracoes';
 export * from './useVisitas';
 export * from './useCalendario';
 export * from './useEstoque';
+export * from './useUsuarios';
+export * from './useProntuarios';

@@ -7,20 +7,13 @@ import {
 } from "./styles/SelecionarPacienteModal.styles";
 
 interface SelecionarPacienteModalProps {
+  pacientes: Paciente[];
   onSelect: (paciente: Paciente) => void;
   onClose?: () => void;
 }
 
-const pacientes: Paciente[] = [
-  { id: "1", nome: "Maria Silva", idade: 28, leito: "12A", sexo: "F", condicao: "Pós-operatório" },
-  { id: "2", nome: "João Pereira", idade: 64, leito: "07B", sexo: "M", condicao: "Insuficiência respiratória" },
-  { id: "3", nome: "Ana Costa", idade: 45, leito: "03A", sexo: "F", condicao: "Sepse" },
-  { id: "4", nome: "Carlos Mendes", idade: 71, leito: "09C", sexo: "M", condicao: "AVC isquêmico" },
-  { id: "5", nome: "Beatriz Santos", idade: 33, leito: "05A", sexo: "F", condicao: "Observação clínica" },
-  { id: "6", nome: "Roberto Lima", idade: 58, leito: "11B", sexo: "M", condicao: "Politrauma" },
-];
-
 export function SelecionarPacienteModal({
+  pacientes,
   onSelect,
   onClose,
 }: SelecionarPacienteModalProps) {
@@ -34,7 +27,7 @@ export function SelecionarPacienteModal({
         p.nome.toLowerCase().includes(termo) ||
         p.leito.toLowerCase().includes(termo)
     );
-  }, [busca]);
+  }, [busca, pacientes]);
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center" style={styles.overlay}>

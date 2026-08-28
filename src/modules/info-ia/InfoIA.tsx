@@ -1,9 +1,8 @@
-import React, { useState, useRef, useEffect, useCallback } from "react";
+import React, { useState, useRef, useEffect, useCallback, useMemo } from "react";
 import {
   Activity,
   Camera,
   CameraOff,
-  Thermometer,
   AlertTriangle,
   CheckCircle,
   Loader2,
@@ -19,76 +18,90 @@ import {
 } from "recharts";
 import { TopBar } from "../../shared/components";
 import { Bed, MoodType } from "../../types";
-import { tremorEvents, moodMeta, clinicalData } from "../../config/mockData";
-import { useSinaisVitais, useExpressoes } from "../../hooks";
+import { moodMeta, vitalsData, tremorEvents } from "../../config/mockData";
+import { useBeds, useSinaisVitais, useExpressoes } from "../../hooks";
 import { infoIAStyles as styles } from "./InfoIA.styles";
 import { COLORS } from "../../config/colors";
-import {
-  detectEmotion,
-  captureFrame,
-  dataUrlToBase64,
-} from "../../lib/detection";
+import { detectEmotion, captureFrame, dataUrlToBase64 } from "../../lib/detection";
+import { idadeFrom, diasInternacao } from "../../lib/db";
 
 interface InfoIAProps {
-  bed: Bed;
+  bed?: Bed | null;
   onBack: () => void;
 }
 
 type CameraState = "idle" | "starting" | "active" | "error";
 
 export const InfoIA: React.FC<InfoIAProps> = ({ bed, onBack }) => {
-  const { data: vitals = [] } = useSinaisVitais(bed.internacaoId);
-  const { data: expressions = [] } = useExpressoes(bed.internacaoId);
+  const { data: beds = [] } = useBeds(false);
+  const internados = useMemo(
+    () => beds.filter((b) => b.status === "internado" && b.internacaoId),
+    [beds]
+  );
 
-  // ─── Câmera ───────────────────────────────────────────────────────────────
+  const [selectedId, setSelectedId] = useState<string | undefined>(bed?.internacaoId);
+
+  useEffect(() => {
+    if (bed?.internacaoId) setSelectedId(bed.internacaoId);
+  }, [bed?.internacaoId]);
+
+  const liveBed =
+    internados.find((b) => b.internacaoId === selectedId) ??
+    internados[0] ??
+    bed ??
+    internados[0];
+
+  const internacaoId = liveBed?.internacaoId;
+  const { data: vitals = [] } = useSinaisVitais(internacaoId);
+  const { data: expressions = [] } = useExpressoes(internacaoId);
+
   const videoRef = useRef<HTMLVideoElement>(null);
   const streamRef = useRef<MediaStream | null>(null);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const detectingRef = useRef(false);
 
   const [cameraState, setCameraState] = useState<CameraState>("idle");
-  const [cameraError, setCameraError] = useState<string>("");
+  const [cameraError, setCameraError] = useState("");
   const [isDetecting, setIsDetecting] = useState(false);
   const [detectedEmotion, setDetectedEmotion] = useState<string | null>(null);
-  const [detectedConf, setDetectedConf] = useState<number>(0);
-  const [lastDetectionTs, setLastDetectionTs] = useState<string>("");
+  const [detectedConf, setDetectedConf] = useState(0);
+  const [lastDetectionTs, setLastDetectionTs] = useState("");
 
   const stopCamera = useCallback(() => {
     if (intervalRef.current) {
       clearInterval(intervalRef.current);
       intervalRef.current = null;
     }
-    if (streamRef.current) {
-      streamRef.current.getTracks().forEach((t) => t.stop());
-      streamRef.current = null;
-    }
-    if (videoRef.current) {
-      videoRef.current.srcObject = null;
-    }
+    streamRef.current?.getTracks().forEach((t) => t.stop());
+    streamRef.current = null;
+    if (videoRef.current) videoRef.current.srcObject = null;
     setCameraState("idle");
     setIsDetecting(false);
+    detectingRef.current = false;
   }, []);
 
   const runDetection = useCallback(async () => {
-    if (!videoRef.current || !bed.internacaoId || isDetecting) return;
+    if (!videoRef.current || !internacaoId || detectingRef.current) return;
     const video = videoRef.current;
-    if (video.readyState < 2) return; // vídeo ainda não está pronto
+    if (video.readyState < 2) return;
 
     try {
+      detectingRef.current = true;
       setIsDetecting(true);
       const dataUrl = await captureFrame(video);
-      const base64 = dataUrlToBase64(dataUrl);
-      const result = await detectEmotion(base64, bed.internacaoId);
-      setDetectedEmotion(result.Emotion);
-      setDetectedConf(Math.round(result.Confidence * 100));
+      const result = await detectEmotion(dataUrlToBase64(dataUrl), internacaoId);
+      setDetectedEmotion(result.emotion);
+      setDetectedConf(Math.round(result.confidence * 100));
       setLastDetectionTs(
         new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", second: "2-digit" })
       );
     } catch {
-      // Erros de rede ou backend não param a câmera — só silenciam essa rodada
+      /* a câmera continua; esta rodada falhou */
     } finally {
+      detectingRef.current = false;
       setIsDetecting(false);
     }
-  }, [bed.internacaoId, isDetecting]);
+  }, [internacaoId]);
 
   const startCamera = useCallback(async () => {
     setCameraError("");
@@ -104,85 +117,126 @@ export const InfoIA: React.FC<InfoIAProps> = ({ bed, onBack }) => {
         await videoRef.current.play();
       }
       setCameraState("active");
-      // Captura a cada 3 segundos
       intervalRef.current = setInterval(runDetection, 3000);
     } catch (err: any) {
-      const msg =
+      setCameraError(
         err?.name === "NotAllowedError"
           ? "Permissão de câmera negada. Permita o acesso nas configurações do navegador."
           : err?.name === "NotFoundError"
-          ? "Nenhuma câmera encontrada neste dispositivo."
-          : "Não foi possível acessar a câmera.";
-      setCameraError(msg);
+            ? "Nenhuma câmera encontrada neste dispositivo."
+            : "Não foi possível acessar a câmera."
+      );
       setCameraState("error");
     }
   }, [runDetection]);
 
-  // Limpa ao desmontar
-  useEffect(() => {
-    return () => stopCamera();
-  }, [stopCamera]);
+  useEffect(() => () => stopCamera(), [stopCamera]);
 
-  // ─── Dados do Supabase ────────────────────────────────────────────────────
-  const vitalsChartData = vitals.map((v: any) => ({
-    t: new Date(v.registrado_em).toLocaleTimeString([], {
-      hour: "2-digit",
-      minute: "2-digit",
-    }),
-    hr: v.hr,
-    spo2: v.spo2,
-  }));
-
+  const latestVital = vitals[vitals.length - 1];
   const latestExpression = expressions[expressions.length - 1];
-  // Campo correto: mood (coluna real no Supabase)
-  const currentMood = (latestExpression?.mood ?? bed.mood) as MoodType;
-  const currentConf = latestExpression?.confianca ?? bed.conf;
-
+  const currentMood = (latestExpression?.mood ?? liveBed?.mood ?? "neutro") as MoodType;
+  const currentConf = latestExpression?.confianca ?? liveBed?.conf ?? 0;
   const mood = moodMeta[currentMood] ?? moodMeta["neutro"]!;
   const MoodIcon = mood.icon;
 
-  const clinical: import("../../types").ClinicalData =
-    clinicalData[bed.id] ??
-    clinicalData["default"] ?? {
-      idade: 0,
-      internacao: "Desconhecida",
-      diagnostico: "Sem dados",
-      medico: "Sem Médico",
-      spo2: 0,
-    };
+  const vitalsChartData =
+    vitals.length > 0
+      ? vitals.map((v: any) => ({
+          t: new Date(v.registrado_em || v.timestamp).toLocaleTimeString([], {
+            hour: "2-digit",
+            minute: "2-digit",
+          }),
+          hr: v.hr,
+          spo2: v.spo2,
+        }))
+      : vitalsData;
 
-  // Emoção detectada pela câmera em tempo real
-  const liveMood = detectedEmotion
-    ? (moodMeta[detectedEmotion] ?? moodMeta["neutro"]!)
-    : null;
+  const neuroEvents =
+    expressions.length > 0
+      ? expressions
+          .filter((e: any) => ["dor", "medo", "enjoo", "tristeza"].includes(e.mood))
+          .slice(-5)
+          .reverse()
+          .map((e: any) => ({
+            t: new Date(e.timestamp || e.registrado_em).toLocaleTimeString([], {
+              hour: "2-digit",
+              minute: "2-digit",
+            }),
+            tipo: moodMeta[e.mood as MoodType]?.label ?? e.mood,
+          }))
+      : tremorEvents;
+
+  const idade = idadeFrom(liveBed?.dataNascimento);
+  const internacaoLabel = diasInternacao(liveBed?.dataEntrada);
+  const diagnostico = liveBed?.diagnostico || "Sem diagnóstico informado";
+  const medico = liveBed?.medicoNome || "Sem médico vinculado";
+  const spo2 = latestVital?.spo2 ?? 0;
+
+  const copilotText = latestExpression
+    ? `Última expressão detectada: ${mood.label} (${currentConf}%). ${latestVital?.hr ? `FC ${latestVital.hr} bpm.` : ""} ${spo2 ? `SpO2 ${spo2}%.` : ""} ${diagnostico !== "Sem diagnóstico informado" ? `Diagnóstico: ${diagnostico}.` : ""}`
+    : `${liveBed?.name ?? "Paciente"} em leito ${liveBed?.id ?? "—"}. ${diagnostico}. Inicie o monitoramento para registrar expressões no banco.`;
+
+  const liveMood = detectedEmotion ? moodMeta[detectedEmotion] ?? moodMeta["neutro"]! : null;
   const LiveMoodIcon = liveMood?.icon ?? null;
+
+  if (!liveBed) {
+    return (
+      <div className="flex-1 flex flex-col overflow-hidden">
+        <TopBar title="Info IA" subtitle="Análise IA e histórico clínico" onBack={onBack} />
+        <div className="flex-1 flex items-center justify-center px-8">
+          <p className="text-sm" style={styles.patientInfoLabel}>
+            Cadastre uma internação no módulo Cadastro para abrir a ficha da IA.
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex-1 flex flex-col overflow-hidden">
       <TopBar
-        title={`${bed.name} (Leito ${bed.id})`}
+        title={`${liveBed.name} (Leito ${liveBed.id})`}
         subtitle="Análise IA e histórico clínico"
         onBack={onBack}
       />
 
       <div className="flex-1 grid grid-cols-2 gap-6 px-8 py-7 overflow-hidden">
-        {/* ── ESQUERDA: gráficos e histórico ── */}
         <div className="flex flex-col gap-4 overflow-y-auto">
-          {/* Info do paciente */}
           <div className="bg-white border p-4" style={styles.card}>
+            {internados.length > 1 && (
+              <select
+                value={liveBed.internacaoId}
+                onChange={(e) => setSelectedId(e.target.value)}
+                className="w-full h-9 border px-2 text-[12px] mb-3 outline-none"
+                style={styles.eventRow}
+              >
+                {internados.map((b) => (
+                  <option key={b.internacaoId} value={b.internacaoId}>
+                    {b.name} — Leito {b.id}
+                  </option>
+                ))}
+              </select>
+            )}
             <div className="flex items-center justify-between mb-3">
               <div>
                 <p className="text-xs" style={styles.patientInfoLabel}>
-                  Idade: {clinical.idade} | Internação: {clinical.internacao}
+                  Idade: {idade || "—"} | Internação: {internacaoLabel}
+                  {liveBed.convenio ? ` | ${liveBed.convenio}` : ""}
                 </p>
                 <p className="font-semibold text-sm" style={styles.patientInfoTitle}>
-                  {clinical.diagnostico}
+                  {diagnostico}
                 </p>
                 <p className="text-xs mt-1" style={styles.patientInfoLabel}>
-                  Médico: {clinical.medico}
+                  Médico: {medico}
+                  {liveBed.cpf ? ` · CPF ${liveBed.cpf}` : ""}
                 </p>
+                {liveBed.alergias ? (
+                  <p className="text-xs mt-1" style={styles.patientInfoLabel}>
+                    Alergias: {liveBed.alergias}
+                  </p>
+                ) : null}
               </div>
-              <div className="flex items-center gap-2 p-3 " style={styles.moodBox}>
+              <div className="flex items-center gap-2 p-3" style={styles.moodBox}>
                 <MoodIcon size={16} color={mood.color} />
                 <span className="text-xs font-semibold" style={styles.moodText}>
                   {mood.label} ({currentConf}%)
@@ -191,7 +245,6 @@ export const InfoIA: React.FC<InfoIAProps> = ({ bed, onBack }) => {
             </div>
           </div>
 
-          {/* Gráfico de vitais */}
           <div className="bg-white border p-4" style={styles.card}>
             <p className="kicker mb-3" style={styles.chartTitle}>
               Sinais Vitais (24h)
@@ -202,36 +255,24 @@ export const InfoIA: React.FC<InfoIAProps> = ({ bed, onBack }) => {
                 <XAxis dataKey="t" stroke={styles.chartAxis} style={{ fontSize: 12 }} />
                 <YAxis stroke={styles.chartAxis} style={{ fontSize: 12 }} />
                 <Tooltip contentStyle={styles.chartTooltip} />
-                <Line
-                  type="monotone"
-                  dataKey="hr"
-                  stroke={styles.chartLineHr}
-                  name="FC"
-                  strokeWidth={2}
-                />
-                <Line
-                  type="monotone"
-                  dataKey="spo2"
-                  stroke={styles.chartLineSpo2}
-                  name="SpO2"
-                  strokeWidth={2}
-                />
+                <Line type="monotone" dataKey="hr" stroke={styles.chartLineHr} name="FC" strokeWidth={2} />
+                <Line type="monotone" dataKey="spo2" stroke={styles.chartLineSpo2} name="SpO2" strokeWidth={2} />
               </LineChart>
             </ResponsiveContainer>
+            {vitals.length === 0 && (
+              <p className="text-[11px] mt-2" style={styles.eventTime}>
+                Sem leituras no banco ainda — gráfico de referência. Salve sinais no prontuário para gravar a série real.
+              </p>
+            )}
           </div>
 
-          {/* Eventos neurológicos */}
           <div className="bg-white border p-4" style={styles.card}>
             <p className="kicker mb-3" style={styles.chartTitle}>
               Eventos Neurológicos
             </p>
             <div className="space-y-2">
-              {tremorEvents.map((evt, i) => (
-                <div
-                  key={i}
-                  className="flex items-center gap-2 p-2 "
-                  style={styles.eventRow}
-                >
+              {neuroEvents.map((evt, i) => (
+                <div key={i} className="flex items-center gap-2 p-2" style={styles.eventRow}>
                   <Activity size={14} color={styles.eventIconColor} />
                   <div className="flex-1">
                     <p className="text-xs font-semibold" style={styles.eventTitle}>
@@ -247,22 +288,16 @@ export const InfoIA: React.FC<InfoIAProps> = ({ bed, onBack }) => {
           </div>
         </div>
 
-        {/* ── DIREITA: câmera + detecção em tempo real ── */}
         <div className="flex flex-col gap-4 overflow-y-auto">
-          {/* Card da câmera */}
           <div className="bg-white border p-4 flex flex-col gap-3" style={styles.card}>
             <div className="flex items-center justify-between">
               <p className="kicker" style={styles.chartTitle}>
                 Monitoramento em Tempo Real
               </p>
-              {/* Indicador de status */}
               <div className="flex items-center gap-1.5">
                 {cameraState === "active" && (
                   <>
-                    <span
-                      className="w-2 h-2 rounded-full animate-pulse"
-                      style={{ background: COLORS.orange }}
-                    />
+                    <span className="w-2 h-2 rounded-full animate-pulse" style={{ background: COLORS.orange }} />
                     <span className="text-[11px] font-semibold" style={{ color: COLORS.orange }}>
                       AO VIVO
                     </span>
@@ -286,7 +321,6 @@ export const InfoIA: React.FC<InfoIAProps> = ({ bed, onBack }) => {
               </div>
             </div>
 
-            {/* Vídeo */}
             <div
               className="relative w-full overflow-hidden flex items-center justify-center"
               style={{ aspectRatio: "4/3", minHeight: 200, background: COLORS.orangePainel }}
@@ -299,7 +333,7 @@ export const InfoIA: React.FC<InfoIAProps> = ({ bed, onBack }) => {
                 className="w-full h-full object-cover"
                 style={{
                   display: cameraState === "active" ? "block" : "none",
-                  transform: "scaleX(-1)", // espelha horizontalmente
+                  transform: "scaleX(-1)",
                 }}
               />
 
@@ -316,22 +350,20 @@ export const InfoIA: React.FC<InfoIAProps> = ({ bed, onBack }) => {
                     {cameraState === "error"
                       ? cameraError
                       : cameraState === "starting"
-                      ? "Acessando câmera…"
-                      : "Câmera desligada"}
+                        ? "Acessando câmera…"
+                        : "Câmera desligada"}
                   </span>
                 </div>
               )}
 
-              {/* Overlay de detecção em curso */}
               {cameraState === "active" && isDetecting && (
-                <div className="absolute bottom-2 right-2 flex items-center gap-1 bg-black/50  px-2 py-1">
+                <div className="absolute bottom-2 right-2 flex items-center gap-1 bg-black/50 px-2 py-1">
                   <Loader2 size={12} color="white" className="animate-spin" />
                   <span className="text-[10px] text-white">Analisando…</span>
                 </div>
               )}
             </div>
 
-            {/* Botão iniciar / parar */}
             <button
               onClick={cameraState === "active" ? stopCamera : startCamera}
               disabled={cameraState === "starting"}
@@ -357,15 +389,8 @@ export const InfoIA: React.FC<InfoIAProps> = ({ bed, onBack }) => {
                 </>
               )}
             </button>
-
-            {!bed.internacaoId && (
-              <p className="text-[11px] text-center" style={{ color: COLORS.orange }}>
-                Este leito não possui internação ativa — detecções não serão salvas.
-              </p>
-            )}
           </div>
 
-          {/* Card de resultado da IA */}
           <div className="bg-white border p-4 flex flex-col gap-3" style={styles.card}>
             <p className="kicker" style={styles.chartTitle}>
               Última Detecção IA
@@ -380,10 +405,7 @@ export const InfoIA: React.FC<InfoIAProps> = ({ bed, onBack }) => {
                   <LiveMoodIcon size={24} color={liveMood.color} />
                 </div>
                 <div>
-                  <p
-                    className="display font-semibold text-[1.35rem]"
-                    style={{ color: liveMood.color }}
-                  >
+                  <p className="display font-semibold text-[1.35rem]" style={{ color: liveMood.color }}>
                     {liveMood.label}
                   </p>
                   <p className="text-xs" style={styles.patientInfoLabel}>
@@ -403,7 +425,6 @@ export const InfoIA: React.FC<InfoIAProps> = ({ bed, onBack }) => {
               </div>
             )}
 
-            {/* Histórico de expressões do Supabase */}
             {expressions.length > 0 && (
               <div className="mt-1">
                 <p className="text-[11px] font-semibold mb-2" style={styles.patientInfoLabel}>
@@ -417,11 +438,7 @@ export const InfoIA: React.FC<InfoIAProps> = ({ bed, onBack }) => {
                       const m = moodMeta[exp.mood as MoodType] ?? moodMeta["neutro"]!;
                       const ExpIcon = m.icon;
                       return (
-                        <div
-                          key={i}
-                          className="flex items-center gap-2 text-[11px] px-2 py-1 "
-                          style={styles.eventRow}
-                        >
+                        <div key={exp.id ?? i} className="flex items-center gap-2 text-[11px] px-2 py-1" style={styles.eventRow}>
                           <ExpIcon size={12} color={m.color} />
                           <span style={{ color: m.color, fontWeight: 600 }}>{m.label}</span>
                           <span className="ml-auto" style={styles.eventTime}>
@@ -435,29 +452,31 @@ export const InfoIA: React.FC<InfoIAProps> = ({ bed, onBack }) => {
             )}
           </div>
 
-          {/* Informações rápidas */}
           <div className="bg-white border p-4" style={styles.card}>
             <p className="kicker mb-3" style={styles.chartTitle}>
               Resumo Clínico
             </p>
+            <p className="text-[12px] leading-relaxed mb-3" style={styles.patientInfoLabel}>
+              {copilotText}
+            </p>
             <div className="grid grid-cols-2 gap-2">
-              <div className="p-2 " style={styles.eventRow}>
+              <div className="p-2" style={styles.eventRow}>
                 <p className="text-[10px] font-semibold" style={styles.patientInfoLabel}>
                   SpO2
                 </p>
                 <p className="font-semibold text-sm" style={styles.patientInfoTitle}>
-                  {clinical.spo2}%
+                  {spo2 ? `${spo2}%` : "—"}
                 </p>
               </div>
-              <div className="p-2 " style={styles.eventRow}>
+              <div className="p-2" style={styles.eventRow}>
                 <p className="text-[10px] font-semibold" style={styles.patientInfoLabel}>
                   Dias internado
                 </p>
                 <p className="font-semibold text-sm" style={styles.patientInfoTitle}>
-                  {clinical.internacao}
+                  {internacaoLabel}
                 </p>
               </div>
-              <div className="p-2 " style={styles.eventRow}>
+              <div className="p-2" style={styles.eventRow}>
                 <p className="text-[10px] font-semibold" style={styles.patientInfoLabel}>
                   Emoção atual (DB)
                 </p>
@@ -465,7 +484,7 @@ export const InfoIA: React.FC<InfoIAProps> = ({ bed, onBack }) => {
                   {mood.label}
                 </p>
               </div>
-              <div className="p-2 " style={styles.eventRow}>
+              <div className="p-2" style={styles.eventRow}>
                 <p className="text-[10px] font-semibold" style={styles.patientInfoLabel}>
                   Confiança (DB)
                 </p>

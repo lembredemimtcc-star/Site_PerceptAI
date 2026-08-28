@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   FileText,
   Activity,
@@ -23,6 +23,9 @@ import {
   ExameItem,
 } from "./Prontuario.types";
 import { SelecionarPacienteModal } from "../../components/modals/SelecionarPacienteModal";
+import { toast } from "sonner";
+import { useBeds, useProntuario, useSinaisVitais } from "../../hooks";
+import { internacaoToPacienteProntuario, salvarProntuario } from "../../lib/mutations";
 
 const criarPrescricaoVazia = (): PrescricaoItem => ({
   id: crypto.randomUUID?.() ?? String(Date.now() + Math.random()),
@@ -65,8 +68,18 @@ function Section({ icon: Icon, title, children }: SectionProps) {
 }
 
 export function Prontuario() {
+  const { data: beds = [] } = useBeds();
+  const pacientes = useMemo(
+    () => beds.filter((b) => b.status === "internado").map(internacaoToPacienteProntuario),
+    [beds]
+  );
+
   const [pacienteSelecionado, setPacienteSelecionado] = useState<Paciente | null>(null);
   const [modalTrocarAberto, setModalTrocarAberto] = useState(false);
+  const [saving, setSaving] = useState(false);
+
+  const { data: registro, refetch } = useProntuario(pacienteSelecionado?.id);
+  const { data: vitais = [] } = useSinaisVitais(pacienteSelecionado?.id);
 
   const [queixaPrincipal, setQueixaPrincipal] = useState("");
   const [historiaDoenca, setHistoriaDoenca] = useState("");
@@ -82,6 +95,37 @@ export function Prontuario() {
     criarPrescricaoVazia(),
   ]);
   const [exames, setExames] = useState<ExameItem[]>([criarExameVazio()]);
+
+  useEffect(() => {
+    if (!registro) return;
+    setQueixaPrincipal(registro.queixa_principal ?? "");
+    setHistoriaDoenca(registro.historia_doenca ?? "");
+    setAvaliacao(registro.avaliacao ?? "");
+    setOrientacoes(registro.orientacoes ?? "");
+    const examesDb = Array.isArray(registro.exames) ? registro.exames : [];
+    if (examesDb.length) {
+      setExames(
+        examesDb.map((e: any) => ({
+          id: e.id || crypto.randomUUID(),
+          nome: e.nome || "",
+          tipo: e.tipo || "",
+          urgencia: e.urgencia || "",
+          observacoes: e.observacoes || "",
+        }))
+      );
+    }
+  }, [registro?.id]);
+
+  useEffect(() => {
+    const latest = vitais[vitais.length - 1];
+    if (!latest) return;
+    setSinaisVitais({
+      pa: latest.pressao_arterial ? String(latest.pressao_arterial) : "",
+      fc: latest.hr ? String(latest.hr) : "",
+      fr: latest.fr ? String(latest.fr) : "",
+      temp: latest.temperatura ? String(latest.temperatura) : "",
+    });
+  }, [pacienteSelecionado?.id, vitais.length]);
 
   const dataAtual = new Date().toLocaleDateString("pt-BR");
 
@@ -147,19 +191,31 @@ export function Prontuario() {
     setModalTrocarAberto(true);
   };
 
-  const handleSalvar = () => {
-    // TODO: implementar submissão real (Supabase)
-    const payload = {
-      paciente: pacienteSelecionado,
-      queixaPrincipal,
-      historiaDoenca,
-      avaliacao,
-      orientacoes,
-      sinaisVitais,
-      prescricoes,
-      exames,
-    };
-    console.log("Salvar prontuário", payload);
+  const handleSalvar = async () => {
+    if (!pacienteSelecionado?.id) {
+      toast.error("Selecione um paciente");
+      return;
+    }
+    try {
+      setSaving(true);
+      await salvarProntuario({
+        internacaoId: pacienteSelecionado.id,
+        queixaPrincipal,
+        historiaDoenca,
+        avaliacao,
+        orientacoes,
+        sinaisVitais,
+        prescricoes,
+        exames,
+        existingId: registro?.id,
+      });
+      toast.success("Prontuário salvo");
+      refetch();
+    } catch (err: any) {
+      toast.error(err.message || "Erro ao salvar prontuário. Se a tabela prontuarios não existir no Supabase, crie-a e tente de novo.");
+    } finally {
+      setSaving(false);
+    }
   };
 
   // Nenhum paciente selecionado ainda: exibe apenas o modal de seleção
@@ -170,7 +226,7 @@ export function Prontuario() {
           title="Prontuário Médico"
           subtitle="Selecione um paciente para continuar"
         />
-        <SelecionarPacienteModal onSelect={handleSelecionarPaciente} />
+        <SelecionarPacienteModal pacientes={pacientes} onSelect={handleSelecionarPaciente} />
       </div>
     );
   }
@@ -473,6 +529,7 @@ export function Prontuario() {
         </button>
         <button
           onClick={handleSalvar}
+          disabled={saving}
           className="flex items-center gap-2 px-5 py-2.5 text-[13px] font-semibold text-white"
           style={styles.saveButton}
         >
@@ -483,6 +540,7 @@ export function Prontuario() {
 
       {modalTrocarAberto && (
         <SelecionarPacienteModal
+          pacientes={pacientes}
           onSelect={handleSelecionarPaciente}
           onClose={() => setModalTrocarAberto(false)}
         />

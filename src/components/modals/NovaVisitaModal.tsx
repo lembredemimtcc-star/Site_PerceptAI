@@ -2,15 +2,16 @@ import React, { useState } from "react";
 import { X } from "lucide-react";
 import { toast } from "sonner";
 import { Visita } from "../../modules/visitas/visitas.types";
-import { beds } from "../../config/mockData";
+import { Bed } from "../../types";
 import { novaVisitaModalStyles as styles } from "./styles/NovaVisitaModal.styles";
 
 interface NovaVisitaModalProps {
+  beds: Bed[];
   onClose: () => void;
   onSubmit: (visita: Visita) => void;
 }
 
-export const NovaVisitaModal: React.FC<NovaVisitaModalProps> = ({ onClose, onSubmit }) => {
+export const NovaVisitaModal: React.FC<NovaVisitaModalProps> = ({ beds, onClose, onSubmit }) => {
   const [leito, setLeito] = useState("");
   const [visitante, setVisitante] = useState("");
   const [parentesco, setParentesco] = useState("");
@@ -18,8 +19,8 @@ export const NovaVisitaModal: React.FC<NovaVisitaModalProps> = ({ onClose, onSub
   const [saida, setSaida] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const internados = beds.filter(b => b.status === "internado");
-  const pacienteSelecionado = internados.find(b => b.id === leito);
+  const internados = beds.filter((b) => b.status === "internado");
+  const pacienteSelecionado = internados.find((b) => (b.internacaoId || b.id) === leito);
 
   const handleSubmit = () => {
     if (isSubmitting) return;
@@ -29,8 +30,12 @@ export const NovaVisitaModal: React.FC<NovaVisitaModalProps> = ({ onClose, onSub
     }
 
     setIsSubmitting(true);
+    const internacaoIdVal = pacienteSelecionado?.internacaoId;
+    const pacienteIdVal = pacienteSelecionado?.pacienteId;
     onSubmit({
-      leito,
+      ...(internacaoIdVal !== undefined ? { internacaoId: internacaoIdVal } : {}),
+      ...(pacienteIdVal !== undefined ? { pacienteId: pacienteIdVal } : {}),
+      leito: pacienteSelecionado?.id ?? leito,
       paciente: pacienteSelecionado?.name ?? "",
       visitante,
       parentesco,
@@ -39,7 +44,6 @@ export const NovaVisitaModal: React.FC<NovaVisitaModalProps> = ({ onClose, onSub
       status: "agendada",
     });
 
-    toast.success("Visita agendada com sucesso!");
     setIsSubmitting(false);
   };
 
@@ -72,8 +76,8 @@ export const NovaVisitaModal: React.FC<NovaVisitaModalProps> = ({ onClose, onSub
               style={styles.fieldInput}
             >
               <option value="">Selecione o paciente</option>
-              {internados.map(bed => (
-                <option key={bed.id} value={bed.id}>
+              {internados.map((bed) => (
+                <option key={bed.internacaoId || bed.id} value={bed.internacaoId || bed.id}>
                   {bed.name} — Leito {bed.id}
                 </option>
               ))}

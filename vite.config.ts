@@ -12,6 +12,12 @@ export default defineConfig({
     port: 3000,
     strictPort: true,
     open: true,
+    proxy: {
+      "/api": {
+        target: "http://127.0.0.1:5198",
+        changeOrigin: true,
+      },
+    },
   },
   build: {
     outDir: "dist",

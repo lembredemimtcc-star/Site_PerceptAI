@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import { ClipboardList, Save, UserPlus, BedSingle } from "lucide-react";
 import { TopBar } from "../../shared/components";
 import { useLeitos, usePacientes } from "../../hooks";
-import { supabase } from "../../lib/supabase";
+import { useQueryClient } from "@tanstack/react-query";
+import { cadastrarPaciente } from "../../lib/mutations";
 import { toast } from "sonner";
 import { cadastroStyles as styles, getSubmitButtonStyle } from "./cadastro.styles";
 
@@ -13,25 +14,49 @@ interface FormFieldProps {
   span?: number;
 }
 
-const FormField = ({ label, value, onChange, placeholder, type = "text", span = 1 }: any) => (
-  <div className={`col-span-${span}`}>
-    <label className="text-[12.5px] font-semibold" style={styles.fieldLabel}>
-      {label}
-    </label>
-    <input
-      type={type}
-      value={value}
-      onChange={(e) => onChange(e.target.value)}
-      placeholder={placeholder}
-      className="w-full h-11 border px-3 text-sm outline-none mt-1.5"
-      style={styles.fieldInput}
-    />
-  </div>
-);
+const applyMask = (value: string, maskType?: string) => {
+  if (!value) return "";
+  if (maskType === "cpf") {
+    let v = value.replace(/\D/g, "");
+    if (v.length > 11) v = v.slice(0, 11);
+    v = v.replace(/(\d{3})(\d)/, "$1.$2");
+    v = v.replace(/(\d{3})(\d)/, "$1.$2");
+    v = v.replace(/(\d{3})(\d{1,2})$/, "$1-$2");
+    return v;
+  }
+  return value;
+};
+
+const FormField = ({ label, value, onChange, placeholder, type = "text", span = 1, required = false, mask }: any) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const rawVal = e.target.value;
+    const maskedVal = mask ? applyMask(rawVal, mask) : rawVal;
+    onChange(maskedVal);
+  };
+
+  return (
+    <div className={`col-span-${span}`}>
+      <label className="text-[12.5px] font-semibold" style={styles.fieldLabel}>
+        {label}
+      </label>
+      <input
+        type={type}
+        value={value}
+        onChange={handleChange}
+        placeholder={placeholder}
+        required={required}
+        maxLength={mask === "cpf" ? 14 : undefined}
+        className="w-full h-11 border px-3 text-sm outline-none mt-1.5"
+        style={styles.fieldInput}
+      />
+    </div>
+  );
+};
 
 export const Cadastro: React.FC = () => {
   const { data: leitos = [], refetch: refetchLeitos } = useLeitos();
   const { data: pacientes = [], refetch: refetchPacientes } = usePacientes();
+  const queryClient = useQueryClient();
 
   const [lgpd, setLgpd] = useState(false);
   const [camera, setCamera] = useState(false);
@@ -40,8 +65,11 @@ export const Cadastro: React.FC = () => {
   const [nome, setNome] = useState("");
   const [cpf, setCpf] = useState("");
   const [dataNascimento, setDataNascimento] = useState("");
+  const [genero, setGenero] = useState("");
   const [convenio, setConvenio] = useState("");
   const [diagnostico, setDiagnostico] = useState("");
+  const [contatoEmergencia, setContatoEmergencia] = useState("");
+  const [alergias, setAlergias] = useState("");
 
   const leitosLivresDb = leitos.filter((l: any) => l.status === "livre");
   const atribuirLeitoAleatorio = (): any => {
@@ -51,47 +79,38 @@ export const Cadastro: React.FC = () => {
   const cadastrosRecentesDb = pacientes.slice(-5).reverse(); // últimos 5
 
   const handleCadastrar = async () => {
-    if (!nome || !cpf || !dataNascimento) {
-      toast.error("Preencha os campos obrigatórios");
+    if (!podeSubmeter) return;
+
+    if (!nome.trim() || !cpf.trim() || !dataNascimento || !genero.trim()) {
+      toast.error("Preencha nome, CPF, gênero e data de nascimento.");
       return;
     }
 
     try {
-      const { data: novoPaciente, error: pacError } = await supabase
-        .from("pacientes")
-        .insert({ nome, cpf, data_nascimento: dataNascimento, diagnostico, convenio })
-        .select()
-        .single();
-
-      if (pacError) throw pacError;
-
       const leitoAleatorio = atribuirLeitoAleatorio();
-      if (leitoAleatorio) {
-        const leitoId = leitoAleatorio.id;
-        const { error: intError } = await supabase
-          .from("internacoes")
-          .insert({
-            paciente_id: novoPaciente.id,
-            leito_id: leitoId,
-            ativo: true,
-            risco: "normal",
-            data_entrada: new Date().toISOString(),
-          });
-
-        if (intError) throw intError;
-
-        await supabase.from("leitos").update({ status: "ocupado" }).eq("id", leitoId);
-      }
+      await cadastrarPaciente({
+        nome,
+        cpf,
+        dataNascimento,
+        genero,
+        diagnostico,
+        convenio,
+        alergias,
+        contatoEmergencia,
+        leitoId: leitoAleatorio?.id,
+      });
 
       toast.success(
         leitoAleatorio
           ? `Paciente cadastrado no leito ${leitoAleatorio.numero}!`
           : "Paciente cadastrado! (nenhum leito disponível)"
       );
-      setNome(""); setCpf(""); setDataNascimento(""); setConvenio(""); setDiagnostico("");
+      setNome(""); setCpf(""); setDataNascimento(""); setGenero(""); setConvenio(""); setDiagnostico("");
+      setContatoEmergencia(""); setAlergias("");
       setLgpd(false); setCamera(false);
       refetchLeitos();
       refetchPacientes();
+      queryClient.invalidateQueries({ queryKey: ["internacoes"] });
     } catch (err: any) {
       toast.error(err.message || "Erro ao cadastrar");
     }
@@ -113,8 +132,24 @@ export const Cadastro: React.FC = () => {
 
           <div className="grid grid-cols-2 gap-4">
             <FormField label="Nome completo" placeholder="Nome do paciente" span={2} value={nome} onChange={setNome} />
-            <FormField label="CPF" placeholder="000.000.000-00" value={cpf} onChange={setCpf} />
-            <FormField label="Data de nascimento" type="date" value={dataNascimento} onChange={setDataNascimento} />
+            <FormField label="CPF" placeholder="000.000.000-00" value={cpf} onChange={setCpf} mask="cpf" />
+            <FormField label="Data de nascimento" type="date" value={dataNascimento} onChange={setDataNascimento} required />
+            <div>
+              <label className="text-[12.5px] font-semibold" style={styles.fieldLabel}>
+                Gênero <span style={{ color: "red" }}>*</span>
+              </label>
+              <select
+                value={genero}
+                onChange={(e) => setGenero(e.target.value)}
+                className="w-full h-11 border px-3 text-sm outline-none mt-1.5"
+                style={styles.fieldInput}
+              >
+                <option value="">Selecione...</option>
+                <option value="M">Masculino</option>
+                <option value="F">Feminino</option>
+                <option value="N">Não informado</option>
+              </select>
+            </div>
             <FormField label="Convênio" placeholder="Ex.: SUS, Bradesco Saúde" value={convenio} onChange={setConvenio} />
 
             <div>
@@ -138,8 +173,8 @@ export const Cadastro: React.FC = () => {
               </p>
             </div>
 
-            <FormField label="Contato de emergência" placeholder="Nome e telefone" span={2} />
-            <FormField label="Alergias conhecidas" placeholder="Ex.: Dipirona, látex" span={2} />
+            <FormField label="Contato de emergência" placeholder="Nome e telefone" span={2} value={contatoEmergencia} onChange={setContatoEmergencia} />
+            <FormField label="Alergias conhecidas" placeholder="Ex.: Dipirona, látex" span={2} value={alergias} onChange={setAlergias} />
 
             <div className="col-span-2">
               <label className="text-[12.5px] font-semibold" style={styles.fieldLabel}>
@@ -232,7 +267,7 @@ export const Cadastro: React.FC = () => {
                       {c.nome}
                     </p>
                     <p className="text-[11px]" style={styles.cadastroInfo}>
-                      Admissão: {new Date(c.criado_em).toLocaleDateString()}
+                      Admissão: {new Date(c.criado_em || c.created_at || Date.now()).toLocaleDateString()}
                     </p>
                   </div>
                 </div>

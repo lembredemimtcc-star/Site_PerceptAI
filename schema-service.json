@@ -1,0 +1,5064 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "",
+    "title": "standard public schema",
+    "version": "14.5"
+  },
+  "host": "jhoepxcrnyxytwjodjfv.supabase.co:443",
+  "basePath": "/",
+  "schemes": [
+    "https"
+  ],
+  "consumes": [
+    "application/json",
+    "application/vnd.pgrst.object+json;nulls=stripped",
+    "application/vnd.pgrst.object+json",
+    "text/csv"
+  ],
+  "produces": [
+    "application/json",
+    "application/vnd.pgrst.object+json;nulls=stripped",
+    "application/vnd.pgrst.object+json",
+    "text/csv"
+  ],
+  "paths": {
+    "/": {
+      "get": {
+        "produces": [
+          "application/openapi+json",
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "summary": "OpenAPI description (this document)",
+        "tags": [
+          "Introspection"
+        ]
+      }
+    },
+    "/administracoes_medicamento": {
+      "get": {
+        "parameters": [
+          {
+            "$ref": "#/parameters/rowFilter.administracoes_medicamento.id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.administracoes_medicamento.prescricao_id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.administracoes_medicamento.administrado_por_id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.administracoes_medicamento.data_hora_planejada"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.administracoes_medicamento.data_hora_administrada"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.administracoes_medicamento.status"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.administracoes_medicamento.observacoes"
+          },
+          {
+            "$ref": "#/parameters/select"
+          },
+          {
+            "$ref": "#/parameters/order"
+          },
+          {
+            "$ref": "#/parameters/range"
+          },
+          {
+            "$ref": "#/parameters/rangeUnit"
+          },
+          {
+            "$ref": "#/parameters/offset"
+          },
+          {
+            "$ref": "#/parameters/limit"
+          },
+          {
+            "$ref": "#/parameters/preferCount"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "items": {
+                "$ref": "#/definitions/administracoes_medicamento"
+              },
+              "type": "array"
+            }
+          },
+          "206": {
+            "description": "Partial Content"
+          }
+        },
+        "tags": [
+          "administracoes_medicamento"
+        ]
+      },
+      "post": {
+        "parameters": [
+          {
+            "$ref": "#/parameters/body.administracoes_medicamento"
+          },
+          {
+            "$ref": "#/parameters/select"
+          },
+          {
+            "$ref": "#/parameters/preferPost"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created"
+          }
+        },
+        "tags": [
+          "administracoes_medicamento"
+        ]
+      },
+      "delete": {
+        "parameters": [
+          {
+            "$ref": "#/parameters/rowFilter.administracoes_medicamento.id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.administracoes_medicamento.prescricao_id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.administracoes_medicamento.administrado_por_id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.administracoes_medicamento.data_hora_planejada"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.administracoes_medicamento.data_hora_administrada"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.administracoes_medicamento.status"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.administracoes_medicamento.observacoes"
+          },
+          {
+            "$ref": "#/parameters/preferReturn"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        },
+        "tags": [
+          "administracoes_medicamento"
+        ]
+      },
+      "patch": {
+        "parameters": [
+          {
+            "$ref": "#/parameters/rowFilter.administracoes_medicamento.id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.administracoes_medicamento.prescricao_id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.administracoes_medicamento.administrado_por_id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.administracoes_medicamento.data_hora_planejada"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.administracoes_medicamento.data_hora_administrada"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.administracoes_medicamento.status"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.administracoes_medicamento.observacoes"
+          },
+          {
+            "$ref": "#/parameters/body.administracoes_medicamento"
+          },
+          {
+            "$ref": "#/parameters/preferReturn"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        },
+        "tags": [
+          "administracoes_medicamento"
+        ]
+      }
+    },
+    "/logs_auditoria": {
+      "get": {
+        "parameters": [
+          {
+            "$ref": "#/parameters/rowFilter.logs_auditoria.id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.logs_auditoria.usuario_id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.logs_auditoria.acao"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.logs_auditoria.tabela_afetada"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.logs_auditoria.id_registro"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.logs_auditoria.dados_antigos"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.logs_auditoria.dados_novos"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.logs_auditoria.ip_address"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.logs_auditoria.user_agent"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.logs_auditoria.data_hora"
+          },
+          {
+            "$ref": "#/parameters/select"
+          },
+          {
+            "$ref": "#/parameters/order"
+          },
+          {
+            "$ref": "#/parameters/range"
+          },
+          {
+            "$ref": "#/parameters/rangeUnit"
+          },
+          {
+            "$ref": "#/parameters/offset"
+          },
+          {
+            "$ref": "#/parameters/limit"
+          },
+          {
+            "$ref": "#/parameters/preferCount"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "items": {
+                "$ref": "#/definitions/logs_auditoria"
+              },
+              "type": "array"
+            }
+          },
+          "206": {
+            "description": "Partial Content"
+          }
+        },
+        "tags": [
+          "logs_auditoria"
+        ]
+      },
+      "post": {
+        "parameters": [
+          {
+            "$ref": "#/parameters/body.logs_auditoria"
+          },
+          {
+            "$ref": "#/parameters/select"
+          },
+          {
+            "$ref": "#/parameters/preferPost"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created"
+          }
+        },
+        "tags": [
+          "logs_auditoria"
+        ]
+      },
+      "delete": {
+        "parameters": [
+          {
+            "$ref": "#/parameters/rowFilter.logs_auditoria.id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.logs_auditoria.usuario_id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.logs_auditoria.acao"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.logs_auditoria.tabela_afetada"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.logs_auditoria.id_registro"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.logs_auditoria.dados_antigos"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.logs_auditoria.dados_novos"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.logs_auditoria.ip_address"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.logs_auditoria.user_agent"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.logs_auditoria.data_hora"
+          },
+          {
+            "$ref": "#/parameters/preferReturn"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        },
+        "tags": [
+          "logs_auditoria"
+        ]
+      },
+      "patch": {
+        "parameters": [
+          {
+            "$ref": "#/parameters/rowFilter.logs_auditoria.id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.logs_auditoria.usuario_id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.logs_auditoria.acao"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.logs_auditoria.tabela_afetada"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.logs_auditoria.id_registro"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.logs_auditoria.dados_antigos"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.logs_auditoria.dados_novos"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.logs_auditoria.ip_address"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.logs_auditoria.user_agent"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.logs_auditoria.data_hora"
+          },
+          {
+            "$ref": "#/parameters/body.logs_auditoria"
+          },
+          {
+            "$ref": "#/parameters/preferReturn"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        },
+        "tags": [
+          "logs_auditoria"
+        ]
+      }
+    },
+    "/sinais_vitais": {
+      "get": {
+        "parameters": [
+          {
+            "$ref": "#/parameters/rowFilter.sinais_vitais.id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.sinais_vitais.internacao_id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.sinais_vitais.frequencia_cardiaca"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.sinais_vitais.spo2"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.sinais_vitais.pressao_arterial_sistolica"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.sinais_vitais.pressao_arterial_diastolica"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.sinais_vitais.temperatura_corporal"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.sinais_vitais.frequencia_respiratoria"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.sinais_vitais.glicemia"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.sinais_vitais.timestamp"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.sinais_vitais.fonte"
+          },
+          {
+            "$ref": "#/parameters/select"
+          },
+          {
+            "$ref": "#/parameters/order"
+          },
+          {
+            "$ref": "#/parameters/range"
+          },
+          {
+            "$ref": "#/parameters/rangeUnit"
+          },
+          {
+            "$ref": "#/parameters/offset"
+          },
+          {
+            "$ref": "#/parameters/limit"
+          },
+          {
+            "$ref": "#/parameters/preferCount"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "items": {
+                "$ref": "#/definitions/sinais_vitais"
+              },
+              "type": "array"
+            }
+          },
+          "206": {
+            "description": "Partial Content"
+          }
+        },
+        "tags": [
+          "sinais_vitais"
+        ]
+      },
+      "post": {
+        "parameters": [
+          {
+            "$ref": "#/parameters/body.sinais_vitais"
+          },
+          {
+            "$ref": "#/parameters/select"
+          },
+          {
+            "$ref": "#/parameters/preferPost"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created"
+          }
+        },
+        "tags": [
+          "sinais_vitais"
+        ]
+      },
+      "delete": {
+        "parameters": [
+          {
+            "$ref": "#/parameters/rowFilter.sinais_vitais.id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.sinais_vitais.internacao_id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.sinais_vitais.frequencia_cardiaca"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.sinais_vitais.spo2"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.sinais_vitais.pressao_arterial_sistolica"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.sinais_vitais.pressao_arterial_diastolica"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.sinais_vitais.temperatura_corporal"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.sinais_vitais.frequencia_respiratoria"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.sinais_vitais.glicemia"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.sinais_vitais.timestamp"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.sinais_vitais.fonte"
+          },
+          {
+            "$ref": "#/parameters/preferReturn"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        },
+        "tags": [
+          "sinais_vitais"
+        ]
+      },
+      "patch": {
+        "parameters": [
+          {
+            "$ref": "#/parameters/rowFilter.sinais_vitais.id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.sinais_vitais.internacao_id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.sinais_vitais.frequencia_cardiaca"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.sinais_vitais.spo2"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.sinais_vitais.pressao_arterial_sistolica"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.sinais_vitais.pressao_arterial_diastolica"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.sinais_vitais.temperatura_corporal"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.sinais_vitais.frequencia_respiratoria"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.sinais_vitais.glicemia"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.sinais_vitais.timestamp"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.sinais_vitais.fonte"
+          },
+          {
+            "$ref": "#/parameters/body.sinais_vitais"
+          },
+          {
+            "$ref": "#/parameters/preferReturn"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        },
+        "tags": [
+          "sinais_vitais"
+        ]
+      }
+    },
+    "/pacientes": {
+      "get": {
+        "parameters": [
+          {
+            "$ref": "#/parameters/rowFilter.pacientes.id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.pacientes.nome"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.pacientes.cpf"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.pacientes.data_nascimento"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.pacientes.genero"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.pacientes.convenio"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.pacientes.telefone"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.pacientes.email"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.pacientes.endereco"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.pacientes.cidade"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.pacientes.estado"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.pacientes.contato_emergencia"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.pacientes.numero_emergencia"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.pacientes.alergias"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.pacientes.data_criacao"
+          },
+          {
+            "$ref": "#/parameters/select"
+          },
+          {
+            "$ref": "#/parameters/order"
+          },
+          {
+            "$ref": "#/parameters/range"
+          },
+          {
+            "$ref": "#/parameters/rangeUnit"
+          },
+          {
+            "$ref": "#/parameters/offset"
+          },
+          {
+            "$ref": "#/parameters/limit"
+          },
+          {
+            "$ref": "#/parameters/preferCount"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "items": {
+                "$ref": "#/definitions/pacientes"
+              },
+              "type": "array"
+            }
+          },
+          "206": {
+            "description": "Partial Content"
+          }
+        },
+        "tags": [
+          "pacientes"
+        ]
+      },
+      "post": {
+        "parameters": [
+          {
+            "$ref": "#/parameters/body.pacientes"
+          },
+          {
+            "$ref": "#/parameters/select"
+          },
+          {
+            "$ref": "#/parameters/preferPost"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created"
+          }
+        },
+        "tags": [
+          "pacientes"
+        ]
+      },
+      "delete": {
+        "parameters": [
+          {
+            "$ref": "#/parameters/rowFilter.pacientes.id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.pacientes.nome"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.pacientes.cpf"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.pacientes.data_nascimento"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.pacientes.genero"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.pacientes.convenio"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.pacientes.telefone"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.pacientes.email"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.pacientes.endereco"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.pacientes.cidade"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.pacientes.estado"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.pacientes.contato_emergencia"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.pacientes.numero_emergencia"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.pacientes.alergias"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.pacientes.data_criacao"
+          },
+          {
+            "$ref": "#/parameters/preferReturn"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        },
+        "tags": [
+          "pacientes"
+        ]
+      },
+      "patch": {
+        "parameters": [
+          {
+            "$ref": "#/parameters/rowFilter.pacientes.id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.pacientes.nome"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.pacientes.cpf"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.pacientes.data_nascimento"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.pacientes.genero"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.pacientes.convenio"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.pacientes.telefone"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.pacientes.email"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.pacientes.endereco"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.pacientes.cidade"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.pacientes.estado"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.pacientes.contato_emergencia"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.pacientes.numero_emergencia"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.pacientes.alergias"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.pacientes.data_criacao"
+          },
+          {
+            "$ref": "#/parameters/body.pacientes"
+          },
+          {
+            "$ref": "#/parameters/preferReturn"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        },
+        "tags": [
+          "pacientes"
+        ]
+      }
+    },
+    "/estoque": {
+      "get": {
+        "parameters": [
+          {
+            "$ref": "#/parameters/rowFilter.estoque.id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.estoque.medicamento_id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.estoque.quantidade_atual"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.estoque.quantidade_minima"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.estoque.quantidade_maxima"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.estoque.localizacao"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.estoque.data_ultima_reposicao"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.estoque.data_proxima_reposicao"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.estoque.fornecedor"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.estoque.preco_unitario"
+          },
+          {
+            "$ref": "#/parameters/select"
+          },
+          {
+            "$ref": "#/parameters/order"
+          },
+          {
+            "$ref": "#/parameters/range"
+          },
+          {
+            "$ref": "#/parameters/rangeUnit"
+          },
+          {
+            "$ref": "#/parameters/offset"
+          },
+          {
+            "$ref": "#/parameters/limit"
+          },
+          {
+            "$ref": "#/parameters/preferCount"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "items": {
+                "$ref": "#/definitions/estoque"
+              },
+              "type": "array"
+            }
+          },
+          "206": {
+            "description": "Partial Content"
+          }
+        },
+        "tags": [
+          "estoque"
+        ]
+      },
+      "post": {
+        "parameters": [
+          {
+            "$ref": "#/parameters/body.estoque"
+          },
+          {
+            "$ref": "#/parameters/select"
+          },
+          {
+            "$ref": "#/parameters/preferPost"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created"
+          }
+        },
+        "tags": [
+          "estoque"
+        ]
+      },
+      "delete": {
+        "parameters": [
+          {
+            "$ref": "#/parameters/rowFilter.estoque.id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.estoque.medicamento_id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.estoque.quantidade_atual"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.estoque.quantidade_minima"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.estoque.quantidade_maxima"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.estoque.localizacao"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.estoque.data_ultima_reposicao"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.estoque.data_proxima_reposicao"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.estoque.fornecedor"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.estoque.preco_unitario"
+          },
+          {
+            "$ref": "#/parameters/preferReturn"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        },
+        "tags": [
+          "estoque"
+        ]
+      },
+      "patch": {
+        "parameters": [
+          {
+            "$ref": "#/parameters/rowFilter.estoque.id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.estoque.medicamento_id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.estoque.quantidade_atual"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.estoque.quantidade_minima"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.estoque.quantidade_maxima"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.estoque.localizacao"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.estoque.data_ultima_reposicao"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.estoque.data_proxima_reposicao"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.estoque.fornecedor"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.estoque.preco_unitario"
+          },
+          {
+            "$ref": "#/parameters/body.estoque"
+          },
+          {
+            "$ref": "#/parameters/preferReturn"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        },
+        "tags": [
+          "estoque"
+        ]
+      }
+    },
+    "/internacoes": {
+      "get": {
+        "parameters": [
+          {
+            "$ref": "#/parameters/rowFilter.internacoes.id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.internacoes.paciente_id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.internacoes.leito_id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.internacoes.diagnostico_principal"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.internacoes.diagnostico_secundario"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.internacoes.medico_responsavel_id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.internacoes.data_internacao"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.internacoes.data_alta"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.internacoes.motivo_alta"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.internacoes.observacoes"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.internacoes.ativo"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.internacoes.data_criacao"
+          },
+          {
+            "$ref": "#/parameters/select"
+          },
+          {
+            "$ref": "#/parameters/order"
+          },
+          {
+            "$ref": "#/parameters/range"
+          },
+          {
+            "$ref": "#/parameters/rangeUnit"
+          },
+          {
+            "$ref": "#/parameters/offset"
+          },
+          {
+            "$ref": "#/parameters/limit"
+          },
+          {
+            "$ref": "#/parameters/preferCount"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "items": {
+                "$ref": "#/definitions/internacoes"
+              },
+              "type": "array"
+            }
+          },
+          "206": {
+            "description": "Partial Content"
+          }
+        },
+        "tags": [
+          "internacoes"
+        ]
+      },
+      "post": {
+        "parameters": [
+          {
+            "$ref": "#/parameters/body.internacoes"
+          },
+          {
+            "$ref": "#/parameters/select"
+          },
+          {
+            "$ref": "#/parameters/preferPost"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created"
+          }
+        },
+        "tags": [
+          "internacoes"
+        ]
+      },
+      "delete": {
+        "parameters": [
+          {
+            "$ref": "#/parameters/rowFilter.internacoes.id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.internacoes.paciente_id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.internacoes.leito_id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.internacoes.diagnostico_principal"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.internacoes.diagnostico_secundario"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.internacoes.medico_responsavel_id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.internacoes.data_internacao"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.internacoes.data_alta"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.internacoes.motivo_alta"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.internacoes.observacoes"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.internacoes.ativo"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.internacoes.data_criacao"
+          },
+          {
+            "$ref": "#/parameters/preferReturn"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        },
+        "tags": [
+          "internacoes"
+        ]
+      },
+      "patch": {
+        "parameters": [
+          {
+            "$ref": "#/parameters/rowFilter.internacoes.id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.internacoes.paciente_id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.internacoes.leito_id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.internacoes.diagnostico_principal"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.internacoes.diagnostico_secundario"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.internacoes.medico_responsavel_id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.internacoes.data_internacao"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.internacoes.data_alta"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.internacoes.motivo_alta"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.internacoes.observacoes"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.internacoes.ativo"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.internacoes.data_criacao"
+          },
+          {
+            "$ref": "#/parameters/body.internacoes"
+          },
+          {
+            "$ref": "#/parameters/preferReturn"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        },
+        "tags": [
+          "internacoes"
+        ]
+      }
+    },
+    "/leitos": {
+      "get": {
+        "parameters": [
+          {
+            "$ref": "#/parameters/rowFilter.leitos.id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.leitos.numero"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.leitos.localizacao"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.leitos.status"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.leitos.tipo"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.leitos.equipamentos"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.leitos.data_criacao"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.leitos.data_atualizacao"
+          },
+          {
+            "$ref": "#/parameters/select"
+          },
+          {
+            "$ref": "#/parameters/order"
+          },
+          {
+            "$ref": "#/parameters/range"
+          },
+          {
+            "$ref": "#/parameters/rangeUnit"
+          },
+          {
+            "$ref": "#/parameters/offset"
+          },
+          {
+            "$ref": "#/parameters/limit"
+          },
+          {
+            "$ref": "#/parameters/preferCount"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "items": {
+                "$ref": "#/definitions/leitos"
+              },
+              "type": "array"
+            }
+          },
+          "206": {
+            "description": "Partial Content"
+          }
+        },
+        "tags": [
+          "leitos"
+        ]
+      },
+      "post": {
+        "parameters": [
+          {
+            "$ref": "#/parameters/body.leitos"
+          },
+          {
+            "$ref": "#/parameters/select"
+          },
+          {
+            "$ref": "#/parameters/preferPost"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created"
+          }
+        },
+        "tags": [
+          "leitos"
+        ]
+      },
+      "delete": {
+        "parameters": [
+          {
+            "$ref": "#/parameters/rowFilter.leitos.id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.leitos.numero"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.leitos.localizacao"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.leitos.status"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.leitos.tipo"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.leitos.equipamentos"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.leitos.data_criacao"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.leitos.data_atualizacao"
+          },
+          {
+            "$ref": "#/parameters/preferReturn"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        },
+        "tags": [
+          "leitos"
+        ]
+      },
+      "patch": {
+        "parameters": [
+          {
+            "$ref": "#/parameters/rowFilter.leitos.id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.leitos.numero"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.leitos.localizacao"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.leitos.status"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.leitos.tipo"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.leitos.equipamentos"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.leitos.data_criacao"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.leitos.data_atualizacao"
+          },
+          {
+            "$ref": "#/parameters/body.leitos"
+          },
+          {
+            "$ref": "#/parameters/preferReturn"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        },
+        "tags": [
+          "leitos"
+        ]
+      }
+    },
+    "/calendario_eventos": {
+      "get": {
+        "parameters": [
+          {
+            "$ref": "#/parameters/rowFilter.calendario_eventos.id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.calendario_eventos.tipo"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.calendario_eventos.titulo"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.calendario_eventos.descricao"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.calendario_eventos.data_hora_inicio"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.calendario_eventos.data_hora_fim"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.calendario_eventos.local"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.calendario_eventos.responsavel_id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.calendario_eventos.paciente_id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.calendario_eventos.leito_id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.calendario_eventos.participantes"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.calendario_eventos.status"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.calendario_eventos.prioridade"
+          },
+          {
+            "$ref": "#/parameters/select"
+          },
+          {
+            "$ref": "#/parameters/order"
+          },
+          {
+            "$ref": "#/parameters/range"
+          },
+          {
+            "$ref": "#/parameters/rangeUnit"
+          },
+          {
+            "$ref": "#/parameters/offset"
+          },
+          {
+            "$ref": "#/parameters/limit"
+          },
+          {
+            "$ref": "#/parameters/preferCount"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "items": {
+                "$ref": "#/definitions/calendario_eventos"
+              },
+              "type": "array"
+            }
+          },
+          "206": {
+            "description": "Partial Content"
+          }
+        },
+        "tags": [
+          "calendario_eventos"
+        ]
+      },
+      "post": {
+        "parameters": [
+          {
+            "$ref": "#/parameters/body.calendario_eventos"
+          },
+          {
+            "$ref": "#/parameters/select"
+          },
+          {
+            "$ref": "#/parameters/preferPost"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created"
+          }
+        },
+        "tags": [
+          "calendario_eventos"
+        ]
+      },
+      "delete": {
+        "parameters": [
+          {
+            "$ref": "#/parameters/rowFilter.calendario_eventos.id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.calendario_eventos.tipo"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.calendario_eventos.titulo"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.calendario_eventos.descricao"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.calendario_eventos.data_hora_inicio"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.calendario_eventos.data_hora_fim"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.calendario_eventos.local"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.calendario_eventos.responsavel_id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.calendario_eventos.paciente_id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.calendario_eventos.leito_id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.calendario_eventos.participantes"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.calendario_eventos.status"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.calendario_eventos.prioridade"
+          },
+          {
+            "$ref": "#/parameters/preferReturn"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        },
+        "tags": [
+          "calendario_eventos"
+        ]
+      },
+      "patch": {
+        "parameters": [
+          {
+            "$ref": "#/parameters/rowFilter.calendario_eventos.id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.calendario_eventos.tipo"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.calendario_eventos.titulo"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.calendario_eventos.descricao"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.calendario_eventos.data_hora_inicio"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.calendario_eventos.data_hora_fim"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.calendario_eventos.local"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.calendario_eventos.responsavel_id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.calendario_eventos.paciente_id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.calendario_eventos.leito_id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.calendario_eventos.participantes"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.calendario_eventos.status"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.calendario_eventos.prioridade"
+          },
+          {
+            "$ref": "#/parameters/body.calendario_eventos"
+          },
+          {
+            "$ref": "#/parameters/preferReturn"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        },
+        "tags": [
+          "calendario_eventos"
+        ]
+      }
+    },
+    "/prontuarios": {
+      "get": {
+        "parameters": [
+          {
+            "$ref": "#/parameters/rowFilter.prontuarios.id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.prontuarios.internacao_id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.prontuarios.queixa_principal"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.prontuarios.historia_doenca"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.prontuarios.avaliacao"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.prontuarios.orientacoes"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.prontuarios.exames"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.prontuarios.atualizado_em"
+          },
+          {
+            "$ref": "#/parameters/select"
+          },
+          {
+            "$ref": "#/parameters/order"
+          },
+          {
+            "$ref": "#/parameters/range"
+          },
+          {
+            "$ref": "#/parameters/rangeUnit"
+          },
+          {
+            "$ref": "#/parameters/offset"
+          },
+          {
+            "$ref": "#/parameters/limit"
+          },
+          {
+            "$ref": "#/parameters/preferCount"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "items": {
+                "$ref": "#/definitions/prontuarios"
+              },
+              "type": "array"
+            }
+          },
+          "206": {
+            "description": "Partial Content"
+          }
+        },
+        "tags": [
+          "prontuarios"
+        ]
+      },
+      "post": {
+        "parameters": [
+          {
+            "$ref": "#/parameters/body.prontuarios"
+          },
+          {
+            "$ref": "#/parameters/select"
+          },
+          {
+            "$ref": "#/parameters/preferPost"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created"
+          }
+        },
+        "tags": [
+          "prontuarios"
+        ]
+      },
+      "delete": {
+        "parameters": [
+          {
+            "$ref": "#/parameters/rowFilter.prontuarios.id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.prontuarios.internacao_id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.prontuarios.queixa_principal"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.prontuarios.historia_doenca"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.prontuarios.avaliacao"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.prontuarios.orientacoes"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.prontuarios.exames"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.prontuarios.atualizado_em"
+          },
+          {
+            "$ref": "#/parameters/preferReturn"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        },
+        "tags": [
+          "prontuarios"
+        ]
+      },
+      "patch": {
+        "parameters": [
+          {
+            "$ref": "#/parameters/rowFilter.prontuarios.id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.prontuarios.internacao_id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.prontuarios.queixa_principal"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.prontuarios.historia_doenca"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.prontuarios.avaliacao"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.prontuarios.orientacoes"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.prontuarios.exames"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.prontuarios.atualizado_em"
+          },
+          {
+            "$ref": "#/parameters/body.prontuarios"
+          },
+          {
+            "$ref": "#/parameters/preferReturn"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        },
+        "tags": [
+          "prontuarios"
+        ]
+      }
+    },
+    "/movimentacoes_estoque": {
+      "get": {
+        "parameters": [
+          {
+            "$ref": "#/parameters/rowFilter.movimentacoes_estoque.id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.movimentacoes_estoque.estoque_id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.movimentacoes_estoque.tipo_movimentacao"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.movimentacoes_estoque.quantidade"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.movimentacoes_estoque.motivo"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.movimentacoes_estoque.responsavel_id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.movimentacoes_estoque.data_hora"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.movimentacoes_estoque.numero_nf"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.movimentacoes_estoque.observacoes"
+          },
+          {
+            "$ref": "#/parameters/select"
+          },
+          {
+            "$ref": "#/parameters/order"
+          },
+          {
+            "$ref": "#/parameters/range"
+          },
+          {
+            "$ref": "#/parameters/rangeUnit"
+          },
+          {
+            "$ref": "#/parameters/offset"
+          },
+          {
+            "$ref": "#/parameters/limit"
+          },
+          {
+            "$ref": "#/parameters/preferCount"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "items": {
+                "$ref": "#/definitions/movimentacoes_estoque"
+              },
+              "type": "array"
+            }
+          },
+          "206": {
+            "description": "Partial Content"
+          }
+        },
+        "tags": [
+          "movimentacoes_estoque"
+        ]
+      },
+      "post": {
+        "parameters": [
+          {
+            "$ref": "#/parameters/body.movimentacoes_estoque"
+          },
+          {
+            "$ref": "#/parameters/select"
+          },
+          {
+            "$ref": "#/parameters/preferPost"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created"
+          }
+        },
+        "tags": [
+          "movimentacoes_estoque"
+        ]
+      },
+      "delete": {
+        "parameters": [
+          {
+            "$ref": "#/parameters/rowFilter.movimentacoes_estoque.id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.movimentacoes_estoque.estoque_id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.movimentacoes_estoque.tipo_movimentacao"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.movimentacoes_estoque.quantidade"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.movimentacoes_estoque.motivo"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.movimentacoes_estoque.responsavel_id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.movimentacoes_estoque.data_hora"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.movimentacoes_estoque.numero_nf"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.movimentacoes_estoque.observacoes"
+          },
+          {
+            "$ref": "#/parameters/preferReturn"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        },
+        "tags": [
+          "movimentacoes_estoque"
+        ]
+      },
+      "patch": {
+        "parameters": [
+          {
+            "$ref": "#/parameters/rowFilter.movimentacoes_estoque.id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.movimentacoes_estoque.estoque_id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.movimentacoes_estoque.tipo_movimentacao"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.movimentacoes_estoque.quantidade"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.movimentacoes_estoque.motivo"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.movimentacoes_estoque.responsavel_id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.movimentacoes_estoque.data_hora"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.movimentacoes_estoque.numero_nf"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.movimentacoes_estoque.observacoes"
+          },
+          {
+            "$ref": "#/parameters/body.movimentacoes_estoque"
+          },
+          {
+            "$ref": "#/parameters/preferReturn"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        },
+        "tags": [
+          "movimentacoes_estoque"
+        ]
+      }
+    },
+    "/prescricoes_medicamentos": {
+      "get": {
+        "parameters": [
+          {
+            "$ref": "#/parameters/rowFilter.prescricoes_medicamentos.id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.prescricoes_medicamentos.internacao_id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.prescricoes_medicamentos.medicamento_id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.prescricoes_medicamentos.prescrito_por_id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.prescricoes_medicamentos.dosagem"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.prescricoes_medicamentos.via_administracao"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.prescricoes_medicamentos.frequencia"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.prescricoes_medicamentos.data_inicio"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.prescricoes_medicamentos.data_fim"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.prescricoes_medicamentos.observacoes"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.prescricoes_medicamentos.status"
+          },
+          {
+            "$ref": "#/parameters/select"
+          },
+          {
+            "$ref": "#/parameters/order"
+          },
+          {
+            "$ref": "#/parameters/range"
+          },
+          {
+            "$ref": "#/parameters/rangeUnit"
+          },
+          {
+            "$ref": "#/parameters/offset"
+          },
+          {
+            "$ref": "#/parameters/limit"
+          },
+          {
+            "$ref": "#/parameters/preferCount"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "items": {
+                "$ref": "#/definitions/prescricoes_medicamentos"
+              },
+              "type": "array"
+            }
+          },
+          "206": {
+            "description": "Partial Content"
+          }
+        },
+        "tags": [
+          "prescricoes_medicamentos"
+        ]
+      },
+      "post": {
+        "parameters": [
+          {
+            "$ref": "#/parameters/body.prescricoes_medicamentos"
+          },
+          {
+            "$ref": "#/parameters/select"
+          },
+          {
+            "$ref": "#/parameters/preferPost"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created"
+          }
+        },
+        "tags": [
+          "prescricoes_medicamentos"
+        ]
+      },
+      "delete": {
+        "parameters": [
+          {
+            "$ref": "#/parameters/rowFilter.prescricoes_medicamentos.id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.prescricoes_medicamentos.internacao_id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.prescricoes_medicamentos.medicamento_id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.prescricoes_medicamentos.prescrito_por_id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.prescricoes_medicamentos.dosagem"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.prescricoes_medicamentos.via_administracao"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.prescricoes_medicamentos.frequencia"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.prescricoes_medicamentos.data_inicio"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.prescricoes_medicamentos.data_fim"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.prescricoes_medicamentos.observacoes"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.prescricoes_medicamentos.status"
+          },
+          {
+            "$ref": "#/parameters/preferReturn"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        },
+        "tags": [
+          "prescricoes_medicamentos"
+        ]
+      },
+      "patch": {
+        "parameters": [
+          {
+            "$ref": "#/parameters/rowFilter.prescricoes_medicamentos.id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.prescricoes_medicamentos.internacao_id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.prescricoes_medicamentos.medicamento_id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.prescricoes_medicamentos.prescrito_por_id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.prescricoes_medicamentos.dosagem"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.prescricoes_medicamentos.via_administracao"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.prescricoes_medicamentos.frequencia"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.prescricoes_medicamentos.data_inicio"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.prescricoes_medicamentos.data_fim"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.prescricoes_medicamentos.observacoes"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.prescricoes_medicamentos.status"
+          },
+          {
+            "$ref": "#/parameters/body.prescricoes_medicamentos"
+          },
+          {
+            "$ref": "#/parameters/preferReturn"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        },
+        "tags": [
+          "prescricoes_medicamentos"
+        ]
+      }
+    },
+    "/expressoes_faciais": {
+      "get": {
+        "parameters": [
+          {
+            "$ref": "#/parameters/rowFilter.expressoes_faciais.id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.expressoes_faciais.internacao_id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.expressoes_faciais.emocao"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.expressoes_faciais.confianca"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.expressoes_faciais.descricao_detalhada"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.expressoes_faciais.imagem_hash"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.expressoes_faciais.timestamp"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.expressoes_faciais.processado_por"
+          },
+          {
+            "$ref": "#/parameters/select"
+          },
+          {
+            "$ref": "#/parameters/order"
+          },
+          {
+            "$ref": "#/parameters/range"
+          },
+          {
+            "$ref": "#/parameters/rangeUnit"
+          },
+          {
+            "$ref": "#/parameters/offset"
+          },
+          {
+            "$ref": "#/parameters/limit"
+          },
+          {
+            "$ref": "#/parameters/preferCount"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "items": {
+                "$ref": "#/definitions/expressoes_faciais"
+              },
+              "type": "array"
+            }
+          },
+          "206": {
+            "description": "Partial Content"
+          }
+        },
+        "tags": [
+          "expressoes_faciais"
+        ]
+      },
+      "post": {
+        "parameters": [
+          {
+            "$ref": "#/parameters/body.expressoes_faciais"
+          },
+          {
+            "$ref": "#/parameters/select"
+          },
+          {
+            "$ref": "#/parameters/preferPost"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created"
+          }
+        },
+        "tags": [
+          "expressoes_faciais"
+        ]
+      },
+      "delete": {
+        "parameters": [
+          {
+            "$ref": "#/parameters/rowFilter.expressoes_faciais.id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.expressoes_faciais.internacao_id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.expressoes_faciais.emocao"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.expressoes_faciais.confianca"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.expressoes_faciais.descricao_detalhada"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.expressoes_faciais.imagem_hash"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.expressoes_faciais.timestamp"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.expressoes_faciais.processado_por"
+          },
+          {
+            "$ref": "#/parameters/preferReturn"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        },
+        "tags": [
+          "expressoes_faciais"
+        ]
+      },
+      "patch": {
+        "parameters": [
+          {
+            "$ref": "#/parameters/rowFilter.expressoes_faciais.id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.expressoes_faciais.internacao_id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.expressoes_faciais.emocao"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.expressoes_faciais.confianca"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.expressoes_faciais.descricao_detalhada"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.expressoes_faciais.imagem_hash"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.expressoes_faciais.timestamp"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.expressoes_faciais.processado_por"
+          },
+          {
+            "$ref": "#/parameters/body.expressoes_faciais"
+          },
+          {
+            "$ref": "#/parameters/preferReturn"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        },
+        "tags": [
+          "expressoes_faciais"
+        ]
+      }
+    },
+    "/medicamentos": {
+      "get": {
+        "parameters": [
+          {
+            "$ref": "#/parameters/rowFilter.medicamentos.id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.medicamentos.nome"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.medicamentos.principio_ativo"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.medicamentos.forma_farmaceutica"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.medicamentos.concentracao"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.medicamentos.unidade_medida"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.medicamentos.fabricante"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.medicamentos.lote"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.medicamentos.validade"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.medicamentos.codigo_barra"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.medicamentos.categoria"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.medicamentos.preco_unitario"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.medicamentos.data_criacao"
+          },
+          {
+            "$ref": "#/parameters/select"
+          },
+          {
+            "$ref": "#/parameters/order"
+          },
+          {
+            "$ref": "#/parameters/range"
+          },
+          {
+            "$ref": "#/parameters/rangeUnit"
+          },
+          {
+            "$ref": "#/parameters/offset"
+          },
+          {
+            "$ref": "#/parameters/limit"
+          },
+          {
+            "$ref": "#/parameters/preferCount"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "items": {
+                "$ref": "#/definitions/medicamentos"
+              },
+              "type": "array"
+            }
+          },
+          "206": {
+            "description": "Partial Content"
+          }
+        },
+        "tags": [
+          "medicamentos"
+        ]
+      },
+      "post": {
+        "parameters": [
+          {
+            "$ref": "#/parameters/body.medicamentos"
+          },
+          {
+            "$ref": "#/parameters/select"
+          },
+          {
+            "$ref": "#/parameters/preferPost"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created"
+          }
+        },
+        "tags": [
+          "medicamentos"
+        ]
+      },
+      "delete": {
+        "parameters": [
+          {
+            "$ref": "#/parameters/rowFilter.medicamentos.id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.medicamentos.nome"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.medicamentos.principio_ativo"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.medicamentos.forma_farmaceutica"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.medicamentos.concentracao"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.medicamentos.unidade_medida"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.medicamentos.fabricante"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.medicamentos.lote"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.medicamentos.validade"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.medicamentos.codigo_barra"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.medicamentos.categoria"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.medicamentos.preco_unitario"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.medicamentos.data_criacao"
+          },
+          {
+            "$ref": "#/parameters/preferReturn"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        },
+        "tags": [
+          "medicamentos"
+        ]
+      },
+      "patch": {
+        "parameters": [
+          {
+            "$ref": "#/parameters/rowFilter.medicamentos.id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.medicamentos.nome"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.medicamentos.principio_ativo"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.medicamentos.forma_farmaceutica"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.medicamentos.concentracao"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.medicamentos.unidade_medida"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.medicamentos.fabricante"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.medicamentos.lote"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.medicamentos.validade"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.medicamentos.codigo_barra"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.medicamentos.categoria"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.medicamentos.preco_unitario"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.medicamentos.data_criacao"
+          },
+          {
+            "$ref": "#/parameters/body.medicamentos"
+          },
+          {
+            "$ref": "#/parameters/preferReturn"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        },
+        "tags": [
+          "medicamentos"
+        ]
+      }
+    },
+    "/visitantes": {
+      "get": {
+        "parameters": [
+          {
+            "$ref": "#/parameters/rowFilter.visitantes.id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.visitantes.paciente_id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.visitantes.nome_visitante"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.visitantes.parentesco"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.visitantes.cpf_visitante"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.visitantes.telefone"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.visitantes.data_entrada"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.visitantes.data_saida"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.visitantes.status"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.visitantes.companhia_permitida"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.visitantes.observacoes"
+          },
+          {
+            "$ref": "#/parameters/select"
+          },
+          {
+            "$ref": "#/parameters/order"
+          },
+          {
+            "$ref": "#/parameters/range"
+          },
+          {
+            "$ref": "#/parameters/rangeUnit"
+          },
+          {
+            "$ref": "#/parameters/offset"
+          },
+          {
+            "$ref": "#/parameters/limit"
+          },
+          {
+            "$ref": "#/parameters/preferCount"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "items": {
+                "$ref": "#/definitions/visitantes"
+              },
+              "type": "array"
+            }
+          },
+          "206": {
+            "description": "Partial Content"
+          }
+        },
+        "tags": [
+          "visitantes"
+        ]
+      },
+      "post": {
+        "parameters": [
+          {
+            "$ref": "#/parameters/body.visitantes"
+          },
+          {
+            "$ref": "#/parameters/select"
+          },
+          {
+            "$ref": "#/parameters/preferPost"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created"
+          }
+        },
+        "tags": [
+          "visitantes"
+        ]
+      },
+      "delete": {
+        "parameters": [
+          {
+            "$ref": "#/parameters/rowFilter.visitantes.id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.visitantes.paciente_id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.visitantes.nome_visitante"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.visitantes.parentesco"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.visitantes.cpf_visitante"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.visitantes.telefone"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.visitantes.data_entrada"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.visitantes.data_saida"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.visitantes.status"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.visitantes.companhia_permitida"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.visitantes.observacoes"
+          },
+          {
+            "$ref": "#/parameters/preferReturn"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        },
+        "tags": [
+          "visitantes"
+        ]
+      },
+      "patch": {
+        "parameters": [
+          {
+            "$ref": "#/parameters/rowFilter.visitantes.id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.visitantes.paciente_id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.visitantes.nome_visitante"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.visitantes.parentesco"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.visitantes.cpf_visitante"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.visitantes.telefone"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.visitantes.data_entrada"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.visitantes.data_saida"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.visitantes.status"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.visitantes.companhia_permitida"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.visitantes.observacoes"
+          },
+          {
+            "$ref": "#/parameters/body.visitantes"
+          },
+          {
+            "$ref": "#/parameters/preferReturn"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        },
+        "tags": [
+          "visitantes"
+        ]
+      }
+    },
+    "/usuarios": {
+      "get": {
+        "parameters": [
+          {
+            "$ref": "#/parameters/rowFilter.usuarios.id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.usuarios.nome"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.usuarios.email"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.usuarios.senha_hash"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.usuarios.role"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.usuarios.especialidade"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.usuarios.crm_coren"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.usuarios.ativo"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.usuarios.data_criacao"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.usuarios.data_atualizacao"
+          },
+          {
+            "$ref": "#/parameters/select"
+          },
+          {
+            "$ref": "#/parameters/order"
+          },
+          {
+            "$ref": "#/parameters/range"
+          },
+          {
+            "$ref": "#/parameters/rangeUnit"
+          },
+          {
+            "$ref": "#/parameters/offset"
+          },
+          {
+            "$ref": "#/parameters/limit"
+          },
+          {
+            "$ref": "#/parameters/preferCount"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "items": {
+                "$ref": "#/definitions/usuarios"
+              },
+              "type": "array"
+            }
+          },
+          "206": {
+            "description": "Partial Content"
+          }
+        },
+        "tags": [
+          "usuarios"
+        ]
+      },
+      "post": {
+        "parameters": [
+          {
+            "$ref": "#/parameters/body.usuarios"
+          },
+          {
+            "$ref": "#/parameters/select"
+          },
+          {
+            "$ref": "#/parameters/preferPost"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created"
+          }
+        },
+        "tags": [
+          "usuarios"
+        ]
+      },
+      "delete": {
+        "parameters": [
+          {
+            "$ref": "#/parameters/rowFilter.usuarios.id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.usuarios.nome"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.usuarios.email"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.usuarios.senha_hash"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.usuarios.role"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.usuarios.especialidade"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.usuarios.crm_coren"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.usuarios.ativo"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.usuarios.data_criacao"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.usuarios.data_atualizacao"
+          },
+          {
+            "$ref": "#/parameters/preferReturn"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        },
+        "tags": [
+          "usuarios"
+        ]
+      },
+      "patch": {
+        "parameters": [
+          {
+            "$ref": "#/parameters/rowFilter.usuarios.id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.usuarios.nome"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.usuarios.email"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.usuarios.senha_hash"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.usuarios.role"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.usuarios.especialidade"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.usuarios.crm_coren"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.usuarios.ativo"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.usuarios.data_criacao"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.usuarios.data_atualizacao"
+          },
+          {
+            "$ref": "#/parameters/body.usuarios"
+          },
+          {
+            "$ref": "#/parameters/preferReturn"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        },
+        "tags": [
+          "usuarios"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "administracoes_medicamento": {
+      "required": [
+        "id",
+        "prescricao_id",
+        "data_hora_planejada"
+      ],
+      "properties": {
+        "id": {
+          "description": "Note:\nThis is a Primary Key.<pk/>",
+          "format": "integer",
+          "type": "integer"
+        },
+        "prescricao_id": {
+          "description": "Note:\nThis is a Foreign Key to `prescricoes_medicamentos.id`.<fk table='prescricoes_medicamentos' column='id'/>",
+          "format": "integer",
+          "type": "integer"
+        },
+        "administrado_por_id": {
+          "description": "Note:\nThis is a Foreign Key to `usuarios.id`.<fk table='usuarios' column='id'/>",
+          "format": "integer",
+          "type": "integer"
+        },
+        "data_hora_planejada": {
+          "format": "timestamp without time zone",
+          "type": "string"
+        },
+        "data_hora_administrada": {
+          "format": "timestamp without time zone",
+          "type": "string"
+        },
+        "status": {
+          "default": "pendente",
+          "enum": [
+            "pendente",
+            "administrado",
+            "atrasado",
+            "cancelado"
+          ],
+          "format": "public.status_administracao",
+          "type": "string"
+        },
+        "observacoes": {
+          "format": "text",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "logs_auditoria": {
+      "required": [
+        "id",
+        "acao"
+      ],
+      "properties": {
+        "id": {
+          "description": "Note:\nThis is a Primary Key.<pk/>",
+          "format": "integer",
+          "type": "integer"
+        },
+        "usuario_id": {
+          "description": "Note:\nThis is a Foreign Key to `usuarios.id`.<fk table='usuarios' column='id'/>",
+          "format": "integer",
+          "type": "integer"
+        },
+        "acao": {
+          "format": "character varying",
+          "maxLength": 100,
+          "type": "string"
+        },
+        "tabela_afetada": {
+          "format": "character varying",
+          "maxLength": 100,
+          "type": "string"
+        },
+        "id_registro": {
+          "format": "integer",
+          "type": "integer"
+        },
+        "dados_antigos": {
+          "format": "jsonb"
+        },
+        "dados_novos": {
+          "format": "jsonb"
+        },
+        "ip_address": {
+          "format": "character varying",
+          "maxLength": 45,
+          "type": "string"
+        },
+        "user_agent": {
+          "format": "text",
+          "type": "string"
+        },
+        "data_hora": {
+          "default": "CURRENT_TIMESTAMP",
+          "format": "timestamp without time zone",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "sinais_vitais": {
+      "required": [
+        "id",
+        "internacao_id",
+        "timestamp"
+      ],
+      "properties": {
+        "id": {
+          "description": "Note:\nThis is a Primary Key.<pk/>",
+          "format": "bigint",
+          "type": "integer"
+        },
+        "internacao_id": {
+          "description": "Note:\nThis is a Foreign Key to `internacoes.id`.<fk table='internacoes' column='id'/>",
+          "format": "integer",
+          "type": "integer"
+        },
+        "frequencia_cardiaca": {
+          "format": "integer",
+          "type": "integer"
+        },
+        "spo2": {
+          "format": "integer",
+          "type": "integer"
+        },
+        "pressao_arterial_sistolica": {
+          "format": "integer",
+          "type": "integer"
+        },
+        "pressao_arterial_diastolica": {
+          "format": "integer",
+          "type": "integer"
+        },
+        "temperatura_corporal": {
+          "format": "numeric",
+          "type": "number"
+        },
+        "frequencia_respiratoria": {
+          "format": "integer",
+          "type": "integer"
+        },
+        "glicemia": {
+          "format": "numeric",
+          "type": "number"
+        },
+        "timestamp": {
+          "format": "timestamp without time zone",
+          "type": "string"
+        },
+        "fonte": {
+          "default": "monitor",
+          "format": "character varying",
+          "maxLength": 50,
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "pacientes": {
+      "required": [
+        "id",
+        "nome",
+        "cpf",
+        "data_nascimento",
+        "genero"
+      ],
+      "properties": {
+        "id": {
+          "description": "Note:\nThis is a Primary Key.<pk/>",
+          "format": "integer",
+          "type": "integer"
+        },
+        "nome": {
+          "format": "character varying",
+          "maxLength": 150,
+          "type": "string"
+        },
+        "cpf": {
+          "format": "character varying",
+          "maxLength": 14,
+          "type": "string"
+        },
+        "data_nascimento": {
+          "format": "date",
+          "type": "string"
+        },
+        "genero": {
+          "enum": [
+            "M",
+            "F",
+            "Outro"
+          ],
+          "format": "public.genero_paciente",
+          "type": "string"
+        },
+        "convenio": {
+          "format": "character varying",
+          "maxLength": 100,
+          "type": "string"
+        },
+        "telefone": {
+          "format": "character varying",
+          "maxLength": 20,
+          "type": "string"
+        },
+        "email": {
+          "format": "character varying",
+          "maxLength": 120,
+          "type": "string"
+        },
+        "endereco": {
+          "format": "text",
+          "type": "string"
+        },
+        "cidade": {
+          "format": "character varying",
+          "maxLength": 100,
+          "type": "string"
+        },
+        "estado": {
+          "format": "character varying",
+          "maxLength": 2,
+          "type": "string"
+        },
+        "contato_emergencia": {
+          "format": "character varying",
+          "maxLength": 150,
+          "type": "string"
+        },
+        "numero_emergencia": {
+          "format": "character varying",
+          "maxLength": 20,
+          "type": "string"
+        },
+        "alergias": {
+          "format": "text",
+          "type": "string"
+        },
+        "data_criacao": {
+          "default": "CURRENT_TIMESTAMP",
+          "format": "timestamp without time zone",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "estoque": {
+      "required": [
+        "id",
+        "medicamento_id",
+        "quantidade_atual",
+        "quantidade_minima",
+        "quantidade_maxima"
+      ],
+      "properties": {
+        "id": {
+          "description": "Note:\nThis is a Primary Key.<pk/>",
+          "format": "integer",
+          "type": "integer"
+        },
+        "medicamento_id": {
+          "description": "Note:\nThis is a Foreign Key to `medicamentos.id`.<fk table='medicamentos' column='id'/>",
+          "format": "integer",
+          "type": "integer"
+        },
+        "quantidade_atual": {
+          "format": "integer",
+          "type": "integer"
+        },
+        "quantidade_minima": {
+          "format": "integer",
+          "type": "integer"
+        },
+        "quantidade_maxima": {
+          "format": "integer",
+          "type": "integer"
+        },
+        "localizacao": {
+          "format": "character varying",
+          "maxLength": 100,
+          "type": "string"
+        },
+        "data_ultima_reposicao": {
+          "format": "timestamp without time zone",
+          "type": "string"
+        },
+        "data_proxima_reposicao": {
+          "format": "timestamp without time zone",
+          "type": "string"
+        },
+        "fornecedor": {
+          "format": "character varying",
+          "maxLength": 150,
+          "type": "string"
+        },
+        "preco_unitario": {
+          "format": "numeric",
+          "type": "number"
+        }
+      },
+      "type": "object"
+    },
+    "internacoes": {
+      "required": [
+        "id",
+        "paciente_id",
+        "leito_id",
+        "diagnostico_principal",
+        "medico_responsavel_id",
+        "data_internacao"
+      ],
+      "properties": {
+        "id": {
+          "description": "Note:\nThis is a Primary Key.<pk/>",
+          "format": "integer",
+          "type": "integer"
+        },
+        "paciente_id": {
+          "description": "Note:\nThis is a Foreign Key to `pacientes.id`.<fk table='pacientes' column='id'/>",
+          "format": "integer",
+          "type": "integer"
+        },
+        "leito_id": {
+          "description": "Note:\nThis is a Foreign Key to `leitos.id`.<fk table='leitos' column='id'/>",
+          "format": "integer",
+          "type": "integer"
+        },
+        "diagnostico_principal": {
+          "format": "character varying",
+          "maxLength": 255,
+          "type": "string"
+        },
+        "diagnostico_secundario": {
+          "format": "text",
+          "type": "string"
+        },
+        "medico_responsavel_id": {
+          "description": "Note:\nThis is a Foreign Key to `usuarios.id`.<fk table='usuarios' column='id'/>",
+          "format": "integer",
+          "type": "integer"
+        },
+        "data_internacao": {
+          "format": "timestamp without time zone",
+          "type": "string"
+        },
+        "data_alta": {
+          "format": "timestamp without time zone",
+          "type": "string"
+        },
+        "motivo_alta": {
+          "format": "character varying",
+          "maxLength": 100,
+          "type": "string"
+        },
+        "observacoes": {
+          "format": "text",
+          "type": "string"
+        },
+        "ativo": {
+          "default": true,
+          "format": "boolean",
+          "type": "boolean"
+        },
+        "data_criacao": {
+          "default": "CURRENT_TIMESTAMP",
+          "format": "timestamp without time zone",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "leitos": {
+      "required": [
+        "id",
+        "numero"
+      ],
+      "properties": {
+        "id": {
+          "description": "Note:\nThis is a Primary Key.<pk/>",
+          "format": "integer",
+          "type": "integer"
+        },
+        "numero": {
+          "format": "character varying",
+          "maxLength": 10,
+          "type": "string"
+        },
+        "localizacao": {
+          "format": "character varying",
+          "maxLength": 100,
+          "type": "string"
+        },
+        "status": {
+          "default": "livre",
+          "enum": [
+            "livre",
+            "ocupado",
+            "manutencao",
+            "desativado"
+          ],
+          "format": "public.status_leito",
+          "type": "string"
+        },
+        "tipo": {
+          "default": "uti",
+          "enum": [
+            "uti",
+            "enfermaria",
+            "isolamento"
+          ],
+          "format": "public.tipo_leito",
+          "type": "string"
+        },
+        "equipamentos": {
+          "format": "text",
+          "type": "string"
+        },
+        "data_criacao": {
+          "default": "CURRENT_TIMESTAMP",
+          "format": "timestamp without time zone",
+          "type": "string"
+        },
+        "data_atualizacao": {
+          "default": "CURRENT_TIMESTAMP",
+          "format": "timestamp without time zone",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "calendario_eventos": {
+      "required": [
+        "id",
+        "tipo",
+        "titulo",
+        "data_hora_inicio"
+      ],
+      "properties": {
+        "id": {
+          "description": "Note:\nThis is a Primary Key.<pk/>",
+          "format": "integer",
+          "type": "integer"
+        },
+        "tipo": {
+          "enum": [
+            "plantao",
+            "procedimento",
+            "consulta",
+            "reuniao"
+          ],
+          "format": "public.tipo_evento",
+          "type": "string"
+        },
+        "titulo": {
+          "format": "character varying",
+          "maxLength": 255,
+          "type": "string"
+        },
+        "descricao": {
+          "format": "text",
+          "type": "string"
+        },
+        "data_hora_inicio": {
+          "format": "timestamp without time zone",
+          "type": "string"
+        },
+        "data_hora_fim": {
+          "format": "timestamp without time zone",
+          "type": "string"
+        },
+        "local": {
+          "format": "character varying",
+          "maxLength": 150,
+          "type": "string"
+        },
+        "responsavel_id": {
+          "description": "Note:\nThis is a Foreign Key to `usuarios.id`.<fk table='usuarios' column='id'/>",
+          "format": "integer",
+          "type": "integer"
+        },
+        "paciente_id": {
+          "description": "Note:\nThis is a Foreign Key to `pacientes.id`.<fk table='pacientes' column='id'/>",
+          "format": "integer",
+          "type": "integer"
+        },
+        "leito_id": {
+          "description": "Note:\nThis is a Foreign Key to `leitos.id`.<fk table='leitos' column='id'/>",
+          "format": "integer",
+          "type": "integer"
+        },
+        "participantes": {
+          "format": "jsonb"
+        },
+        "status": {
+          "default": "agendado",
+          "enum": [
+            "agendado",
+            "em-andamento",
+            "finalizado",
+            "cancelado"
+          ],
+          "format": "public.status_evento",
+          "type": "string"
+        },
+        "prioridade": {
+          "default": "media",
+          "enum": [
+            "baixa",
+            "media",
+            "alta",
+            "critica"
+          ],
+          "format": "public.prioridade_evento",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "prontuarios": {
+      "required": [
+        "id"
+      ],
+      "properties": {
+        "id": {
+          "default": "gen_random_uuid()",
+          "description": "Note:\nThis is a Primary Key.<pk/>",
+          "format": "uuid",
+          "type": "string"
+        },
+        "internacao_id": {
+          "format": "uuid",
+          "type": "string"
+        },
+        "queixa_principal": {
+          "format": "text",
+          "type": "string"
+        },
+        "historia_doenca": {
+          "format": "text",
+          "type": "string"
+        },
+        "avaliacao": {
+          "format": "text",
+          "type": "string"
+        },
+        "orientacoes": {
+          "format": "text",
+          "type": "string"
+        },
+        "exames": {
+          "format": "jsonb"
+        },
+        "atualizado_em": {
+          "default": "now()",
+          "format": "timestamp with time zone",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "movimentacoes_estoque": {
+      "required": [
+        "id",
+        "estoque_id",
+        "tipo_movimentacao",
+        "quantidade"
+      ],
+      "properties": {
+        "id": {
+          "description": "Note:\nThis is a Primary Key.<pk/>",
+          "format": "integer",
+          "type": "integer"
+        },
+        "estoque_id": {
+          "description": "Note:\nThis is a Foreign Key to `estoque.id`.<fk table='estoque' column='id'/>",
+          "format": "integer",
+          "type": "integer"
+        },
+        "tipo_movimentacao": {
+          "enum": [
+            "entrada",
+            "saida",
+            "ajuste",
+            "perda"
+          ],
+          "format": "public.tipo_movimentacao",
+          "type": "string"
+        },
+        "quantidade": {
+          "format": "integer",
+          "type": "integer"
+        },
+        "motivo": {
+          "format": "character varying",
+          "maxLength": 255,
+          "type": "string"
+        },
+        "responsavel_id": {
+          "description": "Note:\nThis is a Foreign Key to `usuarios.id`.<fk table='usuarios' column='id'/>",
+          "format": "integer",
+          "type": "integer"
+        },
+        "data_hora": {
+          "default": "CURRENT_TIMESTAMP",
+          "format": "timestamp without time zone",
+          "type": "string"
+        },
+        "numero_nf": {
+          "format": "character varying",
+          "maxLength": 50,
+          "type": "string"
+        },
+        "observacoes": {
+          "format": "text",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "prescricoes_medicamentos": {
+      "required": [
+        "id",
+        "internacao_id",
+        "medicamento_id",
+        "prescrito_por_id",
+        "dosagem",
+        "via_administracao",
+        "frequencia",
+        "data_inicio"
+      ],
+      "properties": {
+        "id": {
+          "description": "Note:\nThis is a Primary Key.<pk/>",
+          "format": "integer",
+          "type": "integer"
+        },
+        "internacao_id": {
+          "description": "Note:\nThis is a Foreign Key to `internacoes.id`.<fk table='internacoes' column='id'/>",
+          "format": "integer",
+          "type": "integer"
+        },
+        "medicamento_id": {
+          "description": "Note:\nThis is a Foreign Key to `medicamentos.id`.<fk table='medicamentos' column='id'/>",
+          "format": "integer",
+          "type": "integer"
+        },
+        "prescrito_por_id": {
+          "description": "Note:\nThis is a Foreign Key to `usuarios.id`.<fk table='usuarios' column='id'/>",
+          "format": "integer",
+          "type": "integer"
+        },
+        "dosagem": {
+          "format": "character varying",
+          "maxLength": 100,
+          "type": "string"
+        },
+        "via_administracao": {
+          "enum": [
+            "EV",
+            "VO",
+            "SC",
+            "IM",
+            "Inalatoria",
+            "Topica"
+          ],
+          "format": "public.via_administracao",
+          "type": "string"
+        },
+        "frequencia": {
+          "format": "character varying",
+          "maxLength": 100,
+          "type": "string"
+        },
+        "data_inicio": {
+          "format": "timestamp without time zone",
+          "type": "string"
+        },
+        "data_fim": {
+          "format": "timestamp without time zone",
+          "type": "string"
+        },
+        "observacoes": {
+          "format": "text",
+          "type": "string"
+        },
+        "status": {
+          "default": "ativa",
+          "enum": [
+            "ativa",
+            "pausada",
+            "suspensa",
+            "finalizada"
+          ],
+          "format": "public.status_prescricao",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "expressoes_faciais": {
+      "required": [
+        "id",
+        "internacao_id",
+        "emocao",
+        "timestamp"
+      ],
+      "properties": {
+        "id": {
+          "description": "Note:\nThis is a Primary Key.<pk/>",
+          "format": "bigint",
+          "type": "integer"
+        },
+        "internacao_id": {
+          "description": "Note:\nThis is a Foreign Key to `internacoes.id`.<fk table='internacoes' column='id'/>",
+          "format": "integer",
+          "type": "integer"
+        },
+        "emocao": {
+          "enum": [
+            "dor",
+            "medo",
+            "tristeza",
+            "enjoo",
+            "sono",
+            "dormindo",
+            "acordado",
+            "neutro"
+          ],
+          "format": "public.emocao_facial",
+          "type": "string"
+        },
+        "confianca": {
+          "default": 0,
+          "format": "integer",
+          "type": "integer"
+        },
+        "descricao_detalhada": {
+          "format": "text",
+          "type": "string"
+        },
+        "imagem_hash": {
+          "format": "character varying",
+          "maxLength": 255,
+          "type": "string"
+        },
+        "timestamp": {
+          "format": "timestamp without time zone",
+          "type": "string"
+        },
+        "processado_por": {
+          "default": "perceptai_v1",
+          "format": "character varying",
+          "maxLength": 50,
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "medicamentos": {
+      "required": [
+        "id",
+        "nome",
+        "principio_ativo",
+        "forma_farmaceutica"
+      ],
+      "properties": {
+        "id": {
+          "description": "Note:\nThis is a Primary Key.<pk/>",
+          "format": "integer",
+          "type": "integer"
+        },
+        "nome": {
+          "format": "character varying",
+          "maxLength": 150,
+          "type": "string"
+        },
+        "principio_ativo": {
+          "format": "character varying",
+          "maxLength": 150,
+          "type": "string"
+        },
+        "forma_farmaceutica": {
+          "enum": [
+            "comprimido",
+            "injecao",
+            "xarope",
+            "inalacao",
+            "creme"
+          ],
+          "format": "public.forma_farmaceutica",
+          "type": "string"
+        },
+        "concentracao": {
+          "format": "character varying",
+          "maxLength": 50,
+          "type": "string"
+        },
+        "unidade_medida": {
+          "format": "character varying",
+          "maxLength": 20,
+          "type": "string"
+        },
+        "fabricante": {
+          "format": "character varying",
+          "maxLength": 150,
+          "type": "string"
+        },
+        "lote": {
+          "format": "character varying",
+          "maxLength": 50,
+          "type": "string"
+        },
+        "validade": {
+          "format": "date",
+          "type": "string"
+        },
+        "codigo_barra": {
+          "format": "character varying",
+          "maxLength": 50,
+          "type": "string"
+        },
+        "categoria": {
+          "format": "character varying",
+          "maxLength": 100,
+          "type": "string"
+        },
+        "preco_unitario": {
+          "format": "numeric",
+          "type": "number"
+        },
+        "data_criacao": {
+          "default": "CURRENT_TIMESTAMP",
+          "format": "timestamp without time zone",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "visitantes": {
+      "required": [
+        "id",
+        "paciente_id",
+        "nome_visitante",
+        "data_entrada"
+      ],
+      "properties": {
+        "id": {
+          "description": "Note:\nThis is a Primary Key.<pk/>",
+          "format": "integer",
+          "type": "integer"
+        },
+        "paciente_id": {
+          "description": "Note:\nThis is a Foreign Key to `pacientes.id`.<fk table='pacientes' column='id'/>",
+          "format": "integer",
+          "type": "integer"
+        },
+        "nome_visitante": {
+          "format": "character varying",
+          "maxLength": 150,
+          "type": "string"
+        },
+        "parentesco": {
+          "format": "character varying",
+          "maxLength": 50,
+          "type": "string"
+        },
+        "cpf_visitante": {
+          "format": "character varying",
+          "maxLength": 14,
+          "type": "string"
+        },
+        "telefone": {
+          "format": "character varying",
+          "maxLength": 20,
+          "type": "string"
+        },
+        "data_entrada": {
+          "format": "timestamp without time zone",
+          "type": "string"
+        },
+        "data_saida": {
+          "format": "timestamp without time zone",
+          "type": "string"
+        },
+        "status": {
+          "default": "agendada",
+          "enum": [
+            "agendada",
+            "em-andamento",
+            "finalizada",
+            "cancelada"
+          ],
+          "format": "public.status_visitante",
+          "type": "string"
+        },
+        "companhia_permitida": {
+          "default": false,
+          "format": "boolean",
+          "type": "boolean"
+        },
+        "observacoes": {
+          "format": "text",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "usuarios": {
+      "required": [
+        "id",
+        "nome",
+        "email",
+        "senha_hash",
+        "role"
+      ],
+      "properties": {
+        "id": {
+          "description": "Note:\nThis is a Primary Key.<pk/>",
+          "format": "integer",
+          "type": "integer"
+        },
+        "nome": {
+          "format": "character varying",
+          "maxLength": 150,
+          "type": "string"
+        },
+        "email": {
+          "format": "character varying",
+          "maxLength": 120,
+          "type": "string"
+        },
+        "senha_hash": {
+          "format": "character varying",
+          "maxLength": 255,
+          "type": "string"
+        },
+        "role": {
+          "enum": [
+            "medico",
+            "enfermeiro",
+            "admin"
+          ],
+          "format": "public.role_usuario",
+          "type": "string"
+        },
+        "especialidade": {
+          "format": "character varying",
+          "maxLength": 100,
+          "type": "string"
+        },
+        "crm_coren": {
+          "format": "character varying",
+          "maxLength": 20,
+          "type": "string"
+        },
+        "ativo": {
+          "default": true,
+          "format": "boolean",
+          "type": "boolean"
+        },
+        "data_criacao": {
+          "default": "CURRENT_TIMESTAMP",
+          "format": "timestamp without time zone",
+          "type": "string"
+        },
+        "data_atualizacao": {
+          "default": "CURRENT_TIMESTAMP",
+          "format": "timestamp without time zone",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    }
+  },
+  "parameters": {
+    "preferParams": {
+      "name": "Prefer",
+      "description": "Preference",
+      "required": false,
+      "in": "header",
+      "type": "string"
+    },
+    "preferReturn": {
+      "name": "Prefer",
+      "description": "Preference",
+      "required": false,
+      "enum": [
+        "return=representation",
+        "return=minimal",
+        "return=none"
+      ],
+      "in": "header",
+      "type": "string"
+    },
+    "preferCount": {
+      "name": "Prefer",
+      "description": "Preference",
+      "required": false,
+      "enum": [
+        "count=none"
+      ],
+      "in": "header",
+      "type": "string"
+    },
+    "preferPost": {
+      "name": "Prefer",
+      "description": "Preference",
+      "required": false,
+      "enum": [
+        "return=representation",
+        "return=minimal",
+        "return=none",
+        "resolution=ignore-duplicates",
+        "resolution=merge-duplicates"
+      ],
+      "in": "header",
+      "type": "string"
+    },
+    "select": {
+      "name": "select",
+      "description": "Filtering Columns",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "on_conflict": {
+      "name": "on_conflict",
+      "description": "On Conflict",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "order": {
+      "name": "order",
+      "description": "Ordering",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "range": {
+      "name": "Range",
+      "description": "Limiting and Pagination",
+      "required": false,
+      "in": "header",
+      "type": "string"
+    },
+    "rangeUnit": {
+      "name": "Range-Unit",
+      "description": "Limiting and Pagination",
+      "required": false,
+      "default": "items",
+      "in": "header",
+      "type": "string"
+    },
+    "offset": {
+      "name": "offset",
+      "description": "Limiting and Pagination",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "limit": {
+      "name": "limit",
+      "description": "Limiting and Pagination",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "body.administracoes_medicamento": {
+      "name": "administracoes_medicamento",
+      "description": "administracoes_medicamento",
+      "required": false,
+      "in": "body",
+      "schema": {
+        "$ref": "#/definitions/administracoes_medicamento"
+      }
+    },
+    "rowFilter.administracoes_medicamento.id": {
+      "name": "id",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.administracoes_medicamento.prescricao_id": {
+      "name": "prescricao_id",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.administracoes_medicamento.administrado_por_id": {
+      "name": "administrado_por_id",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.administracoes_medicamento.data_hora_planejada": {
+      "name": "data_hora_planejada",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.administracoes_medicamento.data_hora_administrada": {
+      "name": "data_hora_administrada",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.administracoes_medicamento.status": {
+      "name": "status",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.administracoes_medicamento.observacoes": {
+      "name": "observacoes",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "body.logs_auditoria": {
+      "name": "logs_auditoria",
+      "description": "logs_auditoria",
+      "required": false,
+      "in": "body",
+      "schema": {
+        "$ref": "#/definitions/logs_auditoria"
+      }
+    },
+    "rowFilter.logs_auditoria.id": {
+      "name": "id",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.logs_auditoria.usuario_id": {
+      "name": "usuario_id",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.logs_auditoria.acao": {
+      "name": "acao",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.logs_auditoria.tabela_afetada": {
+      "name": "tabela_afetada",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.logs_auditoria.id_registro": {
+      "name": "id_registro",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.logs_auditoria.dados_antigos": {
+      "name": "dados_antigos",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.logs_auditoria.dados_novos": {
+      "name": "dados_novos",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.logs_auditoria.ip_address": {
+      "name": "ip_address",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.logs_auditoria.user_agent": {
+      "name": "user_agent",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.logs_auditoria.data_hora": {
+      "name": "data_hora",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "body.sinais_vitais": {
+      "name": "sinais_vitais",
+      "description": "sinais_vitais",
+      "required": false,
+      "in": "body",
+      "schema": {
+        "$ref": "#/definitions/sinais_vitais"
+      }
+    },
+    "rowFilter.sinais_vitais.id": {
+      "name": "id",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.sinais_vitais.internacao_id": {
+      "name": "internacao_id",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.sinais_vitais.frequencia_cardiaca": {
+      "name": "frequencia_cardiaca",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.sinais_vitais.spo2": {
+      "name": "spo2",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.sinais_vitais.pressao_arterial_sistolica": {
+      "name": "pressao_arterial_sistolica",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.sinais_vitais.pressao_arterial_diastolica": {
+      "name": "pressao_arterial_diastolica",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.sinais_vitais.temperatura_corporal": {
+      "name": "temperatura_corporal",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.sinais_vitais.frequencia_respiratoria": {
+      "name": "frequencia_respiratoria",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.sinais_vitais.glicemia": {
+      "name": "glicemia",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.sinais_vitais.timestamp": {
+      "name": "timestamp",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.sinais_vitais.fonte": {
+      "name": "fonte",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "body.pacientes": {
+      "name": "pacientes",
+      "description": "pacientes",
+      "required": false,
+      "in": "body",
+      "schema": {
+        "$ref": "#/definitions/pacientes"
+      }
+    },
+    "rowFilter.pacientes.id": {
+      "name": "id",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.pacientes.nome": {
+      "name": "nome",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.pacientes.cpf": {
+      "name": "cpf",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.pacientes.data_nascimento": {
+      "name": "data_nascimento",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.pacientes.genero": {
+      "name": "genero",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.pacientes.convenio": {
+      "name": "convenio",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.pacientes.telefone": {
+      "name": "telefone",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.pacientes.email": {
+      "name": "email",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.pacientes.endereco": {
+      "name": "endereco",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.pacientes.cidade": {
+      "name": "cidade",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.pacientes.estado": {
+      "name": "estado",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.pacientes.contato_emergencia": {
+      "name": "contato_emergencia",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.pacientes.numero_emergencia": {
+      "name": "numero_emergencia",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.pacientes.alergias": {
+      "name": "alergias",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.pacientes.data_criacao": {
+      "name": "data_criacao",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "body.estoque": {
+      "name": "estoque",
+      "description": "estoque",
+      "required": false,
+      "in": "body",
+      "schema": {
+        "$ref": "#/definitions/estoque"
+      }
+    },
+    "rowFilter.estoque.id": {
+      "name": "id",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.estoque.medicamento_id": {
+      "name": "medicamento_id",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.estoque.quantidade_atual": {
+      "name": "quantidade_atual",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.estoque.quantidade_minima": {
+      "name": "quantidade_minima",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.estoque.quantidade_maxima": {
+      "name": "quantidade_maxima",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.estoque.localizacao": {
+      "name": "localizacao",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.estoque.data_ultima_reposicao": {
+      "name": "data_ultima_reposicao",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.estoque.data_proxima_reposicao": {
+      "name": "data_proxima_reposicao",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.estoque.fornecedor": {
+      "name": "fornecedor",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.estoque.preco_unitario": {
+      "name": "preco_unitario",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "body.internacoes": {
+      "name": "internacoes",
+      "description": "internacoes",
+      "required": false,
+      "in": "body",
+      "schema": {
+        "$ref": "#/definitions/internacoes"
+      }
+    },
+    "rowFilter.internacoes.id": {
+      "name": "id",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.internacoes.paciente_id": {
+      "name": "paciente_id",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.internacoes.leito_id": {
+      "name": "leito_id",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.internacoes.diagnostico_principal": {
+      "name": "diagnostico_principal",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.internacoes.diagnostico_secundario": {
+      "name": "diagnostico_secundario",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.internacoes.medico_responsavel_id": {
+      "name": "medico_responsavel_id",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.internacoes.data_internacao": {
+      "name": "data_internacao",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.internacoes.data_alta": {
+      "name": "data_alta",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.internacoes.motivo_alta": {
+      "name": "motivo_alta",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.internacoes.observacoes": {
+      "name": "observacoes",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.internacoes.ativo": {
+      "name": "ativo",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.internacoes.data_criacao": {
+      "name": "data_criacao",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "body.leitos": {
+      "name": "leitos",
+      "description": "leitos",
+      "required": false,
+      "in": "body",
+      "schema": {
+        "$ref": "#/definitions/leitos"
+      }
+    },
+    "rowFilter.leitos.id": {
+      "name": "id",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.leitos.numero": {
+      "name": "numero",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.leitos.localizacao": {
+      "name": "localizacao",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.leitos.status": {
+      "name": "status",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.leitos.tipo": {
+      "name": "tipo",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.leitos.equipamentos": {
+      "name": "equipamentos",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.leitos.data_criacao": {
+      "name": "data_criacao",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.leitos.data_atualizacao": {
+      "name": "data_atualizacao",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "body.calendario_eventos": {
+      "name": "calendario_eventos",
+      "description": "calendario_eventos",
+      "required": false,
+      "in": "body",
+      "schema": {
+        "$ref": "#/definitions/calendario_eventos"
+      }
+    },
+    "rowFilter.calendario_eventos.id": {
+      "name": "id",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.calendario_eventos.tipo": {
+      "name": "tipo",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.calendario_eventos.titulo": {
+      "name": "titulo",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.calendario_eventos.descricao": {
+      "name": "descricao",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.calendario_eventos.data_hora_inicio": {
+      "name": "data_hora_inicio",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.calendario_eventos.data_hora_fim": {
+      "name": "data_hora_fim",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.calendario_eventos.local": {
+      "name": "local",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.calendario_eventos.responsavel_id": {
+      "name": "responsavel_id",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.calendario_eventos.paciente_id": {
+      "name": "paciente_id",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.calendario_eventos.leito_id": {
+      "name": "leito_id",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.calendario_eventos.participantes": {
+      "name": "participantes",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.calendario_eventos.status": {
+      "name": "status",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.calendario_eventos.prioridade": {
+      "name": "prioridade",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "body.prontuarios": {
+      "name": "prontuarios",
+      "description": "prontuarios",
+      "required": false,
+      "in": "body",
+      "schema": {
+        "$ref": "#/definitions/prontuarios"
+      }
+    },
+    "rowFilter.prontuarios.id": {
+      "name": "id",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.prontuarios.internacao_id": {
+      "name": "internacao_id",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.prontuarios.queixa_principal": {
+      "name": "queixa_principal",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.prontuarios.historia_doenca": {
+      "name": "historia_doenca",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.prontuarios.avaliacao": {
+      "name": "avaliacao",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.prontuarios.orientacoes": {
+      "name": "orientacoes",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.prontuarios.exames": {
+      "name": "exames",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.prontuarios.atualizado_em": {
+      "name": "atualizado_em",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "body.movimentacoes_estoque": {
+      "name": "movimentacoes_estoque",
+      "description": "movimentacoes_estoque",
+      "required": false,
+      "in": "body",
+      "schema": {
+        "$ref": "#/definitions/movimentacoes_estoque"
+      }
+    },
+    "rowFilter.movimentacoes_estoque.id": {
+      "name": "id",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.movimentacoes_estoque.estoque_id": {
+      "name": "estoque_id",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.movimentacoes_estoque.tipo_movimentacao": {
+      "name": "tipo_movimentacao",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.movimentacoes_estoque.quantidade": {
+      "name": "quantidade",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.movimentacoes_estoque.motivo": {
+      "name": "motivo",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.movimentacoes_estoque.responsavel_id": {
+      "name": "responsavel_id",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.movimentacoes_estoque.data_hora": {
+      "name": "data_hora",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.movimentacoes_estoque.numero_nf": {
+      "name": "numero_nf",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.movimentacoes_estoque.observacoes": {
+      "name": "observacoes",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "body.prescricoes_medicamentos": {
+      "name": "prescricoes_medicamentos",
+      "description": "prescricoes_medicamentos",
+      "required": false,
+      "in": "body",
+      "schema": {
+        "$ref": "#/definitions/prescricoes_medicamentos"
+      }
+    },
+    "rowFilter.prescricoes_medicamentos.id": {
+      "name": "id",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.prescricoes_medicamentos.internacao_id": {
+      "name": "internacao_id",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.prescricoes_medicamentos.medicamento_id": {
+      "name": "medicamento_id",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.prescricoes_medicamentos.prescrito_por_id": {
+      "name": "prescrito_por_id",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.prescricoes_medicamentos.dosagem": {
+      "name": "dosagem",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.prescricoes_medicamentos.via_administracao": {
+      "name": "via_administracao",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.prescricoes_medicamentos.frequencia": {
+      "name": "frequencia",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.prescricoes_medicamentos.data_inicio": {
+      "name": "data_inicio",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.prescricoes_medicamentos.data_fim": {
+      "name": "data_fim",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.prescricoes_medicamentos.observacoes": {
+      "name": "observacoes",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.prescricoes_medicamentos.status": {
+      "name": "status",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "body.expressoes_faciais": {
+      "name": "expressoes_faciais",
+      "description": "expressoes_faciais",
+      "required": false,
+      "in": "body",
+      "schema": {
+        "$ref": "#/definitions/expressoes_faciais"
+      }
+    },
+    "rowFilter.expressoes_faciais.id": {
+      "name": "id",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.expressoes_faciais.internacao_id": {
+      "name": "internacao_id",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.expressoes_faciais.emocao": {
+      "name": "emocao",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.expressoes_faciais.confianca": {
+      "name": "confianca",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.expressoes_faciais.descricao_detalhada": {
+      "name": "descricao_detalhada",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.expressoes_faciais.imagem_hash": {
+      "name": "imagem_hash",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.expressoes_faciais.timestamp": {
+      "name": "timestamp",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.expressoes_faciais.processado_por": {
+      "name": "processado_por",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "body.medicamentos": {
+      "name": "medicamentos",
+      "description": "medicamentos",
+      "required": false,
+      "in": "body",
+      "schema": {
+        "$ref": "#/definitions/medicamentos"
+      }
+    },
+    "rowFilter.medicamentos.id": {
+      "name": "id",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.medicamentos.nome": {
+      "name": "nome",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.medicamentos.principio_ativo": {
+      "name": "principio_ativo",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.medicamentos.forma_farmaceutica": {
+      "name": "forma_farmaceutica",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.medicamentos.concentracao": {
+      "name": "concentracao",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.medicamentos.unidade_medida": {
+      "name": "unidade_medida",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.medicamentos.fabricante": {
+      "name": "fabricante",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.medicamentos.lote": {
+      "name": "lote",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.medicamentos.validade": {
+      "name": "validade",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.medicamentos.codigo_barra": {
+      "name": "codigo_barra",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.medicamentos.categoria": {
+      "name": "categoria",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.medicamentos.preco_unitario": {
+      "name": "preco_unitario",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.medicamentos.data_criacao": {
+      "name": "data_criacao",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "body.visitantes": {
+      "name": "visitantes",
+      "description": "visitantes",
+      "required": false,
+      "in": "body",
+      "schema": {
+        "$ref": "#/definitions/visitantes"
+      }
+    },
+    "rowFilter.visitantes.id": {
+      "name": "id",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.visitantes.paciente_id": {
+      "name": "paciente_id",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.visitantes.nome_visitante": {
+      "name": "nome_visitante",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.visitantes.parentesco": {
+      "name": "parentesco",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.visitantes.cpf_visitante": {
+      "name": "cpf_visitante",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.visitantes.telefone": {
+      "name": "telefone",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.visitantes.data_entrada": {
+      "name": "data_entrada",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.visitantes.data_saida": {
+      "name": "data_saida",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.visitantes.status": {
+      "name": "status",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.visitantes.companhia_permitida": {
+      "name": "companhia_permitida",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.visitantes.observacoes": {
+      "name": "observacoes",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "body.usuarios": {
+      "name": "usuarios",
+      "description": "usuarios",
+      "required": false,
+      "in": "body",
+      "schema": {
+        "$ref": "#/definitions/usuarios"
+      }
+    },
+    "rowFilter.usuarios.id": {
+      "name": "id",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.usuarios.nome": {
+      "name": "nome",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.usuarios.email": {
+      "name": "email",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.usuarios.senha_hash": {
+      "name": "senha_hash",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.usuarios.role": {
+      "name": "role",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.usuarios.especialidade": {
+      "name": "especialidade",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.usuarios.crm_coren": {
+      "name": "crm_coren",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.usuarios.ativo": {
+      "name": "ativo",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.usuarios.data_criacao": {
+      "name": "data_criacao",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.usuarios.data_atualizacao": {
+      "name": "data_atualizacao",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    }
+  },
+  "externalDocs": {
+    "description": "PostgREST Documentation",
+    "url": "https://postgrest.org/en/v14/references/api.html"
+  }
+}

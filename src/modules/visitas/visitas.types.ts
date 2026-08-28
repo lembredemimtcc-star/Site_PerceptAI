@@ -1,6 +1,9 @@
 export interface Visita {
+  id?: string;
+  internacaoId?: string;
+  pacienteId?: string;
   leito: string;
-  paciente: string; // NOVO — nome do paciente, preenchido automaticamente ao selecionar o leito
+  paciente: string;
   visitante: string;
   parentesco: string;
   entrada: string;

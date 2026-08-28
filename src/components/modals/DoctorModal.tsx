@@ -21,9 +21,11 @@ export const DoctorModal: React.FC<DoctorModalProps> = ({ doctor, allBeds, onClo
 
   const internados = allBeds.filter(b => b.status === "internado");
 
-  const togglePaciente = (bedId: string) => {
-    setPacientesSelecionados(prev =>
-      prev.includes(bedId) ? prev.filter(id => id !== bedId) : [...prev, bedId]
+  const bedKey = (bed: (typeof internados)[number]) => bed.internacaoId || bed.id;
+
+  const togglePaciente = (key: string) => {
+    setPacientesSelecionados((prev) =>
+      prev.includes(key) ? prev.filter((id) => id !== key) : [...prev, key]
     );
   };
 
@@ -128,7 +130,7 @@ export const DoctorModal: React.FC<DoctorModalProps> = ({ doctor, allBeds, onClo
           </p>
           <div className="space-y-1">
             {internados.map(bed => {
-              const isChecked = pacientesSelecionados.includes(bed.id);
+              const isChecked = pacientesSelecionados.includes(bedKey(bed));
               return (
                 <div
                   key={bed.id}
@@ -139,7 +141,7 @@ export const DoctorModal: React.FC<DoctorModalProps> = ({ doctor, allBeds, onClo
                     <input
                       type="checkbox"
                       checked={isChecked}
-                      onChange={() => togglePaciente(bed.id)}
+                      onChange={() => togglePaciente(bedKey(bed))}
                     />
                     <span className="text-sm" style={styles.patientName}>
                       {bed.name} — Leito {bed.id}

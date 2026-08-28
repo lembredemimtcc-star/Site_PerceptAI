@@ -14,8 +14,10 @@ import {
 } from "./Medicamentos.styles";
 
 import { useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
 import { supabase } from "../../lib/supabase";
-import { useAdministracoes } from "../../hooks";
+import { useAdministracoes, useBeds } from "../../hooks";
+import { criarAdministracao } from "../../lib/mutations";
 
 const statusIconMap = {
   administrado: CheckCircle2,
@@ -44,10 +46,11 @@ const KPICard: React.FC<KPICardProps> = ({ icon: Icon, label, value, accent }) =
 
 export const Medicamentos: React.FC = () => {
   const { data: administracoes = [], isLoading } = useAdministracoes();
+  const { data: beds = [] } = useBeds();
   const queryClient = useQueryClient();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const items: Medicamento[] = administracoes.map((admin: any) => ({
+  const items: Medicamento[] = administracoes.map((admin: any) => admin.mapped ?? {
     id: admin.id,
     leito: admin.prescricao?.internacao?.leito?.numero || "??",
     paciente: admin.prescricao?.internacao?.paciente?.nome || "Desconhecido",
@@ -56,7 +59,7 @@ export const Medicamentos: React.FC = () => {
     horario: admin.data_hora_planejada ? new Date(admin.data_hora_planejada).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : "??",
     status: admin.status as any,
     recorrente: false,
-  }));
+  });
 
   const toggleAdministrado = async (id: string, currentStatus: string) => {
     const newStatus = currentStatus === "administrado" ? "pendente" : "administrado";
@@ -79,8 +82,24 @@ export const Medicamentos: React.FC = () => {
     }
   };
 
-  const handleAddMedicamento = (novo: Omit<Medicamento, "id" | "status">) => {
-    setIsModalOpen(false);
+  const handleAddMedicamento = async (novo: Omit<Medicamento, "id" | "status">) => {
+    if (!novo.internacaoId) {
+      toast.error("Selecione um paciente internado");
+      return;
+    }
+    try {
+      await criarAdministracao({
+        internacaoId: novo.internacaoId,
+        nome: novo.nome,
+        via: novo.via,
+        horario: novo.horario,
+      });
+      toast.success(novo.recorrente ? "Medicamento adicionado à rotina diária!" : "Medicamento agendado!");
+      setIsModalOpen(false);
+      queryClient.invalidateQueries({ queryKey: ["administracoes"] });
+    } catch (err: any) {
+      toast.error(err.message || "Erro ao cadastrar medicamento");
+    }
   };
 
   const pendentesOuAtrasados = items.filter(m => m.status !== "administrado").length;
@@ -174,6 +193,7 @@ export const Medicamentos: React.FC = () => {
 
       {isModalOpen && (
         <NovoMedicamentoModal
+          beds={beds}
           onClose={() => setIsModalOpen(false)}
           onSubmit={handleAddMedicamento}
         />

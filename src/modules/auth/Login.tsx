@@ -125,6 +125,8 @@ export const LoginScreen: React.FC<LoginProps> = ({ onLogin }) => {
             </label>
             <input
               type="email"
+              name="email"
+              autoComplete="username"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Digite seu email"
@@ -142,6 +144,8 @@ export const LoginScreen: React.FC<LoginProps> = ({ onLogin }) => {
             <div className="relative">
               <input
                 type={showPassword ? "text" : "password"}
+                name="password"
+                autoComplete="current-password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Digite sua senha"

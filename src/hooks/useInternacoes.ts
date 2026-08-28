@@ -1,22 +1,20 @@
-import { useQuery } from '@tanstack/react-query';
-import { supabase } from '../lib/supabase';
+import { useMemo } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { fetchInternacoesRows, internacaoToBed } from "../lib/db";
 
-export function useInternacoes() {
+export function useInternacoes(onlyActive = true) {
   return useQuery({
-    queryKey: ['internacoes'],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from('internacoes')
-        .select(`
-          *,
-          paciente:pacientes(nome, cpf),
-          leito:leitos(numero, status),
-          medico:usuarios(nome)
-        `)
-        .eq('ativo', true);
-      
-      if (error) throw error;
-      return data;
-    },
+    queryKey: ["internacoes", onlyActive],
+    queryFn: () => fetchInternacoesRows(onlyActive),
+    retry: false,
   });
+}
+
+export function useBeds(onlyActive = true) {
+  const query = useInternacoes(onlyActive);
+  const data = useMemo(
+    () => (query.data ?? []).map(internacaoToBed),
+    [query.data]
+  );
+  return { ...query, data };
 }

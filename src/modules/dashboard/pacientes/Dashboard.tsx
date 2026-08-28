@@ -1,11 +1,13 @@
 import React, { useState, useRef, useEffect, useMemo } from "react";
 import { Filter, ChevronDown } from "lucide-react";
+import { toast } from "sonner";
 import { TopBar } from "../../../shared/components";
 import { BedCard } from "../../../components/BedCard";
 import { AlertBanner } from "../../../components/AlertBanner";
 import { SearchInput } from "../../../components/SearchInput";
-import { useInternacoes } from "../../../hooks";
+import { useBeds } from "../../../hooks";
 import { Bed, RiskLevel } from "../../../types";
+import { atualizarRiscoInternacao, atualizarStatusInternacao } from "../../../lib/mutations";
 import { COLORS } from "../../../config/colors";
 import { dashboardStyles as styles, getRiskBadgeStyle, getFilterOptionStyle } from "./Dashboard.styles";
 
@@ -21,34 +23,17 @@ const FILTER_OPTIONS: { value: RiskLevel | "all"; label: string }[] = [
 ];
 
 export const Dashboard: React.FC<DashboardProps> = ({ onOpenBed }) => {
-  const { data: internacoes = [], isLoading } = useInternacoes();
+  const { data: bedsFromDb = [], isLoading, refetch } = useBeds(false);
+  const [overrides, setOverrides] = useState<Record<string, Partial<Bed>>>({});
 
-  const initialBeds = useMemo(() => internacoes.map(int => ({
-    id: String(int.leito?.numero ?? "??"),
-    internacaoId: String(int.id),
-    name: int.paciente?.nome || "Desconhecido",
-    hr: 0,
-    hrSeries: [] as number[],
-    mood: "neutro" as import("../../../types").MoodType,
-    conf: 0,
-    risk: int.risco as import("../../../types").RiskLevel,
-    acordado: true,
-    ts: "",
-    status: (int.ativo ? "internado" : "alta") as import("../../../types").PatientStatus,
-  })), [internacoes]);
-
-  const [bedsState, setBedsState] = useState<Bed[]>(initialBeds);
-
-  // Sync with server data - compare by content to avoid infinite loop
-  useEffect(() => {
-    const hasChanged = initialBeds.some((newBed, i) => {
-      const oldBed = bedsState[i];
-      return !oldBed || oldBed.internacaoId !== newBed.internacaoId || oldBed.risk !== newBed.risk || oldBed.status !== newBed.status;
-    });
-    if (hasChanged || initialBeds.length !== bedsState.length) {
-      setBedsState(initialBeds);
-    }
-  }, [initialBeds]);
+  const bedsState = useMemo(
+    () =>
+      bedsFromDb.map((bed) => {
+        const key = bed.internacaoId || bed.id;
+        return overrides[key] ? { ...bed, ...overrides[key] } : bed;
+      }),
+    [bedsFromDb, overrides]
+  );
 
   const [filter, setFilter] = useState<RiskLevel | "all">("all");
   const [searchTerm, setSearchTerm] = useState("");
@@ -65,16 +50,37 @@ export const Dashboard: React.FC<DashboardProps> = ({ onOpenBed }) => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const handleChangeRisk = (bedId: string, risk: RiskLevel) => {
-    setBedsState(prev => prev.map(bed =>
-      bed.id === bedId ? { ...bed, risk } : bed
-    ));
+  const handleChangeRisk = async (internacaoId: string, risk: RiskLevel) => {
+    const previous = overrides;
+    setOverrides((prev) => ({
+      ...prev,
+      [internacaoId]: { ...prev[internacaoId], risk },
+    }));
+    try {
+      await atualizarRiscoInternacao(internacaoId, risk);
+      refetch();
+    } catch (err: any) {
+      setOverrides(previous);
+      toast.error(err.message || "Não foi possível atualizar o risco");
+    }
   };
 
-  const handleToggleStatus = (bedId: string) => {
-    setBedsState(prev => prev.map(bed =>
-      bed.id === bedId ? { ...bed, status: bed.status === "internado" ? "alta" : "internado" } : bed
-    ));
+  const handleToggleStatus = async (internacaoId: string) => {
+    const target = bedsState.find((b) => b.internacaoId === internacaoId);
+    if (!target) return;
+    const internado = target.status !== "internado";
+    const previous = overrides;
+    setOverrides((prev) => ({
+      ...prev,
+      [internacaoId]: { ...prev[internacaoId], status: internado ? "internado" : "alta" },
+    }));
+    try {
+      await atualizarStatusInternacao(internacaoId, target.leitoDbId, internado);
+      refetch();
+    } catch (err: any) {
+      setOverrides(previous);
+      toast.error(err.message || "Não foi possível atualizar o status");
+    }
   };
 
   const filteredBeds = bedsState.filter(bed => {

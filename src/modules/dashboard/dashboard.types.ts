@@ -8,8 +8,8 @@ export interface DashboardState {
 export interface BedCardProps {
   bed: Bed;
   onSelect: (bed: Bed) => void;
-  onChangeRisk: (bedId: string, risk: RiskLevel) => void;
-  onToggleStatus: (bedId: string) => void;
+  onChangeRisk: (internacaoId: string, risk: RiskLevel) => void;
+  onToggleStatus: (internacaoId: string) => void;
 }
 
 export interface RiskAlertProps {

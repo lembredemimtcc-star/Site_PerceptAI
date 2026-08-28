@@ -1,7 +1,7 @@
 import { Bed } from "../../types";
 
 export interface InfoIAProps {
-  bed: Bed;
+  bed?: Bed | null;
   onBack: () => void;
 }
 

@@ -2,17 +2,18 @@ import React, { useState } from "react";
 import { X } from "lucide-react";
 import { toast } from "sonner";
 import { Medicamento } from "../../modules/medicamentos/medicamentos.types";
-import { beds } from "../../config/mockData";
+import { Bed } from "../../types";
 import { novoMedicamentoModalStyles as styles } from "./styles/NovoMedicamentoModal.styles";
 
 interface NovoMedicamentoModalProps {
+  beds: Bed[];
   onClose: () => void;
   onSubmit: (medicamento: Omit<Medicamento, "id" | "status">) => void;
 }
 
 const VIA_OPTIONS = ["EV", "VO", "SC", "IM", "Inalatória", "Tópica"];
 
-export const NovoMedicamentoModal: React.FC<NovoMedicamentoModalProps> = ({ onClose, onSubmit }) => {
+export const NovoMedicamentoModal: React.FC<NovoMedicamentoModalProps> = ({ beds, onClose, onSubmit }) => {
   const [leito, setLeito] = useState("");
   const [nome, setNome] = useState("");
   const [via, setVia] = useState(VIA_OPTIONS[0]);
@@ -20,8 +21,8 @@ export const NovoMedicamentoModal: React.FC<NovoMedicamentoModalProps> = ({ onCl
   const [recorrente, setRecorrente] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const internados = beds.filter(b => b.status === "internado");
-  const pacienteSelecionado = internados.find(b => b.id === leito);
+  const internados = beds.filter((b) => b.status === "internado");
+  const pacienteSelecionado = internados.find((b) => (b.internacaoId || b.id) === leito);
 
   const handleSubmit = () => {
     if (isSubmitting) return;
@@ -31,20 +32,16 @@ export const NovoMedicamentoModal: React.FC<NovoMedicamentoModalProps> = ({ onCl
     }
 
     setIsSubmitting(true);
+    const internacaoIdVal = pacienteSelecionado?.internacaoId;
     onSubmit({
-      leito,
+      ...(internacaoIdVal !== undefined ? { internacaoId: internacaoIdVal } : {}),
+      leito: pacienteSelecionado?.id ?? leito,
       paciente: pacienteSelecionado?.name ?? "",
       nome,
       via,
       horario,
       recorrente,
     });
-
-    toast.success(
-      recorrente
-        ? "Medicamento adicionado à rotina diária!"
-        : "Medicamento agendado!"
-    );
     onClose();
     setIsSubmitting(false);
   };
@@ -78,8 +75,8 @@ export const NovoMedicamentoModal: React.FC<NovoMedicamentoModalProps> = ({ onCl
               style={styles.fieldInput}
             >
               <option value="">Selecione o paciente</option>
-              {internados.map(bed => (
-                <option key={bed.id} value={bed.id}>
+              {internados.map((bed) => (
+                <option key={bed.internacaoId || bed.id} value={bed.internacaoId || bed.id}>
                   {bed.name} — Leito {bed.id}
                 </option>
               ))}

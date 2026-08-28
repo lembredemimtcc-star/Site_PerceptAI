@@ -1,10 +1,11 @@
 export interface Medicamento {
-  id: number;
+  id: number | string;
+  internacaoId?: string;
   leito: string;
   paciente: string;
   nome: string;
   via: string;
   horario: string;
   status: "administrado" | "pendente" | "atrasado";
-  recorrente: boolean; // NOVO — se repete todos os dias
+  recorrente: boolean;
 }

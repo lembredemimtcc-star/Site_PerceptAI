@@ -9,8 +9,8 @@ import { SearchInput } from "../../components/SearchInput";
 import { COLORS } from "../../config/colors";
 import { estoqueStyles as styles, getStockBadgeStyle } from "./Estoque.styles";
 
-import { useEstoque, useMedicamentos } from "../../hooks";
-import { supabase } from "../../lib/supabase";
+import { useEstoque } from "../../hooks";
+import { garantirMedicamento, salvarEstoque } from "../../lib/mutations";
 
 export const Estoque: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -19,7 +19,6 @@ export const Estoque: React.FC = () => {
   const [editingItem, setEditingItem] = useState<EstoqueItem | null>(null);
 
   const { data: supabaseItems, refetch, isError, error, isLoading } = useEstoque();
-  const { data: medicamentos = [] } = useMedicamentos();
 
   // Transform DB rows to local EstoqueItem
   const items: EstoqueItem[] = (supabaseItems || []).map((dbItem: any) => ({
@@ -87,46 +86,14 @@ export const Estoque: React.FC = () => {
 
   const handleSaveItem = async (item: EstoqueItem) => {
     try {
-      if (modalMode === "novo") {
-        // Buscar ou criar medicamento pelo nome
-        let med = medicamentos.find(m => m.nome.toLowerCase() === item.nome.toLowerCase());
-        if (!med) {
-          // Criar novo medicamento
-          const { data: newMed, error: medError } = await supabase
-            .from("medicamentos")
-            .insert({
-              nome: item.nome,
-              categoria: item.categoria,
-              unidade_medida: item.unidade,
-              principio_ativo: item.nome,
-              forma_farmaceutica: "outro",
-              concentracao: "",
-            })
-            .select()
-            .single();
-          if (medError) throw medError;
-          med = newMed;
-        }
-
-        // Inserir estoque com medicamento_id
-        const { error } = await supabase.from("estoque").insert({
-          medicamento_id: med.id,
-          quantidade_atual: item.quantidade,
-          quantidade_minima: item.minimo,
-        });
-        if (error) throw error;
-      } else {
-        // Apenas atualizar quantidade (estoque table só tem essas colunas editáveis)
-        const { error } = await supabase
-          .from("estoque")
-          .update({
-            quantidade_atual: item.quantidade,
-            quantidade_minima: item.minimo,
-          })
-          .eq("id", item.id);
-        if (error) throw error;
+      let medicamentoId: string | undefined;
+      try {
+        const med = await garantirMedicamento(item.nome, item.categoria, item.unidade);
+        medicamentoId = med?.id ? String(med.id) : undefined;
+      } catch {
+        medicamentoId = undefined;
       }
-
+      await salvarEstoque(modalMode, item, medicamentoId);
       toast.success(modalMode === "novo" ? "Item adicionado ao estoque" : "Item atualizado");
       setModalOpen(false);
       setEditingItem(null);

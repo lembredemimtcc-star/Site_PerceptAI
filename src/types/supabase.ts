@@ -18,17 +18,29 @@ export interface Database {
           nome: string;
           cpf: string;
           data_nascimento: string;
-          diagnostico: string | null;
+          genero: string;
           convenio: string | null;
-          criado_em: string;
+          telefone: string | null;
+          email: string | null;
+          endereco: string | null;
+          cidade: string | null;
+          estado: string | null;
+          contato_emergencia: string | null;
+          numero_emergencia: string | null;
+          alergias: string | null;
+          data_criacao: string;
         };
       };
       leitos: {
         Row: {
           id: string;
           numero: string;
+          localizacao: string | null;
           status: 'livre' | 'ocupado' | 'manutencao';
-          criado_em: string;
+          tipo: string | null;
+          equipamentos: string | null;
+          data_criacao: string;
+          data_atualizacao: string | null;
         };
       };
       internacoes: {
@@ -36,12 +48,15 @@ export interface Database {
           id: string;
           paciente_id: string;
           leito_id: string;
-          medico_id: string | null;
-          data_entrada: string;
+          medico_responsavel_id: string | null;
+          diagnostico_principal: string | null;
+          diagnostico_secundario: string | null;
+          data_internacao: string;
           data_alta: string | null;
+          motivo_alta: string | null;
+          observacoes: string | null;
           ativo: boolean;
-          risco: 'normal' | 'attention' | 'critical';
-          criado_em: string;
+          data_criacao: string;
         };
       };
       sinais_vitais: {

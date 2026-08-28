@@ -39,7 +39,7 @@ export const BedCard: React.FC<BedCardProps> = ({ bed, onSelect, onChangeRisk, o
   const conf = latestExpression?.confianca ?? bed.conf;
   const acordado = moodName !== "dormindo";
   const hrSeries = vitals.length > 0 ? vitals.map(v => v.hr ?? 0) : bed.hrSeries;
-  const ts = latestVital ? new Date(latestVital.registrado_em).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : bed.ts;
+  const ts = latestVital ? new Date(latestVital.registrado_em || latestVital.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : bed.ts;
 
   // Validate risk value
   const validRisk = (["normal", "attention", "critical"] as const).includes(bed.risk) ? bed.risk : "normal";
@@ -70,7 +70,7 @@ export const BedCard: React.FC<BedCardProps> = ({ bed, onSelect, onChangeRisk, o
             type="button"
             onClick={(e) => {
               e.stopPropagation();
-              onToggleStatus(bed.id);
+              onToggleStatus(bed.internacaoId || bed.id);
             }}
             className="text-[10px] font-semibold px-2 py-0.5"
             style={getStatusToggleStyle(isInternado)}
@@ -83,7 +83,7 @@ export const BedCard: React.FC<BedCardProps> = ({ bed, onSelect, onChangeRisk, o
             <select
               value={validRisk}
               onClick={(e) => e.stopPropagation()}
-              onChange={(e) => onChangeRisk(bed.id, e.target.value as RiskLevel)}
+              onChange={(e) => onChangeRisk(bed.internacaoId || bed.id, e.target.value as RiskLevel)}
               className="text-xs font-semibold px-2 py-0.5 border-none outline-none"
               style={getRiskBadgeStyle(validRisk)}
             >
