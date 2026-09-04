@@ -36,3 +36,13 @@ dist-ssr
 
 # Windows artifacts
 nul
+
+# Datasets
+src/datasets/
+datasets/
+
+# ML outputs and models
+outputs/
+*.pth
+*.onnx
+*.onnx.data
