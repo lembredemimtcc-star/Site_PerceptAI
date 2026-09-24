@@ -237,10 +237,21 @@ export const InfoIA: React.FC<InfoIAProps> = ({ bed, onBack }) => {
                 ) : null}
               </div>
               <div className="flex items-center gap-2 p-3" style={styles.moodBox}>
-                <MoodIcon size={16} color={mood.color} />
-                <span className="text-xs font-semibold" style={styles.moodText}>
-                  {mood.label} ({currentConf}%)
-                </span>
+                {detectedEmotion && liveMood ? (
+                  <>
+                    <LiveMoodIcon size={16} color={liveMood.color} />
+                    <span className="text-xs font-semibold" style={styles.moodText}>
+                      {liveMood.label} ({detectedConf}%)
+                    </span>
+                  </>
+                ) : (
+                  <>
+                    <MoodIcon size={16} color={mood.color} />
+                    <span className="text-xs font-semibold" style={styles.moodText}>
+                      {mood.label} ({currentConf}%)
+                    </span>
+                  </>
+                )}
               </div>
             </div>
           </div>
