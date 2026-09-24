@@ -13,10 +13,10 @@ export interface DetectionResponse {
 }
 
 // ── Simulação realista quando backend está offline ──────────────────────────
-// Sequência cíclica com pesos naturais (neutro aparece mais, dor e medo esporadicamente)
+// Sequência cíclica: apenas emoções clínicas (acordado/dormindo são estado, não emoção)
 const MOCK_SEQUENCE = [
-  "neutro", "acordado", "neutro", "dor", "neutro",
-  "medo", "neutro", "tristeza", "neutro", "acordado",
+  "neutro", "dor", "neutro", "neutro",
+  "medo", "neutro", "tristeza", "neutro", "enjoo", "neutro",
 ];
 let _mockIdx = 0;
 

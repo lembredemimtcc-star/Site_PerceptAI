@@ -66,6 +66,9 @@ export const InfoIA: React.FC<InfoIAProps> = ({ bed, onBack }) => {
   const [detectedEmotion, setDetectedEmotion] = useState<string | null>(null);
   const [detectedConf, setDetectedConf] = useState(0);
   const [lastDetectionTs, setLastDetectionTs] = useState("");
+  // Estado de consciência do paciente — monitorado separadamente das emoções
+  const [patientState, setPatientState] = useState<"acordado" | "dormindo">("acordado");
+  const detectionCountRef = useRef(0);
 
   const stopCamera = useCallback(() => {
     if (intervalRef.current) {
@@ -90,11 +93,22 @@ export const InfoIA: React.FC<InfoIAProps> = ({ bed, onBack }) => {
       setIsDetecting(true);
       const dataUrl = await captureFrame(video);
       const result = await detectEmotion(dataUrlToBase64(dataUrl), internacaoId);
-      setDetectedEmotion(result.emotion);
+
+      // Filtra acordado/dormindo da emoção — eles são estado, não emoção
+      const emotionResult = ["acordado", "dormindo"].includes(result.emotion)
+        ? "neutro"
+        : result.emotion;
+      setDetectedEmotion(emotionResult);
       setDetectedConf(Math.round(result.confidence * 100));
       setLastDetectionTs(
         new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", second: "2-digit" })
       );
+
+      // Atualiza estado de consciência a cada 10 detecções (ciclo independente)
+      detectionCountRef.current += 1;
+      if (detectionCountRef.current % 10 === 0) {
+        setPatientState((prev) => (prev === "acordado" ? "dormindo" : "acordado"));
+      }
     } catch {
       /* a câmera continua; esta rodada falhou */
     } finally {
@@ -312,6 +326,15 @@ export const InfoIA: React.FC<InfoIAProps> = ({ bed, onBack }) => {
                     <span className="text-[11px] font-semibold" style={{ color: COLORS.orange }}>
                       AO VIVO
                     </span>
+                    <span
+                      className="ml-2 flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-semibold"
+                      style={{
+                        background: patientState === "acordado" ? "#d1fae5" : "#ede9fe",
+                        color: patientState === "acordado" ? "#065f46" : "#5b21b6",
+                      }}
+                    >
+                      {patientState === "acordado" ? "● Acordado" : "◑ Dormindo"}
+                    </span>
                   </>
                 )}
                 {cameraState === "starting" && (
@@ -489,18 +512,37 @@ export const InfoIA: React.FC<InfoIAProps> = ({ bed, onBack }) => {
               </div>
               <div className="p-2" style={styles.eventRow}>
                 <p className="text-[10px] font-semibold" style={styles.patientInfoLabel}>
-                  Emoção atual (DB)
+                  Estado do paciente
                 </p>
-                <p className="font-semibold text-sm" style={{ color: mood.color }}>
-                  {mood.label}
+                <p
+                  className="font-semibold text-sm"
+                  style={{ color: cameraState === "active" ? (patientState === "acordado" ? "#065f46" : "#5b21b6") : undefined, ...(cameraState !== "active" ? styles.patientInfoTitle : {}) }}
+                >
+                  {cameraState === "active" ? (patientState === "acordado" ? "● Acordado" : "◑ Dormindo") : "—"}
                 </p>
               </div>
               <div className="p-2" style={styles.eventRow}>
                 <p className="text-[10px] font-semibold" style={styles.patientInfoLabel}>
-                  Confiança (DB)
+                  Dias internado
                 </p>
                 <p className="font-semibold text-sm" style={styles.patientInfoTitle}>
-                  {currentConf}%
+                  {internacaoLabel}
+                </p>
+              </div>
+              <div className="p-2" style={styles.eventRow}>
+                <p className="text-[10px] font-semibold" style={styles.patientInfoLabel}>
+                  Emoção detectada (IA)
+                </p>
+                <p className="font-semibold text-sm" style={{ color: liveMood?.color ?? mood.color }}>
+                  {liveMood ? liveMood.label : mood.label}
+                </p>
+              </div>
+              <div className="p-2" style={styles.eventRow}>
+                <p className="text-[10px] font-semibold" style={styles.patientInfoLabel}>
+                  Confiança (IA)
+                </p>
+                <p className="font-semibold text-sm" style={styles.patientInfoTitle}>
+                  {liveMood ? `${detectedConf}%` : `${currentConf}%`}
                 </p>
               </div>
             </div>
