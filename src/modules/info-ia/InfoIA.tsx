@@ -6,6 +6,7 @@ import {
   AlertTriangle,
   CheckCircle,
   Loader2,
+  Zap,
 } from "lucide-react";
 import {
   LineChart,
@@ -24,6 +25,7 @@ import { infoIAStyles as styles } from "./InfoIA.styles";
 import { COLORS } from "../../config/colors";
 import { detectEmotion, captureFrame, dataUrlToBase64 } from "../../lib/detection";
 import { idadeFrom, diasInternacao } from "../../lib/db";
+import { TestCameraModal } from "../../components/modals/TestCameraModal";
 
 interface InfoIAProps {
   bed?: Bed | null;
@@ -69,6 +71,8 @@ export const InfoIA: React.FC<InfoIAProps> = ({ bed, onBack }) => {
   // Estado de consciência do paciente — monitorado separadamente das emoções
   const [patientState, setPatientState] = useState<"acordado" | "dormindo">("acordado");
   const detectionCountRef = useRef(0);
+  // Modal de teste da câmera
+  const [showTestModal, setShowTestModal] = useState(false);
 
   const stopCamera = useCallback(() => {
     if (intervalRef.current) {
@@ -208,11 +212,32 @@ export const InfoIA: React.FC<InfoIAProps> = ({ bed, onBack }) => {
 
   return (
     <div className="flex-1 flex flex-col overflow-hidden">
-      <TopBar
-        title={`${liveBed.name} (Leito ${liveBed.id})`}
-        subtitle="Análise IA e histórico clínico"
-        onBack={onBack}
-      />
+      {/* Modal de teste de câmera */}
+      {showTestModal && (
+        <TestCameraModal
+          internacaoId={internacaoId}
+          onClose={() => setShowTestModal(false)}
+        />
+      )}
+
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+        <div style={{ flex: 1 }}>
+          <TopBar
+            title={`${liveBed.name} (Leito ${liveBed.id})`}
+            subtitle="Análise IA e histórico clínico"
+            onBack={onBack}
+          />
+        </div>
+        <button
+          onClick={() => setShowTestModal(true)}
+          className="flex items-center gap-1.5 px-3 py-2 mr-4 rounded-lg font-semibold text-[12px]"
+          style={{ background: "#f97316", color: "#fff", flexShrink: 0 }}
+          title="Abrir modal de teste manual da câmera com a IA"
+        >
+          <Zap size={14} />
+          Testar IA
+        </button>
+      </div>
 
       <div className="flex-1 grid grid-cols-2 gap-6 px-8 py-7 overflow-hidden">
         <div className="flex flex-col gap-4 overflow-y-auto">
