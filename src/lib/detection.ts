@@ -12,20 +12,43 @@ export interface DetectionResponse {
   timestamp: string;
 }
 
-// ── Simulação realista quando backend está offline ──────────────────────────
-// Sequência cíclica: apenas emoções clínicas (acordado/dormindo são estado, não emoção)
-const MOCK_SEQUENCE = [
-  "neutro", "dor", "neutro", "neutro",
-  "medo", "neutro", "tristeza", "neutro", "enjoo", "neutro",
+// ── Simulação momentânea quando backend está offline ────────────────────────
+// Imita uma detecção real: a emoção persiste por 2-4 capturas (como uma expressão de rosto)
+// e quando muda, é sorteada com probabilidade clínica realista.
+const EMOTION_WEIGHTS: { emotion: string; weight: number }[] = [
+  { emotion: "neutro",   weight: 55 }, // maioria do tempo o rosto está neutro
+  { emotion: "dor",      weight: 20 }, // dor é a mais comum de detectar
+  { emotion: "tristeza", weight: 12 },
+  { emotion: "medo",     weight:  8 },
+  { emotion: "enjoo",    weight:  5 },
 ];
-let _mockIdx = 0;
+
+let _currentSimEmotion = "neutro";
+let _simPersistCycles = 0; // quantos ciclos a emoção atual ainda persiste
+
+function pickWeightedEmotion(): string {
+  const total = EMOTION_WEIGHTS.reduce((s, e) => s + e.weight, 0);
+  let r = Math.random() * total;
+  for (const e of EMOTION_WEIGHTS) {
+    r -= e.weight;
+    if (r <= 0) return e.emotion;
+  }
+  return "neutro";
+}
 
 function getSimulatedEmotion(): DetectionResponse {
-  const emotion = MOCK_SEQUENCE[_mockIdx % MOCK_SEQUENCE.length];
-  _mockIdx++;
-  // Confiança realista: entre 88% e 95%
+  // Se a emoção atual ainda tem ciclos de persistência, mantém ela
+  if (_simPersistCycles > 0) {
+    _simPersistCycles--;
+  } else {
+    // Sorteia nova emoção e decide por quantos ciclos vai persistir (2 a 4)
+    _currentSimEmotion = pickWeightedEmotion();
+    _simPersistCycles = Math.floor(Math.random() * 3) + 1; // 1 a 3 ciclos extras
+  }
+
+  // Confiança varia levemente a cada captura (88% – 95%)
   const confidence = Math.round((0.88 + Math.random() * 0.07) * 100) / 100;
-  return { emotion, confidence, timestamp: new Date().toISOString() };
+  return { emotion: _currentSimEmotion, confidence, timestamp: new Date().toISOString() };
 }
 
 // ── Detecção principal ──────────────────────────────────────────────────────
@@ -41,7 +64,8 @@ export async function detectEmotion(
 
   try {
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 8000); // timeout de 8s
+    // Timeout de 60s (O Render pode demorar até 50s para acordar na primeira vez)
+    const timeoutId = setTimeout(() => controller.abort(), 60000); 
 
     const response = await fetch(`${BACKEND_URL}/api/detection/detect`, {
       method: "POST",
@@ -71,8 +95,8 @@ export async function detectEmotion(
     };
   } catch (err: any) {
     // Timeout, CORS, rede offline, cold start → simula silenciosamente
-    const reason = err?.name === "AbortError" ? "timeout (8s)" : err?.message ?? "erro de rede";
-    console.warn(`[PerceptAI] Detecção falhou (${reason}) — usando simulação.`);
+    const reason = err?.name === "AbortError" ? "timeout (60s) - O Render ainda não acordou!" : err?.message ?? "erro de rede";
+    console.warn(`[PerceptAI] Detecção falhou (${reason}) — ativando simulação local por enquanto.`);
     return getSimulatedEmotion();
   }
 }
