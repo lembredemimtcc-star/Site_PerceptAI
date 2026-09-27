@@ -19,6 +19,7 @@ export const TestCameraModal: React.FC<TestCameraModalProps> = ({ internacaoId =
   const [cameraError, setCameraError] = useState("");
   const [result, setResult] = useState<{ emotion: string; confidence: number } | null>(null);
   const [lastFrame, setLastFrame] = useState<string | null>(null);
+  const [debugRanking, setDebugRanking] = useState<{ emocao: string; confianca: number }[] | null>(null);
 
   const startCamera = useCallback(async () => {
     setCameraError("");
@@ -57,17 +58,37 @@ export const TestCameraModal: React.FC<TestCameraModalProps> = ({ internacaoId =
     if (!videoRef.current || status !== "ready") return;
     setStatus("capturing");
     setResult(null);
+    setDebugRanking(null);
 
     try {
       const dataUrl = await captureFrame(videoRef.current);
-      setLastFrame(dataUrl); // guarda a foto tirada para exibir
+      setLastFrame(dataUrl);
 
-      const detection = await detectEmotion(dataUrlToBase64(dataUrl), internacaoId);
+      const base64 = dataUrlToBase64(dataUrl);
+      const backendUrl = (import.meta.env["VITE_BACKEND_URL"] as string | undefined)?.replace(/\/$/, "") || "";
 
-      setResult({
-        emotion: detection.emotion,
-        confidence: Math.round(detection.confidence * 100),
-      });
+      // Chama detect e debug em paralelo
+      const [detection, debugRes] = await Promise.allSettled([
+        detectEmotion(base64, internacaoId),
+        backendUrl
+          ? fetch(`${backendUrl}/api/detection/debug`, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ image: base64, internacaoId }),
+            }).then((r) => r.ok ? r.json() : null).catch(() => null)
+          : Promise.resolve(null),
+      ]);
+
+      if (detection.status === "fulfilled") {
+        setResult({
+          emotion: detection.value.emotion,
+          confidence: Math.round(detection.value.confidence * 100),
+        });
+      }
+
+      if (debugRes.status === "fulfilled" && debugRes.value?.ranking) {
+        setDebugRanking(debugRes.value.ranking as { emocao: string; confianca: number }[]);
+      }
     } catch (err) {
       setCameraError("Falha ao capturar ou enviar a imagem.");
     } finally {
@@ -172,7 +193,7 @@ export const TestCameraModal: React.FC<TestCameraModalProps> = ({ internacaoId =
             </div>
           )}
 
-          {/* Resultado */}
+          {/* Resultado principal */}
           {result && mood && MoodIcon && (
             <div
               className="w-full rounded-xl p-4 flex items-center gap-4"
@@ -193,6 +214,39 @@ export const TestCameraModal: React.FC<TestCameraModalProps> = ({ internacaoId =
                 </p>
                 <p className="text-sm text-gray-500">Confiança: {result.confidence}%</p>
               </div>
+            </div>
+          )}
+
+          {/* Ranking de probabilidades — diagnóstico */}
+          {debugRanking && (
+            <div className="w-full rounded-xl p-4" style={{ background: "#f0f4ff" }}>
+              <p className="text-[11px] font-semibold text-gray-500 uppercase tracking-wide mb-3">
+                📊 Probabilidade por emoção (diagnóstico)
+              </p>
+              <div className="space-y-2">
+                {debugRanking.map((item) => (
+                  <div key={item.emocao}>
+                    <div className="flex justify-between text-[12px] mb-0.5">
+                      <span className="font-medium capitalize">{item.emocao}</span>
+                      <span className="text-gray-500">{item.confianca}%</span>
+                    </div>
+                    <div className="w-full h-2 rounded-full" style={{ background: "#e2e8f0" }}>
+                      <div
+                        className="h-2 rounded-full transition-all"
+                        style={{
+                          width: `${item.confianca}%`,
+                          background: item.confianca > 50 ? "#f97316" : item.confianca > 20 ? "#f59e0b" : "#94a3b8",
+                        }}
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+              {result?.emotion === "neutro" && result.confidence > 80 && (
+                <p className="text-[11px] text-amber-600 mt-3 font-medium">
+                  ⚠️ Modelo com forte viés para "neutro". Pode indicar problema na ordem das classes ou normalização BGR/RGB.
+                </p>
+              )}
             </div>
           )}
         </div>
