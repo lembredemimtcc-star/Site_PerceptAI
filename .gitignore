@@ -46,3 +46,8 @@ outputs/
 *.pth
 *.onnx
 *.onnx.data
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
