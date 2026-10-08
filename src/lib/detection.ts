@@ -10,21 +10,24 @@ export interface DetectionResponse {
   emotion: string;
   confidence: number;
   timestamp: string;
+  estadoFisiologico: "acordado" | "dormindo";
+  confiancaFisiologica?: number;
+  estadoEmocional?: string | null;
+  confiancaEmocional?: number | null;
 }
 
 // ── Simulação momentânea quando backend está offline ────────────────────────
-// Imita uma detecção real: a emoção persiste por 2-4 capturas (como uma expressão de rosto)
-// e quando muda, é sorteada com probabilidade clínica realista.
 const EMOTION_WEIGHTS: { emotion: string; weight: number }[] = [
-  { emotion: "neutro",   weight: 55 }, // maioria do tempo o rosto está neutro
-  { emotion: "dor",      weight: 20 }, // dor é a mais comum de detectar
+  { emotion: "neutro",   weight: 50 },
+  { emotion: "dor",      weight: 22 },
   { emotion: "tristeza", weight: 12 },
-  { emotion: "medo",     weight:  8 },
-  { emotion: "enjoo",    weight:  5 },
+  { emotion: "medo",     weight:  9 },
+  { emotion: "enjoo",    weight:  7 },
 ];
 
+let _currentSimPhysio: "acordado" | "dormindo" = "acordado";
 let _currentSimEmotion = "neutro";
-let _simPersistCycles = 0; // quantos ciclos a emoção atual ainda persiste
+let _simPersistCycles = 0;
 
 function pickWeightedEmotion(): string {
   const total = EMOTION_WEIGHTS.reduce((s, e) => s + e.weight, 0);
@@ -37,18 +40,38 @@ function pickWeightedEmotion(): string {
 }
 
 function getSimulatedEmotion(): DetectionResponse {
-  // Se a emoção atual ainda tem ciclos de persistência, mantém ela
   if (_simPersistCycles > 0) {
     _simPersistCycles--;
   } else {
-    // Sorteia nova emoção e decide por quantos ciclos vai persistir (2 a 4)
+    // 85% de chance acordado, 15% dormindo
+    _currentSimPhysio = Math.random() < 0.15 ? "dormindo" : "acordado";
     _currentSimEmotion = pickWeightedEmotion();
-    _simPersistCycles = Math.floor(Math.random() * 3) + 1; // 1 a 3 ciclos extras
+    _simPersistCycles = Math.floor(Math.random() * 3) + 1;
   }
 
-  // Confiança varia levemente a cada captura (88% – 95%)
-  const confidence = Math.round((0.88 + Math.random() * 0.07) * 100) / 100;
-  return { emotion: _currentSimEmotion, confidence, timestamp: new Date().toISOString() };
+  const confidence = Math.round((0.88 + Math.random() * 0.08) * 100) / 100;
+
+  if (_currentSimPhysio === "dormindo") {
+    return {
+      emotion: "dormindo",
+      confidence,
+      estadoFisiologico: "dormindo",
+      confiancaFisiologica: confidence,
+      estadoEmocional: null, // sem emoção quando dormindo
+      confiancaEmocional: null,
+      timestamp: new Date().toISOString(),
+    };
+  }
+
+  return {
+    emotion: _currentSimEmotion,
+    confidence,
+    estadoFisiologico: "acordado",
+    confiancaFisiologica: 0.95,
+    estadoEmocional: _currentSimEmotion,
+    confiancaEmocional: confidence,
+    timestamp: new Date().toISOString(),
+  };
 }
 
 // ── Detecção principal ──────────────────────────────────────────────────────
@@ -56,7 +79,7 @@ export async function detectEmotion(
   base64Image: string,
   internacaoId: string
 ): Promise<DetectionResponse> {
-  // Sem backend configurado → simula diretamente (ex: Vercel sem VITE_BACKEND_URL)
+  // Sem backend configurado → simula diretamente
   if (!BACKEND_URL) {
     console.warn("[PerceptAI] VITE_BACKEND_URL não configurado — usando simulação de emoção.");
     return getSimulatedEmotion();
@@ -82,19 +105,43 @@ export async function detectEmotion(
     clearTimeout(timeoutId);
 
     if (!response.ok) {
-      // Backend com erro (503 cold start, 404, etc.) → simula
       console.warn(`[PerceptAI] Backend retornou ${response.status} — usando simulação.`);
       return getSimulatedEmotion();
     }
 
     const data = await response.json();
+    const rawEmotion = data.emotion ?? data.Emotion ?? "neutro";
+    const rawConfidence = Number(data.confidence ?? data.Confidence ?? 0);
+
+    // Identifica estado fisiológico vindo da API ou fallback inteligente
+    const rawPhysio = data.estadoFisiologico ?? data.EstadoFisiologico;
+    const estadoFisiologico: "acordado" | "dormindo" =
+      rawPhysio === "dormindo" || rawEmotion === "dormindo" ? "dormindo" : "acordado";
+
+    // Se dormindo, não há emoção aplicável
+    let estadoEmocional: string | null = null;
+    let confiancaEmocional: number | null = null;
+
+    if (estadoFisiologico === "acordado") {
+      estadoEmocional =
+        data.estadoEmocional ?? data.EstadoEmocional ?? (rawEmotion === "acordado" ? "neutro" : rawEmotion);
+      confiancaEmocional = Number(data.confiancaEmocional ?? data.ConfiancaEmocional ?? rawConfidence);
+    }
+
+    const confiancaFisiologica = Number(
+      data.confiancaFisiologica ?? data.ConfiancaFisiologica ?? rawConfidence
+    );
+
     return {
-      emotion: data.emotion ?? data.Emotion ?? "neutro",
-      confidence: Number(data.confidence ?? data.Confidence ?? 0),
+      emotion: rawEmotion,
+      confidence: rawConfidence,
+      estadoFisiologico,
+      confiancaFisiologica,
+      estadoEmocional,
+      confiancaEmocional,
       timestamp: data.timestamp ?? data.Timestamp ?? new Date().toISOString(),
     };
   } catch (err: any) {
-    // Timeout, CORS, rede offline, cold start → simula silenciosamente
     const reason = err?.name === "AbortError" ? "timeout (60s) - O Render ainda não acordou!" : err?.message ?? "erro de rede";
     console.warn(`[PerceptAI] Detecção falhou (${reason}) — ativando simulação local por enquanto.`);
     return getSimulatedEmotion();

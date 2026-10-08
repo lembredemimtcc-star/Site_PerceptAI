@@ -1,5 +1,5 @@
 import React, { useRef, useState, useCallback } from "react";
-import { Camera, CameraOff, Zap, Loader2, X } from "lucide-react";
+import { Camera, CameraOff, Zap, Loader2, X, Moon, Eye } from "lucide-react";
 import { captureFrame, dataUrlToBase64, detectEmotion } from "../../lib/detection";
 import { moodMeta } from "../../config/mockData";
 import { MoodType } from "../../types";
@@ -17,7 +17,14 @@ export const TestCameraModal: React.FC<TestCameraModalProps> = ({ internacaoId =
 
   const [status, setStatus] = useState<Status>("idle");
   const [cameraError, setCameraError] = useState("");
-  const [result, setResult] = useState<{ emotion: string; confidence: number } | null>(null);
+  const [result, setResult] = useState<{
+    emotion: string;
+    confidence: number;
+    estadoFisiologico: "acordado" | "dormindo";
+    confiancaFisiologica?: number;
+    estadoEmocional?: string | null;
+    confiancaEmocional?: number | null;
+  } | null>(null);
   const [lastFrame, setLastFrame] = useState<string | null>(null);
   const [debugRanking, setDebugRanking] = useState<{ emocao: string; confianca: number }[] | null>(null);
 
@@ -80,9 +87,14 @@ export const TestCameraModal: React.FC<TestCameraModalProps> = ({ internacaoId =
       ]);
 
       if (detection.status === "fulfilled") {
+        const val = detection.value;
         setResult({
-          emotion: detection.value.emotion,
-          confidence: Math.round(detection.value.confidence * 100),
+          emotion: val.emotion,
+          confidence: Math.round(val.confidence * 100),
+          estadoFisiologico: val.estadoFisiologico,
+          confiancaFisiologica: val.confiancaFisiologica != null ? Math.round(val.confiancaFisiologica * 100) : undefined,
+          estadoEmocional: val.estadoEmocional,
+          confiancaEmocional: val.confiancaEmocional != null ? Math.round(val.confiancaEmocional * 100) : undefined,
         });
       }
 
@@ -101,7 +113,8 @@ export const TestCameraModal: React.FC<TestCameraModalProps> = ({ internacaoId =
     onClose();
   };
 
-  const mood = result ? (moodMeta[result.emotion as MoodType] ?? moodMeta["neutro"]!) : null;
+  const activeEmotionName = result?.estadoEmocional || result?.emotion || "neutro";
+  const mood = moodMeta[activeEmotionName as MoodType] ?? moodMeta["neutro"]!;
   const MoodIcon = mood?.icon ?? null;
 
   return (
@@ -123,7 +136,7 @@ export const TestCameraModal: React.FC<TestCameraModalProps> = ({ internacaoId =
         >
           <div className="flex items-center gap-2">
             <Zap size={18} color="#f97316" />
-            <span className="font-semibold text-[15px]">Teste de Detecção IA</span>
+            <span className="font-semibold text-[15px]">Análise IA de Paciente</span>
           </div>
           <button onClick={handleClose} className="opacity-70 hover:opacity-100 transition-opacity">
             <X size={20} color="#fff" />
@@ -151,7 +164,7 @@ export const TestCameraModal: React.FC<TestCameraModalProps> = ({ internacaoId =
               <div className="flex flex-col items-center gap-3 p-6 text-center">
                 <Camera size={40} color="#f97316" />
                 <p className="text-sm text-white opacity-70">
-                  Ligue a câmera e clique em <br /><strong>"Capturar Emoção"</strong> para testar a IA
+                  Ligue a câmera e clique em <br /><strong>"Analisar Paciente"</strong> para testar os dois estados
                 </p>
               </div>
             )}
@@ -182,38 +195,115 @@ export const TestCameraModal: React.FC<TestCameraModalProps> = ({ internacaoId =
           {lastFrame && (
             <div className="w-full">
               <p className="text-[11px] font-semibold text-gray-400 uppercase mb-1 tracking-wide">
-                Frame enviado para a IA
+                Frame capturado
               </p>
               <img
                 src={lastFrame}
                 alt="Frame capturado"
                 className="w-full rounded-lg object-cover"
-                style={{ maxHeight: 180 }}
+                style={{ maxHeight: 160 }}
               />
             </div>
           )}
 
-          {/* Resultado principal */}
-          {result && mood && MoodIcon && (
-            <div
-              className="w-full rounded-xl p-4 flex items-center gap-4"
-              style={{ background: "#f9fafb", border: `2px solid ${mood.color}` }}
-            >
-              <div
-                className="w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0"
-                style={{ background: mood.color + "22" }}
-              >
-                <MoodIcon size={24} color={mood.color} />
-              </div>
-              <div>
-                <p className="text-[11px] font-semibold text-gray-400 uppercase tracking-wide">
-                  Emoção Detectada
-                </p>
-                <p className="text-xl font-bold" style={{ color: mood.color }}>
-                  {mood.label}
-                </p>
-                <p className="text-sm text-gray-500">Confiança: {result.confidence}%</p>
-              </div>
+          {/* Resultado: DOIS ESTADOS (Fisiológico + Emocional) */}
+          {result && (
+            <div className="w-full space-y-3">
+              {/* 1º ESTADO FISIOLÓGICO: Dormindo ou Acordado */}
+              {result.estadoFisiologico === "dormindo" ? (
+                <div
+                  className="w-full rounded-xl p-4 flex items-center gap-4"
+                  style={{ background: "#eef2ff", border: "2px solid #6366f1" }}
+                >
+                  <div
+                    className="w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0"
+                    style={{ background: "#c7d2fe" }}
+                  >
+                    <Moon size={24} color="#4338ca" />
+                  </div>
+                  <div className="flex-1">
+                    <div className="flex items-center justify-between">
+                      <p className="text-[11px] font-semibold text-indigo-700 uppercase tracking-wide">
+                        1º Estado Fisiológico
+                      </p>
+                      <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-indigo-100 text-indigo-800">
+                        {result.confiancaFisiologica ?? result.confidence}%
+                      </span>
+                    </div>
+                    <p className="text-xl font-bold text-indigo-950">
+                      Dormindo
+                    </p>
+                    <p className="text-xs text-indigo-700 mt-1">
+                      Paciente em repouso. Análise de emoção não necessária durante o sono.
+                    </p>
+                  </div>
+                </div>
+              ) : (
+                <>
+                  {/* Paciente ACORDADO */}
+                  <div
+                    className="w-full rounded-xl p-4 flex items-center gap-4"
+                    style={{ background: "#ecfdf5", border: "2px solid #10b981" }}
+                  >
+                    <div
+                      className="w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0"
+                      style={{ background: "#a7f3d0" }}
+                    >
+                      <Eye size={24} color="#047857" />
+                    </div>
+                    <div className="flex-1">
+                      <div className="flex items-center justify-between">
+                        <p className="text-[11px] font-semibold text-emerald-700 uppercase tracking-wide">
+                          1º Estado Fisiológico
+                        </p>
+                        <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800">
+                          {result.confiancaFisiologica ?? 95}%
+                        </span>
+                      </div>
+                      <p className="text-xl font-bold text-emerald-950">
+                        Acordado
+                      </p>
+                      <p className="text-xs text-emerald-600 mt-0.5">
+                        Paciente consciente e em vigília.
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* 2º ESTADO EMOCIONAL: Aparece logo em baixo de Acordado */}
+                  {MoodIcon && (
+                    <div
+                      className="w-full rounded-xl p-4 flex items-center gap-4 transition-all"
+                      style={{ background: "#fff", border: `2px solid ${mood.color}`, boxShadow: "0 2px 8px rgba(0,0,0,0.06)" }}
+                    >
+                      <div
+                        className="w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0"
+                        style={{ background: mood.color + "22" }}
+                      >
+                        <MoodIcon size={24} color={mood.color} />
+                      </div>
+                      <div className="flex-1">
+                        <div className="flex items-center justify-between">
+                          <p className="text-[11px] font-semibold text-gray-400 uppercase tracking-wide">
+                            2º Estado Emocional
+                          </p>
+                          <span
+                            className="text-xs font-bold px-2 py-0.5 rounded-full"
+                            style={{ background: mood.color + "20", color: mood.color }}
+                          >
+                            {result.confiancaEmocional ?? result.confidence}%
+                          </span>
+                        </div>
+                        <p className="text-xl font-bold" style={{ color: mood.color }}>
+                          {mood.label}
+                        </p>
+                        <p className="text-xs text-gray-500 mt-0.5">
+                          Expressão facial avaliada pela rede neural.
+                        </p>
+                      </div>
+                    </div>
+                  )}
+                </>
+              )}
             </div>
           )}
 
@@ -279,7 +369,7 @@ export const TestCameraModal: React.FC<TestCameraModalProps> = ({ internacaoId =
                 {status === "capturing" ? (
                   <><Loader2 size={16} className="animate-spin" /> Analisando...</>
                 ) : (
-                  <><Zap size={16} color="#f97316" /> Capturar Emoção</>
+                  <><Zap size={16} color="#f97316" /> Analisar Paciente</>
                 )}
               </button>
             </>

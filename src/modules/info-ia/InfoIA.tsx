@@ -7,6 +7,7 @@ import {
   CheckCircle,
   Loader2,
   Zap,
+  Moon,
 } from "lucide-react";
 import {
   LineChart,
@@ -96,23 +97,22 @@ export const InfoIA: React.FC<InfoIAProps> = ({ bed, onBack }) => {
       detectingRef.current = true;
       setIsDetecting(true);
       const dataUrl = await captureFrame(video);
-      const result = await detectEmotion(dataUrlToBase64(dataUrl), internacaoId);
+      // Separação dos dois estados fornecidos diretamente pela IA
+      const physio = result.estadoFisiologico;
+      setPatientState(physio);
 
-      // Filtra acordado/dormindo da emoção — eles são estado, não emoção
-      const emotionResult = ["acordado", "dormindo"].includes(result.emotion)
-        ? "neutro"
-        : result.emotion;
-      setDetectedEmotion(emotionResult);
-      setDetectedConf(Math.round(result.confidence * 100));
+      if (physio === "dormindo") {
+        setDetectedEmotion(null);
+        setDetectedConf(Math.round((result.confiancaFisiologica ?? result.confidence) * 100));
+      } else {
+        const emo = result.estadoEmocional ?? (result.emotion === "acordado" ? "neutro" : result.emotion);
+        setDetectedEmotion(emo);
+        setDetectedConf(Math.round((result.confiancaEmocional ?? result.confidence) * 100));
+      }
+
       setLastDetectionTs(
         new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", second: "2-digit" })
       );
-
-      // Atualiza estado de consciência a cada 10 detecções (ciclo independente)
-      detectionCountRef.current += 1;
-      if (detectionCountRef.current % 10 === 0) {
-        setPatientState((prev) => (prev === "acordado" ? "dormindo" : "acordado"));
-      }
     } catch {
       /* a câmera continua; esta rodada falhou */
     } finally {
@@ -276,7 +276,14 @@ export const InfoIA: React.FC<InfoIAProps> = ({ bed, onBack }) => {
                 ) : null}
               </div>
               <div className="flex items-center gap-2 p-3" style={styles.moodBox}>
-                {detectedEmotion && liveMood ? (
+                {patientState === "dormindo" && cameraState === "active" ? (
+                  <>
+                    <Moon size={16} color="#6366f1" />
+                    <span className="text-xs font-semibold" style={{ color: "#4338ca" }}>
+                      Dormindo ({detectedConf}%)
+                    </span>
+                  </>
+                ) : detectedEmotion && liveMood ? (
                   <>
                     <LiveMoodIcon size={16} color={liveMood.color} />
                     <span className="text-xs font-semibold" style={styles.moodText}>
@@ -558,8 +565,10 @@ export const InfoIA: React.FC<InfoIAProps> = ({ bed, onBack }) => {
                 <p className="text-[10px] font-semibold" style={styles.patientInfoLabel}>
                   Emoção detectada (IA)
                 </p>
-                <p className="font-semibold text-sm" style={{ color: liveMood?.color ?? mood.color }}>
-                  {liveMood ? liveMood.label : mood.label}
+                <p className="font-semibold text-sm" style={{ color: cameraState === "active" && patientState === "dormindo" ? "#6366f1" : (liveMood?.color ?? mood.color) }}>
+                  {cameraState === "active" && patientState === "dormindo"
+                    ? "Em repouso (sono)"
+                    : (liveMood ? liveMood.label : mood.label)}
                 </p>
               </div>
               <div className="p-2" style={styles.eventRow}>
