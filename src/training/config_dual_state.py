@@ -41,7 +41,7 @@ TRAIN_RATIO: float = 0.80     # 80% treino, 20% validação
 # Early Stopping (sai do treinamento se não melhorar por N épocas)
 # ---------------------------------------------------------------------------
 
-EARLY_STOPPING_PATIENCE: int = -1  # Desativado (-1 = todas as épocas)
+EARLY_STOPPING_PATIENCE: int = 10  # Para treinamento se val_acc não melhorar por 10 épocas
 EARLY_STOPPING_MIN_DELTA: float = 0.001  # Melhoria mínima para contar como progresso
 
 # ---------------------------------------------------------------------------

@@ -11,7 +11,7 @@ Compatibilidade com a API C# (EmotionDetectionService.cs):
   - output_names = ["logits"]
   - Formato:     NCHW (1, 3, 224, 224)
   - Saída:       8 logits (Softmax é aplicado pela API C#, não aqui)
-  - opset:       18
+  - opset:       12
 """
 
 import os
@@ -24,12 +24,21 @@ import onnxruntime as ort
 from PIL import Image
 from torchvision import transforms
 
-from config import (
-    CLASS_NAMES,
-    IMAGE_SIZE,
-    IMAGENET_MEAN,
-    IMAGENET_STD,
-)
+# Importação dinâmica para compatibilidade com config e config_dual_state
+try:
+    from config_dual_state import (
+        IMAGE_SIZE,
+        IMAGENET_MEAN,
+        IMAGENET_STD,
+    )
+    CLASS_NAMES = None
+except ImportError:
+    from config import (
+        CLASS_NAMES,
+        IMAGE_SIZE,
+        IMAGENET_MEAN,
+        IMAGENET_STD,
+    )
 
 
 # ---------------------------------------------------------------------------
@@ -67,7 +76,7 @@ def export_to_onnx(
     print(f"  Input shape: {list(dummy_input.shape)}")
     print(f"  Input name:  'images'")
     print(f"  Output name: 'logits'")
-    print(f"  Opset:       18")
+    print(f"  Opset:       12")
 
     with torch.no_grad():
         torch.onnx.export(
@@ -76,7 +85,11 @@ def export_to_onnx(
             output_path,
             input_names=["images"],
             output_names=["logits"],
-            opset_version=18,
+            opset_version=12,
+            dynamic_axes={
+                "images": {0: "batch_size"},
+                "logits": {0: "batch_size"},
+            },
             do_constant_folding=True,
         )
 
@@ -90,7 +103,7 @@ def validate_onnx(
     onnx_path: str,
     validation_samples: List[Tuple[str, int]],
     device: torch.device,
-    class_names: List[str] = CLASS_NAMES,
+    class_names: List[str] = None,
     tolerance: float = 1e-5,
     num_samples: int = 3,
 ) -> dict:
