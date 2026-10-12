@@ -11,7 +11,7 @@ Compatibilidade com a API C# (EmotionDetectionService.cs):
   - output_names = ["logits"]
   - Formato:     NCHW (1, 3, 224, 224)
   - Saída:       8 logits (Softmax é aplicado pela API C#, não aqui)
-  - opset:       12
+  - opset:       18
 """
 
 import os
@@ -67,7 +67,7 @@ def export_to_onnx(
     print(f"  Input shape: {list(dummy_input.shape)}")
     print(f"  Input name:  'images'")
     print(f"  Output name: 'logits'")
-    print(f"  Opset:       12")
+    print(f"  Opset:       18")
 
     with torch.no_grad():
         torch.onnx.export(
@@ -76,11 +76,7 @@ def export_to_onnx(
             output_path,
             input_names=["images"],
             output_names=["logits"],
-            opset_version=12,
-            dynamic_axes={
-                "images": {0: "batch_size"},
-                "logits": {0: "batch_size"},
-            },
+            opset_version=18,
             do_constant_folding=True,
         )
 

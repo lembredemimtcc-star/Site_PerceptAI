@@ -47,6 +47,13 @@ outputs/
 *.onnx
 *.onnx.data
 
+# Python virtualenv
+venv/
+.venv/
+env/
+ENV/
+.python-version
+
 # Python cache
 __pycache__/
 *.pyc

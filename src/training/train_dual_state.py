@@ -54,7 +54,7 @@ from sklearn.model_selection import train_test_split
 import config_dual_state as cfg
 from deduplication import scan_dataset, deduplicate_dataset, print_deduplication_report
 from dataset import FacialExpressionDataset
-from model_dual_state import build_model, count_parameters
+from model_dual_state import build_model, count_parameters, load_checkpoint
 from metrics import compute_metrics, print_metrics, plot_confusion_matrix, plot_training_curves
 from export_onnx import export_to_onnx, validate_onnx
 from utils import set_seed, get_device, setup_output_dirs, save_json_report, format_time
@@ -80,6 +80,10 @@ class EarlyStopping:
         self.early_stop = False
 
     def __call__(self, val_loss: float) -> bool:
+        # patience <= 0 desativa o early stopping (roda todas as épocas)
+        if self.patience <= 0:
+            return False
+
         if self.best_loss is None:
             self.best_loss = val_loss
             return False
@@ -538,11 +542,7 @@ def train_single_model(
     )
 
     # Curvas de treinamento
-    plot_training_curves(
-        history["train_loss"], history["val_loss"],
-        history["train_acc"], history["val_acc"],
-        save_path=os.path.join(plots_dir, f"training_curves_{model_name}.png")
-    )
+    plot_training_curves(history, plots_dir)
 
     # Exportação ONNX
     print("\n" + "=" * 80)
