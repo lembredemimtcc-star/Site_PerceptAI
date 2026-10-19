@@ -58,3 +58,14 @@ ENV/
 __pycache__/
 *.pyc
 *.pyo
+
+# Datasets de treino (grandes; nao versionar)
+src/datasets*/
+datasets*/
+datasets_excess/
+
+# Artefatos locais de teste/entrega
+outputs.zip
+*.zip
+testar_dual.py
+VERCEL_FIX_SUMMARY.md

@@ -72,7 +72,9 @@ export const TestCameraModal: React.FC<TestCameraModalProps> = ({ internacaoId =
       setLastFrame(dataUrl);
 
       const base64 = dataUrlToBase64(dataUrl);
-      const backendUrl = (import.meta.env["VITE_BACKEND_URL"] as string | undefined)?.replace(/\/$/, "") || "";
+      const backendUrl =
+        (import.meta.env["VITE_BACKEND_URL"] as string | undefined)?.replace(/\/$/, "") ||
+        (typeof window !== "undefined" ? window.location.origin : "");
 
       // Chama detect e debug em paralelo
       const [detection, debugRes] = await Promise.allSettled([
