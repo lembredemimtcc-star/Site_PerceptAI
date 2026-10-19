@@ -1,6 +1,11 @@
 import { PATIENT_MOCK_EMOTIONS, DEFAULT_MOCK_EMOTION } from "../config/mockEmotions";
 
-const BACKEND_URL = (import.meta.env["VITE_BACKEND_URL"] as string | undefined)?.replace(/\/$/, "") || "";
+// Se VITE_BACKEND_URL nao estiver definido, usa o MESMO host que serve o site
+// (em dev/tunel o proxy do Vite encaminha /api para o backend local; em producao,
+// o VITE_BACKEND_URL continua mandando). Sem isso, o app caia na simulacao.
+const BACKEND_URL =
+  (import.meta.env["VITE_BACKEND_URL"] as string | undefined)?.replace(/\/$/, "") ||
+  (typeof window !== "undefined" ? window.location.origin : "");
 
 export interface DetectionRequest {
   image: string;

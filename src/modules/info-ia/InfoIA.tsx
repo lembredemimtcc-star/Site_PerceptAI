@@ -97,6 +97,7 @@ export const InfoIA: React.FC<InfoIAProps> = ({ bed, onBack }) => {
       detectingRef.current = true;
       setIsDetecting(true);
       const dataUrl = await captureFrame(video);
+      const result = await detectEmotion(dataUrlToBase64(dataUrl), internacaoId);
       // Separação dos dois estados fornecidos diretamente pela IA
       const physio = result.estadoFisiologico;
       setPatientState(physio);
