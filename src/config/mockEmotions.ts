@@ -21,6 +21,7 @@ export const PATIENT_MOCK_EMOTIONS: Record<string, { emotion: string; isSleeping
   "407": { emotion: "neutro", isSleeping: true },    // dormindo
   "408": { emotion: "sono", isSleeping: false },     // sono
   "409": { emotion: "medo", isSleeping: true },      // medo e sono (dormindo)
+  "teste": { emotion: "dor", isSleeping: false },    // teste padrão para modal sem paciente selecionado
 };
 
 // Emoção padrão para pacientes não mapeados

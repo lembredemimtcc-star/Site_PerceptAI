@@ -25,8 +25,11 @@ export interface DetectionResponse {
 
 // ── Mock de emoções definidas por paciente (internação) ─────────────────────
 function getMockEmotionForPatient(internacaoId: string): DetectionResponse {
+  // Tenta encontrar pelo internacaoId, senão retorna emoção padrão
   const mock = PATIENT_MOCK_EMOTIONS[internacaoId] || { emotion: DEFAULT_MOCK_EMOTION, isSleeping: false };
   const confidence = 0.95;
+
+  console.log(`[Mock Emotion] Patient ID: ${internacaoId}, Emotion: ${mock.emotion}, Sleeping: ${mock.isSleeping}`);
 
   if (mock.isSleeping) {
     return {

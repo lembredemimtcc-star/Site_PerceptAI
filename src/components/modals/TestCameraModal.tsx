@@ -76,14 +76,17 @@ export const TestCameraModal: React.FC<TestCameraModalProps> = ({ internacaoId =
         (import.meta.env["VITE_BACKEND_URL"] as string | undefined)?.replace(/\/$/, "") ||
         (typeof window !== "undefined" ? window.location.origin : "");
 
+      // Usa internacaoId se disponível, senão usa "teste" (que mapeia para neutro por padrão)
+      const patientId = internacaoId || "teste";
+
       // Chama detect e debug em paralelo
       const [detection, debugRes] = await Promise.allSettled([
-        detectEmotion(base64, internacaoId),
+        detectEmotion(base64, patientId),
         backendUrl
           ? fetch(`${backendUrl}/api/detection/debug`, {
               method: "POST",
               headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ image: base64, internacaoId }),
+              body: JSON.stringify({ image: base64, internacaoId: patientId }),
             }).then((r) => r.ok ? r.json() : null).catch(() => null)
           : Promise.resolve(null),
       ]);
