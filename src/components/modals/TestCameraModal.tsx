@@ -1,6 +1,6 @@
 import React, { useRef, useState, useCallback } from "react";
 import { Camera, CameraOff, Zap, Loader2, X, Moon, Eye } from "lucide-react";
-import { captureFrame, dataUrlToBase64, detectEmotion } from "../../lib/detection";
+import { captureFrame } from "../../lib/detection";
 import { moodMeta } from "../../config/mockData";
 import { MoodType } from "../../types";
 
@@ -11,12 +11,23 @@ interface TestCameraModalProps {
 
 type Status = "idle" | "starting" | "ready" | "capturing" | "error";
 
+const MOCK_EMOTIONS = [
+  { value: "neutro", label: "Neutro" },
+  { value: "dor", label: "Dor" },
+  { value: "tristeza", label: "Tristeza" },
+  { value: "medo", label: "Medo" },
+  { value: "enjoo", label: "Enjoo" },
+  { value: "sono", label: "Sono" },
+  { value: "dormindo", label: "Dormindo" },
+];
+
 export const TestCameraModal: React.FC<TestCameraModalProps> = ({ internacaoId = "teste", onClose }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const streamRef = useRef<MediaStream | null>(null);
 
   const [status, setStatus] = useState<Status>("idle");
   const [cameraError, setCameraError] = useState("");
+  const [selectedEmotion, setSelectedEmotion] = useState("dor");
   const [result, setResult] = useState<{
     emotion: string;
     confidence: number;
@@ -71,47 +82,24 @@ export const TestCameraModal: React.FC<TestCameraModalProps> = ({ internacaoId =
       const dataUrl = await captureFrame(videoRef.current);
       setLastFrame(dataUrl);
 
-      const base64 = dataUrlToBase64(dataUrl);
-      const backendUrl =
-        (import.meta.env["VITE_BACKEND_URL"] as string | undefined)?.replace(/\/$/, "") ||
-        (typeof window !== "undefined" ? window.location.origin : "");
+      // Usa a emoção selecionada no dropdown em vez de chamar a IA
+      const isSleeping = selectedEmotion === "dormindo";
+      const confidence = 95;
 
-      // Usa internacaoId se disponível, senão usa "teste" (que mapeia para neutro por padrão)
-      const patientId = internacaoId || "teste";
-
-      // Chama detect e debug em paralelo
-      const [detection, debugRes] = await Promise.allSettled([
-        detectEmotion(base64, patientId),
-        backendUrl
-          ? fetch(`${backendUrl}/api/detection/debug`, {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ image: base64, internacaoId: patientId }),
-            }).then((r) => r.ok ? r.json() : null).catch(() => null)
-          : Promise.resolve(null),
-      ]);
-
-      if (detection.status === "fulfilled") {
-        const val = detection.value;
-        setResult({
-          emotion: val.emotion,
-          confidence: Math.round(val.confidence * 100),
-          estadoFisiologico: val.estadoFisiologico,
-          confiancaFisiologica: val.confiancaFisiologica != null ? Math.round(val.confiancaFisiologica * 100) : undefined,
-          estadoEmocional: val.estadoEmocional,
-          confiancaEmocional: val.confiancaEmocional != null ? Math.round(val.confiancaEmocional * 100) : undefined,
-        });
-      }
-
-      if (debugRes.status === "fulfilled" && debugRes.value?.ranking) {
-        setDebugRanking(debugRes.value.ranking as { emocao: string; confianca: number }[]);
-      }
+      setResult({
+        emotion: selectedEmotion,
+        confidence,
+        estadoFisiologico: isSleeping ? "dormindo" : "acordado",
+        confiancaFisiologica: confidence,
+        estadoEmocional: isSleeping ? null : selectedEmotion,
+        confiancaEmocional: isSleeping ? null : confidence,
+      });
     } catch (err) {
-      setCameraError("Falha ao capturar ou enviar a imagem.");
+      setCameraError("Falha ao capturar a imagem.");
     } finally {
       setStatus("ready");
     }
-  }, [status, internacaoId]);
+  }, [status, selectedEmotion]);
 
   const handleClose = () => {
     stopCamera();
@@ -150,6 +138,25 @@ export const TestCameraModal: React.FC<TestCameraModalProps> = ({ internacaoId =
 
         {/* Corpo */}
         <div className="flex flex-col items-center gap-4 p-5 overflow-y-auto">
+          {/* Dropdown de seleção de emoção */}
+          <div className="w-full">
+            <label className="text-[11px] font-semibold text-gray-500 uppercase tracking-wide mb-2 block">
+              Emoção a Simular
+            </label>
+            <select
+              value={selectedEmotion}
+              onChange={(e) => setSelectedEmotion(e.target.value)}
+              className="w-full h-10 border border-gray-300 rounded-lg px-3 text-sm outline-none focus:border-orange-500"
+              disabled={status === "capturing"}
+            >
+              {MOCK_EMOTIONS.map((emo) => (
+                <option key={emo.value} value={emo.value}>
+                  {emo.label}
+                </option>
+              ))}
+            </select>
+          </div>
+
           {/* Área da câmera */}
           <div
             className="w-full rounded-xl overflow-hidden flex items-center justify-center"
