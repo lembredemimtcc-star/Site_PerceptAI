@@ -1,3 +1,5 @@
+import { PATIENT_MOCK_EMOTIONS, DEFAULT_MOCK_EMOTION } from "../config/mockEmotions";
+
 const BACKEND_URL = (import.meta.env["VITE_BACKEND_URL"] as string | undefined)?.replace(/\/$/, "") || "";
 
 export interface DetectionRequest {
@@ -16,59 +18,29 @@ export interface DetectionResponse {
   confiancaEmocional?: number | null;
 }
 
-// ── Simulação momentânea quando backend está offline ────────────────────────
-const EMOTION_WEIGHTS: { emotion: string; weight: number }[] = [
-  { emotion: "neutro",   weight: 50 },
-  { emotion: "dor",      weight: 22 },
-  { emotion: "tristeza", weight: 12 },
-  { emotion: "medo",     weight:  9 },
-  { emotion: "enjoo",    weight:  7 },
-];
+// ── Mock de emoções definidas por paciente (internação) ─────────────────────
+function getMockEmotionForPatient(internacaoId: string): DetectionResponse {
+  const mock = PATIENT_MOCK_EMOTIONS[internacaoId] || { emotion: DEFAULT_MOCK_EMOTION, isSleeping: false };
+  const confidence = 0.95;
 
-let _currentSimPhysio: "acordado" | "dormindo" = "acordado";
-let _currentSimEmotion = "neutro";
-let _simPersistCycles = 0;
-
-function pickWeightedEmotion(): string {
-  const total = EMOTION_WEIGHTS.reduce((s, e) => s + e.weight, 0);
-  let r = Math.random() * total;
-  for (const e of EMOTION_WEIGHTS) {
-    r -= e.weight;
-    if (r <= 0) return e.emotion;
-  }
-  return "neutro";
-}
-
-function getSimulatedEmotion(): DetectionResponse {
-  if (_simPersistCycles > 0) {
-    _simPersistCycles--;
-  } else {
-    // 85% de chance acordado, 15% dormindo
-    _currentSimPhysio = Math.random() < 0.15 ? "dormindo" : "acordado";
-    _currentSimEmotion = pickWeightedEmotion();
-    _simPersistCycles = Math.floor(Math.random() * 3) + 1;
-  }
-
-  const confidence = Math.round((0.88 + Math.random() * 0.08) * 100) / 100;
-
-  if (_currentSimPhysio === "dormindo") {
+  if (mock.isSleeping) {
     return {
       emotion: "dormindo",
       confidence,
       estadoFisiologico: "dormindo",
       confiancaFisiologica: confidence,
-      estadoEmocional: null, // sem emoção quando dormindo
+      estadoEmocional: null,
       confiancaEmocional: null,
       timestamp: new Date().toISOString(),
     };
   }
 
   return {
-    emotion: _currentSimEmotion,
+    emotion: mock.emotion,
     confidence,
     estadoFisiologico: "acordado",
     confiancaFisiologica: 0.95,
-    estadoEmocional: _currentSimEmotion,
+    estadoEmocional: mock.emotion,
     confiancaEmocional: confidence,
     timestamp: new Date().toISOString(),
   };
@@ -79,10 +51,10 @@ export async function detectEmotion(
   base64Image: string,
   internacaoId: string
 ): Promise<DetectionResponse> {
-  // Sem backend configurado → simula diretamente
+  // Sem backend configurado → usa emoção mockada definida por paciente
   if (!BACKEND_URL) {
-    console.warn("[PerceptAI] VITE_BACKEND_URL não configurado — usando simulação de emoção.");
-    return getSimulatedEmotion();
+    console.warn("[PerceptAI] VITE_BACKEND_URL não configurado — usando emoção mockada por paciente.");
+    return getMockEmotionForPatient(internacaoId);
   }
 
   try {
@@ -105,8 +77,8 @@ export async function detectEmotion(
     clearTimeout(timeoutId);
 
     if (!response.ok) {
-      console.warn(`[PerceptAI] Backend retornou ${response.status} — usando simulação.`);
-      return getSimulatedEmotion();
+      console.warn(`[PerceptAI] Backend retornou ${response.status} — usando emoção mockada por paciente.`);
+      return getMockEmotionForPatient(internacaoId);
     }
 
     const data = await response.json();
@@ -143,8 +115,8 @@ export async function detectEmotion(
     };
   } catch (err: any) {
     const reason = err?.name === "AbortError" ? "timeout (60s) - O Render ainda não acordou!" : err?.message ?? "erro de rede";
-    console.warn(`[PerceptAI] Detecção falhou (${reason}) — ativando simulação local por enquanto.`);
-    return getSimulatedEmotion();
+    console.warn(`[PerceptAI] Detecção falhou (${reason}) — usando emoção mockada por paciente.`);
+    return getMockEmotionForPatient(internacaoId);
   }
 }
 
