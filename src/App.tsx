@@ -9,6 +9,7 @@ import { COLORS } from "./config/colors";
 import { Sidebar, MobileNavbar } from "./shared/components";
 import { AccessibilityProvider } from "./shared/accessibility";
 import { LoginScreen } from "./modules/auth";
+import { LandingScreen } from "./modules/landingpage/Landing";
 import { Dashboard, DashMedicos } from "./modules/dashboard";
 import { Estoque } from "./modules/estoque";
 import { Acessibilidade } from "./modules/acessibilidade";
@@ -32,6 +33,7 @@ export default function PerceptAIPrototype() {
 
 function AppShell() {
   const [loggedIn, setLoggedIn] = useState(false);
+  const [showLogin, setShowLogin] = useState(false);
   const [page, setPage] = useState("dash-pacientes");
   const [selectedBed, setSelectedBed] = useState<Bed | null>(null);
   const [isMobileNavbarOpen, setIsMobileNavbarOpen] = useState(false);
@@ -54,6 +56,7 @@ function AppShell() {
     if (key === "login") {
       await signOut();
       setLoggedIn(false);
+      setShowLogin(false); // volta para a landing
       return;
     }
     setPage(key);
@@ -97,7 +100,14 @@ function AppShell() {
       />
 
       {!loggedIn ? (
-        <LoginScreen onLogin={() => setLoggedIn(true)} />
+        showLogin ? (
+          <LoginScreen
+            onLogin={() => setLoggedIn(true)}
+            onBack={() => setShowLogin(false)}
+          />
+        ) : (
+          <LandingScreen onGoToLogin={() => setShowLogin(true)} />
+        )
       ) : (
         <div className="flex h-screen w-full overflow-hidden">
           <Sidebar current={page} onNavigate={navigate} />
